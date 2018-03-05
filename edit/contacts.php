@@ -13,7 +13,7 @@
 			<h1>Contacts</h1>
 			<form id="contactForm">
 
-				<div id="contactForm">
+				<div id="contactCards">
 					<!-- Name: <input type="text" name="name"><br>
 					Address: <input type="text" name="address"><br>
 					Phone: <input type="text" name="phone"><br> -->
@@ -37,7 +37,7 @@
 			var html = '<div class="contact-card">Name: <input type="text" name="name' + contactCounter + '"><br>'
 						+ 'Address: <input type="text" name="address' + contactCounter + '"><br>'
 						+ 'Phone: <input type="text" name="phone' + contactCounter + '"><br></div>'
-			addFields(html, 'contactForm');
+			addFields(html, 'contactCards');
 			contactCounter++;
 		}
 	</script>
