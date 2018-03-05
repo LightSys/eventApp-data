@@ -5,7 +5,7 @@ body {
 
 nav {
     float: left;
-    background-color: lightgrey;
+    background-color: #3E52A9;
     width: 200px;
     height: 100%;
     -webkit-box-shadow: 4px 0px 6px 0px rgba(107,101,107,1);
@@ -19,12 +19,12 @@ nav > ol {
 }
 
 nav > ol > a {
-    color: black;
+    color: white;
     text-decoration: none;
 }
 
 nav > ol > a > li {
-    border-bottom: 1px dotted grey;
+    border-bottom: 1px dotted #161C34;
     padding: 10px;
 }
 
@@ -32,4 +32,32 @@ nav > ol > a > li {
     padding: 50px;
     float: left;
     /* width: calc(100% - 200px); */
+}
+
+div.btn {
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding: 10px;
+    background-color: #3E52A9;
+    color: white;
+    border-radius: 5px;
+}
+
+div.btn:hover {
+    display: inline-block;
+    padding-left: 19px;
+    padding-right: 19px;
+    padding: 9px;
+    border: 1px solid #3E52A9;
+    color: #3E52A9;
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.contact-card {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
 }
