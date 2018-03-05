@@ -6,7 +6,7 @@
 	<body>
 		<?php include("templates/left-nav.php"); ?>
 
-		 
+
 
 	</body>
 </html>

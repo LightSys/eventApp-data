@@ -1,0 +1,35 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+nav {
+    float: left;
+    background-color: lightgrey;
+    width: 200px;
+    height: 100%;
+    -webkit-box-shadow: 4px 0px 6px 0px rgba(107,101,107,1);
+    -moz-box-shadow: 4px 0px 6px 0px rgba(107,101,107,1);
+    box-shadow: 4px 0px 6px 0px rgba(107,101,107,1);
+}
+
+nav > ol {
+    list-style: none;
+    padding: 0px;
+}
+
+nav > ol > a {
+    color: black;
+    text-decoration: none;
+}
+
+nav > ol > a > li {
+    border-bottom: 1px dotted grey;
+    padding: 10px;
+}
+
+#main {
+    padding: 50px;
+    float: left;
+    /* width: calc(100% - 200px); */
+}
