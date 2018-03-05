@@ -1,7 +1,5 @@
 <html>
-	<head>
-		<link rel="stylesheet" href="../styles/styles.css" />
-	</head>
+	<?php include("../templates/head.php"); ?>
 	
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
