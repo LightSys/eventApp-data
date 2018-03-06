@@ -1,5 +1,5 @@
 <html>
-	<?php include("../templates/head.php"); ?>
+	
 	
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
@@ -13,7 +13,7 @@
 
 		<section id="main">
 			<h1>Housing</h1>
-			<form id="housingForm">
+			<form id="form">
 				<div id="sectionCards">
 				</div>
 				<div class="btn" onclick="addHost()">Add Host</div>
@@ -23,6 +23,7 @@
 
 	</body>
 
+	<?php include("../templates/head.php"); ?>
 	<script>
 		var counter = 0;
 		var guestCounters = [];
@@ -49,9 +50,8 @@
 			console.log("addGuest " + guestCounters[num]);
 			guestCounters[num]++;
 		}
-
-		$( "#save" ).click(function() {
-			$( "#housingForm" ).submit();
-		});
 	</script>
+
+	
 </html>
+
