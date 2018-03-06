@@ -296,7 +296,7 @@ if($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$output["information_page"] = array();
 
 	do {
-		$page = "page_" + $get_info_page_res["ID"];
+		$page = "page_" . $get_info_page_res["ID"];
 		$output["information_page"][$page] = array();
 
 		$output["information_page"][$page][] = array(
