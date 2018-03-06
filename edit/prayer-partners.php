@@ -24,25 +24,27 @@
 	<?php include("../templates/head.php"); ?>
 	<script>
 		var counter = 0;
-		var partnerCounter = 0;
+		var partnerCounters = [];
 		
 		$(document).ready(function() {
 			addGroup();
 		});
 
 		function addGroup() {
-			guestCounter = 0;
+			partnerCounters[counter] = 0;
 			var html = '<div class="card">Partners: <br><div id="partners' + counter + '">'
-						+ '<div class="input"><input type="text" name="partner' + guestCounter + '"></div></div>'					
+						+ '<div class="input"><input type="text" name="partner' + partnerCounters[counter] + '"></div></div>'					
 						+ '<br><div class="btn" onclick="addPartner(' + counter + ')">Add Partner</div></div>';
 			addFields(html, 'sectionCards');
+			console.log("addGroup: counter: " + counter);
+			partnerCounters[counter]++;
 			counter++;
 		}
 
 		function addPartner(num) {
-			var html = '<div class="input"><input type="text" name="partner' + counter + '"></div>';
+			var html = '<div class="input"><input type="text" name="partner' + partnerCounters[num] + '"></div>';
 			addFields(html, 'partners' + num);
-			partnerCounter++;
+			partnerCounters[num]++;
 		}
 	</script>
 
