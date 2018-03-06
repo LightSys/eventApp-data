@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 
 include("connection.php");
 
-if (!($get_event_stmt = $db->prepare("SELECT internal_ID FROM event where ID=:id"))) {
+if (!($get_event_stmt = $db->prepare("SELECT internal_ID,notif_nav,notif_icon FROM event where ID=:id"))) {
 	die();
 }
 
@@ -47,11 +47,11 @@ while($get_notif_res = $get_notif_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$output["notifications"][$get_notif_res["ID"]] = array(
 		"title" => $get_notif_res["title"],
 		"body" => $get_notif_res["body"],
-		"date" => date("m/d/Y H:i:s",strtotime($get_notif_res["date"])),,
+		"date" => date("m/d/Y H:i:s",strtotime($get_notif_res["date"])),
 		"refresh" => ($get_notif_res["refresh"] == 0) ? false : true
 	);
 } 
 
-echo json_encode($output);
+echo json_encode_noescape($output);
 
 ?>
