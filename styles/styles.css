@@ -5,6 +5,7 @@ body {
 
 nav {
     float: left;
+    position: fixed;
     background-color: #3E52A9;
     width: 200px;
     height: 100%;
@@ -31,7 +32,8 @@ nav > ol > a > li {
 #main {
     padding: 50px;
     float: left;
-    /* width: calc(100% - 200px); */
+    width: calc(100% - 200px);
+    margin-left: 200px;
 }
 
 div.btn {
@@ -60,4 +62,19 @@ div.btn:hover {
     border-radius: 5px;
     padding: 10px;
     margin: 10px;
+}
+
+input[type=text] {
+    width: 400px;
+    height: 20px;
+    float: right;    
+}
+
+.input {
+    width: 600px;
+    border-bottom: 1px dotted grey;
+    padding: 20px;
+    padding-left: 0px;
+    font-family: sans-serif;
+    font-size: 12pt;
 }
