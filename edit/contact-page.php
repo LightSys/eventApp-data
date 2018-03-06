@@ -36,7 +36,4 @@
 			counter++;
 		}
 	</script>
-		
-
-	</body>
 </html>
