@@ -1,0 +1,113 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+nav {
+    float: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #3E52A9;
+    width: 200px;
+    height: 100%;
+    -webkit-box-shadow: 4px 0px 6px 0px rgba(107,101,107,1);
+    -moz-box-shadow: 4px 0px 6px 0px rgba(107,101,107,1);
+    box-shadow: 4px 0px 6px 0px rgba(107,101,107,1);
+}
+
+nav > ol {
+    list-style: none;
+    padding: 0px;
+}
+
+nav > ol > a {
+    color: white;
+    text-decoration: none;
+}
+
+nav > ol > a > li {
+    border-bottom: 1px dotted #161C34;
+    padding: 10px;
+}
+
+#main {
+    padding: 50px;
+    float: left;
+    width: calc(100% - 200px);
+    margin-left: 200px;
+}
+
+.btn {
+    display: inline-block;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding: 10px;
+    background-color: #3E52A9;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+
+    /* Buttons are not selectable */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.btn:hover {
+    display: inline-block;
+    padding-left: 19px;
+    padding-right: 19px;
+    padding: 9px;
+    border: 1px solid #3E52A9;
+    color: #3E52A9;
+    border-radius: 5px;
+    background-color: transparent;
+
+    /* Buttons are not selectable */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.card {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+    width: 620px;
+}
+
+input[type=text], input[type=date] {
+    width: 400px;
+    height: 20px;
+    float: right;    
+}
+
+input[type=file] {
+    margin-left: 160px;
+}
+
+textarea {
+    width: 400px;
+    height: 300px;
+    float: right;
+}
+
+.input {
+    width: 600px;
+    border-bottom: 1px dotted grey;
+    padding: 20px;
+    padding-left: 0px;
+    font-family: sans-serif;
+    font-size: 12pt;
+    display: inline-block;
+}
