@@ -1,6 +1,4 @@
 <html>
-	<?php include("../templates/head.php"); ?>
-	
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
 
@@ -13,16 +11,16 @@
 
 		<section id="main">
 			<h1>Information Pages</h1>
-			<form id="informationPagesForm">
+			<form id="form" method="post">
 				<div id="informationCards">
 				</div>
 				<div class="btn" onclick="addPage()">+ Add Information Page</div>
-				<input type="submit" value="Submit">
+				<div class="btn" id="save">Save</div>
 			</form>
 		</section>
 
 	</body>
-
+	<?php include("../templates/head.php"); ?>
 	<script>
 		var counter = 0;
 		

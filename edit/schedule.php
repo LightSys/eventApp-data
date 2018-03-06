@@ -1,5 +1,4 @@
 <html>
-	<?php include("../templates/head.php"); ?>
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
 		<style>
@@ -10,14 +9,15 @@
 		</style>
 		<section id="main">
 			<h1>Schedule</h1>
-			<form id="scheduleForm">
+			<form id="form" method="post">
 				<div id="scheduleDiv">
 				</div>
 				<div class="btn" onclick="addScheduleItem()">+ Add Schedule </div>
-				<input type="submit" value="Submit">
+				<div class="btn" id="save">Save</div>
 			</form>
 		</section>
 	</body>
+	<?php include("../templates/head.php"); ?>
 	<script>
 		var contactCounter = 0;
 		
