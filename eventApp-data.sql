@@ -141,8 +141,8 @@ create table notifications (
     event_ID            int,
     title               varchar(100),
     body                text,
-    date                date,
-    refresh             int,
+    date                datetime,
+    refresh             boolean,
 
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
