@@ -38,7 +38,7 @@
 				'Description: <input type="text" name="description"><br>' +
 				'Location: <input type="text" name="location"><br>' +
 				'Category: <input type="text" name="category"><br></div>';
-			addFields(html, 'scheduleForm');
+			addFields(html, 'scheduleDiv');
 			contactCounter++;
 		}
 	</script>
