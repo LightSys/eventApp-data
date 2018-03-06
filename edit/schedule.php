@@ -2,6 +2,12 @@
 	<?php include("../templates/head.php"); ?>
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
+		<style>
+			#schedule {
+				background-color: grey;
+				color: white;
+			}
+		</style>
 		<section id="main">
 			<h1>Schedule</h1>
 			<form>
