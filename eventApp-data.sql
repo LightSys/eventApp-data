@@ -1,7 +1,7 @@
 -- Recreates database with event data
 
 drop table event;
-drop table contact_page;
+drop table contact_page_sections;
 drop table contacts;
 drop table schedule_items;
 drop table info_page;
@@ -39,16 +39,16 @@ create table event (
     theme_dark          varchar(7),
     theme_medium        varchar(7),
     theme_color         varchar(7),
+    visible             boolean,
 
     primary key (internal_ID)
 );
 
 
 -- Contains information for laying out sections of the contact page
-create table contact_page (
+create table contact_page_sections (
     ID                  int AUTO_INCREMENT,
     event_ID            int,
-    section_ID          int,
     header              varchar(100),
     content             text,
 
@@ -60,10 +60,11 @@ create table contact_page (
 -- Stores contact information to populate contact page
 create table contacts (
     ID                  int AUTO_INCREMENT,
+    event_ID            int,    
     name                varchar(100),
     address             varchar(100),
     phone               varchar(17),
-    event_ID            int,
+
 
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
@@ -73,13 +74,13 @@ create table contacts (
 -- Contains information to lay out a schedule
 create table schedule_items (
     ID                  int AUTO_INCREMENT,
+    event_ID            int,    
     date                date,
     start_time          numeric(4,0),
     length              int,
     description         varchar(150),
     location            varchar(50),
     category            varchar(50),
-    event_ID            int,
 
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
@@ -89,9 +90,9 @@ create table schedule_items (
 -- Contains information about housing arrangements
 create table housing (
     ID                  int AUTO_INCREMENT,
+    event_ID            int,    
     host_name           varchar(100),
     driver              varchar(100),
-    event_ID            int,
 
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
@@ -116,8 +117,8 @@ create table attendees (
     prayer_group_ID     int,
 
     primary key (ID),
-    foreign key (house_ID) references housing(ID),
-        on delete set null
+    foreign key (house_ID) references housing(ID)
+        on delete set null,
     foreign key (prayer_group_ID) references prayer_partners(ID)
         on delete set null
 );
@@ -139,9 +140,9 @@ create table notifications (
 -- Contains information about themes
 create table themes (
     ID                  int AUTO_INCREMENT,
-    theme_name          varchar(50) UNIQUE,
+    event_ID            int,    
+    theme_name          varchar(50),
     theme_color         varchar(7),
-    event_ID            int,
 
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
@@ -151,9 +152,9 @@ create table themes (
 -- Defines a link on the nav bar for a user-defined page
 create table info_page (
     ID                  int AUTO_INCREMENT,
+    event_ID            int,    
     nav                 varchar(25),
     icon                varchar(100),
-    event_ID            int,
 
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
@@ -188,8 +189,8 @@ create table event_users (
     event_ID            int,
 
     primary key (ID),
-    foreign key (user_ID) references users(ID),
-        on delete set null
+    foreign key (user_ID) references users(ID)
+        on delete set null,
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
 );
