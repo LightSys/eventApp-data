@@ -1,7 +1,7 @@
 <nav>
     <ol>
         <a href="general.php"><li id="general">General</li></a>
-        <a href="contact-page.php"><li id="contact-pages">Contact Page</li></a>
+        <a href="contact-page.php"><li id="contact-page-sections">Contact Page Sections</li></a>
         <a href="contacts.php"><li id="contacts">Contacts</li></a>
         <a href="schedule.php"><li id="schedule">Schedule</li></a>
         <a href="information-page.php"><li id="information-pages">Information Pages</li></a>
