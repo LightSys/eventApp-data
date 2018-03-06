@@ -30,8 +30,8 @@
 		});
 
 		function addSection() {
-			var html = '<div class="contact-card">Header: <input type="text" name="header' + counter + '"><br>'
-						+ 'Content: <textarea name="content' + counter + '"></textarea><br></div>';
+			var html = '<div class="card"><div class="input">Header: <input type="text" name="header' + counter + '"></div>'
+						+ '<div class="input">Content: <textarea name="content' + counter + '"></textarea></div></div>';
 			addFields(html, 'sectionCards');
 			counter++;
 		}
