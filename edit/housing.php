@@ -33,16 +33,16 @@
 
 		function addHost() {
 			guestCounter = 0;
-			var html = '<div class="contact-card">Host: <input type="text" name="host' + counter + '"><br>'
-						+ 'Driver: <input type="text" name="driver' + counter + '"><br>'
-						+ 'Guests: <div id="guests' + counter + '"><input type="text" name="guest' + guestCounter + '"><br></div>'
+			var html = '<div class="card"><div class="input">Host: <input type="text" name="host' + counter + '"></div>'
+						+ '<div class="input">Driver: <input type="text" name="driver' + counter + '"></div>'
+						+ '<div class="input">Guests: <div id="guests' + counter + '"><input type="text" name="guest' + guestCounter + '"></div></div>'
 						+ '<div class="btn" onclick="addGuest(' + counter + ')">Add Guest</div>';
 			addFields(html, 'sectionCards');
 			counter++;
 		}
 
 		function addGuest(num) {
-			var html = '<input type="text" name="guest' + counter + '"><br>';
+			var html = '<input type="text" name="guest' + counter + '">';
 			addFields(html, 'guests' + num);
 			guestCounter++;
 		}

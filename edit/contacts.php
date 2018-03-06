@@ -29,9 +29,9 @@
 		});
 
 		function addContact() {
-			var html = '<div class="contact-card">Name: <input type="text" name="name' + counter + '"><br>'
-						+ 'Address: <input type="text" name="address' + counter + '"><br>'
-						+ 'Phone: <input type="text" name="phone' + counter + '"><br></div>';
+			var html = '<div class="card"><div class="input">Name: <input type="text" name="name' + counter + '"></div>'
+						+ '<div class="input">Address: <input type="text" name="address' + counter + '"></div>'
+						+ '<div class="input">Phone: <input type="text" name="phone' + counter + '"></div>';
 			addFields(html, 'contactCards');
 			counter++;
 		}

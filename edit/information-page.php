@@ -31,10 +31,10 @@
 		});
 
 		function addPage() {
-			var html = '<div class="contact-card">Navigation Name: <input type="text" name="name' + counter + '"><br>'
-						+ 'Icon: <input type="file" name="logo' + counter + '"><br>'
-						+ 'Title: <input type="text" name="title' + counter + '"><br>'
-						+ 'Information: <textarea name="information' + counter + '"></textarea><br></div>';
+			var html = '<div class="card"><div class="input">Navigation Name: <input type="text" name="name' + counter + '"></div>'
+						+ '<div class="input">Icon: <input type="file" name="logo' + counter + '"></div>'
+						+ '<div class="input">Title: <input type="text" name="title' + counter + '"></div>'
+						+ '<div class="input">Information: <textarea name="information' + counter + '"></textarea></div></div>';
 			addFields(html, 'informationCards');
 			counter++;
 		}

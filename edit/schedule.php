@@ -12,12 +12,6 @@
 			<h1>Schedule</h1>
 			<form id="scheduleForm">
 				<div id="scheduleDiv">
-					<!-- Date: <input type="date" name="date"><br>
-					Start Time: <input type="text" name="starttime"><br>
-					Length: <input type="text" name="length"><br>
-					Description: <input type="text" name="description"><br>
-					Location: <input type="text" name="location"><br>
-					Category: <input type="text" name="category"><br> -->
 				</div>
 				<div class="btn" onclick="addScheduleItem()">+ Add Schedule </div>
 				<input type="submit" value="Submit">
@@ -32,12 +26,12 @@
 		});
 
 		function addScheduleItem() {
-			var html = '<div class="contact-card">Date: <input type="date" name="date"><br>' +
-				'Start Time: <input type="text" name="starttime"><br>' +
-				'Length: <input type="text" name="length"><br>' +
-				'Description: <input type="text" name="description"><br>' +
-				'Location: <input type="text" name="location"><br>' +
-				'Category: <input type="text" name="category"><br></div>';
+			var html = '<div class="card"><div class="input">Date: <input type="date" name="date"></div>' +
+				'<div class="input">Start Time: <input type="text" name="starttime"></div>' +
+				'<div class="input">Length: <input type="text" name="length"></div>' +
+				'<div class="input">Description: <input type="text" name="description"></div>' +
+				'<div class="input">Location: <input type="text" name="location"></div>' +
+				'<div class="input">Category: <input type="text" name="category"></div></div>';
 			addFields(html, 'scheduleDiv');
 			contactCounter++;
 		}
