@@ -15,7 +15,7 @@
 			<form id="contactPageSectionForm">
 				<div id="sectionCards">
 				</div>
-				<div class="btn" onclick="addSection()">+ Add Contact</div>
+				<div class="btn" onclick="addSection()">+ Add Contact Page Section</div>
 				<input type="submit" value="Submit">
 			</form>
 		</section>
