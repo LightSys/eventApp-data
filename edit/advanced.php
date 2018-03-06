@@ -1,5 +1,4 @@
 <html>
-	<?php include("../templates/head.php"); ?>
 	<head>
 		<script type="text/javascript" src="../scripts/advanced.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -15,12 +14,16 @@
 		
 		<section id="main">
 			<h1>Advanced</h1>
-			<form>
-				Refresh: <input type="text" name="refresh"><br>
-				Refresh Expire: <input type="date" name="refreshExpire"><br>
-				Notifications URL: <input type="text" name="notificationsUrl"><br>
-				<input type="submit" value="Submit">
+			<form id="form" method="post">
+				<div class="card">
+					<div class="input">Refresh: <input type="text" name="refresh"></div>
+					<div class="input">Refresh Expire: <input type="date" name="refreshExpire"></div>
+					<div class="input">Notifications URL: <input type="text" name="notificationsUrl"></div>
+				</div>
+				<br>
+				<div class="btn" id="save">Save</div>
 			</form>
 		</section>
 	</body>
+	<?php include("../templates/head.php"); ?>
 </html>
