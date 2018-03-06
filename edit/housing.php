@@ -17,7 +17,7 @@
 				<div id="sectionCards">
 				</div>
 				<div class="btn" onclick="addHost()">Add Host</div>
-				<input type="submit" value="Submit">
+				<div class="btn" id="save">Save</div>
 			</form>
 		</section>
 
@@ -49,5 +49,9 @@
 			console.log("addGuest " + guestCounters[num]);
 			guestCounters[num]++;
 		}
+
+		$( "#save" ).click(function() {
+			$( "#housingForm" ).submit();
+		});
 	</script>
 </html>
