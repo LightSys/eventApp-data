@@ -1,3 +1,29 @@
+<?php	
+	include("../connection.php");
+    if( isset($_POST['name']) )
+	{
+		foreach($_POST['name'] as $key => $name) {
+			if (!($stmt = $db->prepare("UPDATE contacts SET name = :name, address = :address, phone = :phone  WHERE id = :id"))) {
+				die(0);
+			}
+			
+			$address = $_POST['address'][$key];
+			$welcomeMessage = $_POST['phone'][$key];
+			$id = $_POST["id"];
+			
+			if (!($stmt->bindValue(':name', $name))) {
+				die(1);
+			}
+			if (!($stmt->bindValue(':address', $address))) {
+				die(2);
+			}
+			if (!($stmt->bindValue(':phone', $phone))) {
+				die(3);
+			}
+		}
+	}
+?>
+
 <html>
 	<?php include("../templates/head.php"); ?>
 	<body>
@@ -11,7 +37,8 @@
 
 		<section id="main">
 			<h1>Contacts</h1>
-			<form id="contactForm">
+			<form id="contactForm" method="post">
+				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<div id="contactCards">
 				</div>
 				<div class="btn" onclick="addContact()">+ Add Contact</div>
@@ -22,16 +49,15 @@
 	</body>
 
 	<script>
-		var counter = 0;
 		
 		$(document).ready(function() {
 			addContact();
 		});
 
 		function addContact() {
-			var html = '<div class="card"><div class="input">Name: <input type="text" name="name' + counter + '"></div>'
-						+ '<div class="input">Address: <input type="text" name="address' + counter + '"></div>'
-						+ '<div class="input">Phone: <input type="text" name="phone' + counter + '"></div>';
+			var html = '<div class="card"><div class="input">Name: <input type="text" name="name"></div>'
+						+ '<div class="input">Address: <input type="text" name="address"></div>'
+						+ '<div class="input">Phone: <input type="text" name="phone"></div>';
 			addFields(html, 'contactCards');
 			counter++;
 		}
