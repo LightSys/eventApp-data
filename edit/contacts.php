@@ -25,7 +25,7 @@
 ?>
 
 <html>
-	<?php include("../templates/head.php"); ?>
+	
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
 		<style>
@@ -37,17 +37,16 @@
 
 		<section id="main">
 			<h1>Contacts</h1>
-			<form id="contactForm" method="post">
-				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
+			<form id="form" method="post">
 				<div id="contactCards">
 				</div>
 				<div class="btn" onclick="addContact()">+ Add Contact</div>
-				<input type="submit" value="Submit">
+				<div class="btn" id="save">Save</div>
 			</form>
 		</section>
 
 	</body>
-
+	<?php include("../templates/head.php"); ?>
 	<script>
 		
 		$(document).ready(function() {
