@@ -90,7 +90,7 @@ if($get_cpages_res = $get_cpages_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$output["contact_page"]["section_" . $get_cpages_res["ID"]] = array(
 			"header" => $get_cpages_res["header"],
 			"content" => $get_cpages_res["content"],
-			"id" => $get_cpages_res["ID"]
+			"id" => $get_cpages_res["ID"]-1
 		);
 	} while($get_cpages_res = $get_cpages_stmt->fetch(PDO::FETCH_ASSOC));
 }
@@ -326,6 +326,6 @@ if($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 	} while($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC));
 }
 
-echo json_encode($output);
+echo json_encode_noescape($output);
 
 ?>
