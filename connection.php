@@ -38,11 +38,13 @@ function json_encode_noescape($a=false)
 
 		if (is_string($a))
 		{
+
 			static $jsonReplaces = array(array("\\", "\n", "\t", "\r", "\b", "\f", '"'), array('\\\\', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
 			return '"' . str_replace($jsonReplaces[0], $jsonReplaces[1], $a) . '"';
 		}
-		else
+		else {
 			return $a;
+		}
 	}
 	$isList = true;
 	for ($i = 0, reset($a); $i < count($a); $i++, next($a))
@@ -61,7 +63,7 @@ function json_encode_noescape($a=false)
 	}
 	else
 	{
-		foreach ($a as $k => $v) $result[] = json_encode_noescape($k).':'.json_encode_noescape($v);
+		foreach ($a as $k => $v) $result[] = (is_string($k) ? json_encode_noescape($k) : '"'.json_encode_noescape($k). '"') .':'.json_encode_noescape($v);
 			return '{' . join(',', $result) . '}';
 		}
 	}
