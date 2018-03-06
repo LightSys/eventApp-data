@@ -34,6 +34,7 @@ $output = array(
 		"time_zone" => $get_event_res["time_zone"],
 		"welcome_message" => $get_event_res["welcome_message"],
 		"notifications_url" => strtok(full_url($_SERVER),'?') . "?id=" . $_GET['id'] . "&type=notifications",
+		"year" => $get_event_res["year"],
 		"logo" => $get_event_res["logo"]
 	)
 );

@@ -20,6 +20,7 @@ create table event (
     ID                  varchar(36) UNIQUE,
     internal_ID         int AUTO_INCREMENT, 
     name                varchar(100),
+    year                numeric(4,0),
     refresh             int,
     refresh_expire      date,
     time_zone           varchar(9),
