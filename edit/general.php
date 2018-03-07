@@ -17,7 +17,7 @@
 		if(isset($_FILES["logo"]["name"])) {
 			
 			// The directory to save the file to
-			$uploaddir = '../temp/logo/';
+			$uploaddir = '../temp/';
 
 			// Get the full path to save the uploaded file to
 			$uploadfile = $uploaddir . basename($_FILES['logo']['name']);
@@ -39,25 +39,25 @@
 		}
 		
 		if (!($stmt->bindValue(':name', $name))) {
-			die(1);
+			// die(1);
 		}
 		if (!($stmt->bindValue(':time_zone', $timeZone))) {
-			die(2);
+			// die(2);
 		}
 		if (!($stmt->bindValue(':welcome_message', $welcomeMessage))) {
-			die(3);
+			// die(3);
 		}
 		if (!($stmt->bindValue(':id', $id))) {
-			die(4);
+			// die(4);
 		}	
 		if (!($stmt->bindValue(':visible', $visible))) {
-			die(5);
+			// die(5);
 		}	
 		if (!($stmt->bindValue(':logo', $logo))) {
-			die(6);
+			// die(6);
 		}	
 		if(!($stmt->execute())) {
-			die(7);
+			// die(7);
 		}
 	}
 ?>
@@ -76,7 +76,7 @@
 		
 		<section id="main">
 			<h1>General</h1>
-				<form action = "general.php" method = "post" enctype="multipart/form-data">
+				<form action = "general.php" method = "post" enctype="multipart/form-data" id="form">
 					<div class="card">
 						<div class="input">Event Name:<input type="text" name="name"></div>
 						<div class="input">Logo:<input type="file" name="logo"></div>
