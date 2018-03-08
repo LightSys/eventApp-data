@@ -8,9 +8,9 @@ insert into attendees(house_ID, prayer_group_ID, name) values (1, 1, 'First Last
 insert into notifications(event_ID, title, body, date, refresh) values (1, 'Data in Tables', 'Look! There\'s data! Isn\'t that exciting?', CURDATE(), 30);
 insert into notifications(event_ID, title, body, date, refresh) values (1, 'Notification', 'This is another notification.', CURDATE(), 30);
 insert into schedule_items(event_ID, date, start_time, length, description, location, category) values (1, CURDATE(), 800, 53, 'Crying internally', 'Nowhere', 'Cedarville Blue');
-insert into info_page(event_ID, nav, icon) values (1, 'All the INFO', x'12abcdef');
-insert into info_page_sections(info_page_ID, header, content) values (1, 'Info! Info! Info!', 'This is information you need.');
-insert into info_page_sections(info_page_ID, header, content) values (1, 'So Much Info', 'Even more information!');
+insert into info_page(event_ID,sequential_id, nav, icon) values (1,1, 'All the INFO', '12abcdef');
+insert into info_page_sections(info_page_ID,sequential_id, header, content) values (1,1, 'Info! Info! Info!', 'This is information you need.');
+insert into info_page_sections(info_page_ID,sequential_id, header, content) values (1,2, 'So Much Info', 'Even more information!');
 insert into users(username, password) values ('Person Person', 'letmein');
 insert into event_users(user_ID, event_ID) values (1,1);
 insert into schedule_items(event_ID, date, start_time, length, description, location, category) values (1, CURDATE(), 856, 72, 'Screaming', 'Closet', 'Cedarville Blue');

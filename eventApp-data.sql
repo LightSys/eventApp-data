@@ -154,7 +154,8 @@ create table notifications (
 create table info_page (
     ID                  int AUTO_INCREMENT,
     event_ID            int,    
-    nav                 varchar(25) UNIQUE,
+    sequential_ID       int,
+    nav                 varchar(25),
     icon                varchar(100),
 
     primary key (ID),
@@ -165,9 +166,10 @@ create table info_page (
 -- Contains information to lay out a user-defined page
 create table info_page_sections (
     ID                  int AUTO_INCREMENT,
+    info_page_ID        int,
+    sequential_ID       int,
     header              varchar(100),
     content             text,
-    info_page_ID        int,
 
     primary key (ID),
     foreign key (info_page_ID) references info_page(ID)
