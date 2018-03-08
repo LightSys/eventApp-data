@@ -1,24 +1,35 @@
 <?php include("../templates/check-event-exists.php"); ?>
 
 <?php
- // FIXME: this doesn't work
- if( isset($_POST['host'])) {
+
+include("../connection.php");
+
+if( isset($_POST['host'] )) {
 	foreach($_POST['host'] as $key => $host) {
-		if (!($stmt = $db->prepare("INSERT INTO housing (ID, event_ID, host_name, driver) VALUES (:event_ID, :host_name, :driver)"))) {
-			
+		if (!($stmt = $db->prepare("INSERT into housing(event_ID, host_name, driver) VALUES (:event_ID, :host_name, :driver)"))) {
+			die(0);
 		}
 
-		$ID = "c24343ee-218a-11e8-9e9c-525400bb1e83";
-		// $host = $_POST['host'][$key];
+		$ID = $_GET['id'];
 		$driver = $_POST['driver'][$key];
 
-		if (!($stmt->bindValue(':ID', $ID))) {	}
-		if (!($stmt->bindValue(':event_ID', $ID))) {	}
-		if (!($stmt->bindValue(':host_name', $host))) {	}
-		if (!($stmt->bindValue(':driver', $driver))) {	}
+		if (!($stmt->bindValue(':event_ID', $ID))) {
+			die(1);
+		}
+		if (!($stmt->bindValue(':host_name', $host))) {
+			die(2);
+		}
+		if (!($stmt->bindValue(':driver', $driver))) {
+			die(3);
+		}
+
+		if(!($stmt->execute())) {
+			die();
+		}
 	}
- }
-?>
+}
+
+ ?>
 
 <html>
 	
@@ -35,7 +46,7 @@
 
 		<section id="main">
 			<h1>Housing</h1>
-			<form id="form" action="housing.php" method="post">
+			<?php echo('<form id="form" action="housing.php?id=' . $_GET['id'] . '" method="post">') ?>
 				<div id="sectionCards">
 				</div>
 				<div class="btn" onclick="addHost()">Add Host</div>

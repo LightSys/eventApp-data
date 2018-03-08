@@ -1,5 +1,7 @@
 <?php include("../templates/check-event-exists.php"); ?>
 <?php
+	// FIXME: This is not functioning.
+
 	include("../connection.php");
 	if( isset($_POST['header'])) {
 		foreach($_POST['header'] as $key => $header) {
