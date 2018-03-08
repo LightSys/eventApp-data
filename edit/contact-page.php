@@ -1,3 +1,4 @@
+<?php include("../templates/check-event-exists.php"); ?>
 <?php
 	include("../connection.php");
 	if( isset($_POST['header'])) {
@@ -17,6 +18,9 @@
 			}
 			if (!($stmt->bindValue(':content', $content))) {
 				die(3);
+			}
+			if(!($stmt->execute())) {
+				die(4);
 			}
 		}
 	}

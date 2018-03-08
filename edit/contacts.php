@@ -1,3 +1,4 @@
+<?php include("../templates/check-event-exists.php"); ?>
 <?php	
 	include("../connection.php");
 	include("../helper.php");
