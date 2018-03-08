@@ -1,13 +1,21 @@
 <?php
+ // FIXME: this doesn't work
+ if( isset($_POST['host'])) {
+	foreach($_POST['host'] as $key => $host) {
+		if (!($stmt = $db->prepare("INSERT INTO housing (ID, event_ID, host_name, driver) VALUES (:event_ID, :host_name, :driver)"))) {
+			
+		}
 
-// die("ahlskadf");
+		$ID = "c24343ee-218a-11e8-9e9c-525400bb1e83";
+		// $host = $_POST['host'][$key];
+		$driver = $_POST['driver'][$key];
 
-if( isset($_POST['host']) )
-{
-     $fromPerson = $_POST['host'];
-     die($fromPerson);
-}
-
+		if (!($stmt->bindValue(':ID', $ID))) {	}
+		if (!($stmt->bindValue(':event_ID', $ID))) {	}
+		if (!($stmt->bindValue(':host_name', $host))) {	}
+		if (!($stmt->bindValue(':driver', $driver))) {	}
+	}
+ }
 ?>
 
 <html>
@@ -37,30 +45,24 @@ if( isset($_POST['host']) )
 
 	<?php include("../templates/head.php"); ?>
 	<script>
-		var counter = 0;
-		var guestCounters = [];
-		// var guestCounter = 0;
-		
+
 		$(document).ready(function() {
 			addHost();
 		});
 
+
+		// FIXME: broke ability to add guests
 		function addHost() {
-			guestCounters[counter] = 0;
-			var html = '<div class="card"><div class="input">Host: <input type="text" name="host' + counter + '"></div>'
-						+ '<div class="input">Driver: <input type="text" name="driver' + counter + '"></div>'
-						+ '<div class="input">Guests: <div id="guests' + counter + '"><select id="contact' + guestCounters[counter] + '"><option>contact name</option></select></div><br><br>'
-						+ '<div class="btn" onclick="addGuest(' + counter + ')">Add Guest</div></div>';
+			var html = '<div class="card"><div class="input">Host: <input type="text" name="host[]"></div>'
+						+ '<div class="input">Driver: <input type="text" name="driver[]"></div>'
+						+ '<div class="input">Guests: <div id="guests[]"><select id="contact[]"><option>contact name</option></select></div><br><br>'
+						+ '<div class="btn" onclick="addGuest([])">Add Guest</div></div>';
 			addFields(html, 'sectionCards');
-			console.log("addHost, " + counter);
-			counter++;
 		}
 
 		function addGuest(num) {
-			var html = '<select id="contact' + guestCounters[num] + '"><option>contact name</option></select>'
+			var html = '<select id="contact[]"><option>contact name</option></select>'
 			addFields(html, 'guests' + num);
-			console.log("addGuest " + guestCounters[num]);
-			guestCounters[num]++;
 		}
 	</script>
 

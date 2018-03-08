@@ -1,9 +1,14 @@
-<?php	
+<?php
 	include("../connection.php");
-    if( isset($_POST['name']))
+
+	if (!isset($_GET['id'])) {
+		die("Undefined Event");
+	}
+	
+    if(isset($_POST['name']))
 	{
 		if (!($stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone, welcome_message = :welcome_message visible = :visible, logo = :logo WHERE id = :id"))) {
-			die(0);
+			// die(0);
 		}
 		
 		$name = $_POST['name'];
@@ -24,7 +29,7 @@
 
 			// Try to upload the file
 			if(move_uploaded_file($_FILES['logo']['tmp_name'], $uploadfile)) {
-				$logo = file_get_contents($uploadfile);
+				$logo = base64_encode(file_get_contents($uploadfile));
 				echo "<p>File succesfully uploaded</p>";
 			} else {
 				echo "<p>Error uploading file</p>";
