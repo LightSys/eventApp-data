@@ -1,3 +1,5 @@
+<?php include("../templates/check-event-exists.php"); ?>
+
 <html>
 	
 	<body>

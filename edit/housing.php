@@ -1,3 +1,5 @@
+<?php include("../templates/check-event-exists.php"); ?>
+
 <?php
  // FIXME: this doesn't work
  if( isset($_POST['host'])) {

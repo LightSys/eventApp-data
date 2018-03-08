@@ -1,10 +1,7 @@
 <?php
 	include("../connection.php");
+	include("../templates/check-event-exists.php");
 
-	if (!isset($_GET['id'])) {
-		die("Undefined Event");
-	}
-	
     if(isset($_POST['name']))
 	{
 		if (!($stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone, welcome_message = :welcome_message visible = :visible, logo = :logo WHERE id = :id"))) {
