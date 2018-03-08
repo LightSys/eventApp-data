@@ -1,3 +1,31 @@
+<?php include("../templates/check-event-exists.php"); ?>
+<?php
+	include("../connection.php");
+	if( isset($_POST['header'])) {
+		foreach($_POST['header'] as $key => $header) {
+			if (!($stmt = $db->prepare("INSERT into contact_page_sections(event_ID, header, content) VALUES (:event_ID, :header, :content)"))) {
+				die(0);
+			}
+			
+			$event_ID = $_GET["id"];
+			$content = $_POST["content"][$key];
+			
+			if (!($stmt->bindValue(':event_ID', $event_ID))) {
+				die(1);
+			}
+			if (!($stmt->bindValue(':header', $header))) {
+				die(2);
+			}
+			if (!($stmt->bindValue(':content', $content))) {
+				die(3);
+			}
+			if(!($stmt->execute())) {
+				die(4);
+			}
+		}
+	}
+?>
+
 <html>
 	
 	<body>
@@ -32,10 +60,10 @@
 
 		function addSection() {
 			contactCounters[counter] = 0;
-			var html = '<div class="card"><div class="input">Header: <input type="text" name="header' + counter + '"></div>'
-						+ '<div class="input">Content: <textarea name="content' + counter + '"></textarea></div>'
-						+ '<div class="input">Contacts: <div id="contacts' + counter + '"></div><br><br>'
-						+ '<div class="btn" onclick="addContact(' + counter + ')">Add Contact</div></div>';
+			var html = '<div class="card"><div class="input">Header: <input type="text" name="header[]"></div>'
+						+ '<div class="input">Content: <textarea name="content[]"></textarea></div>'
+						+ '<div class="input">Contacts: <div id="contacts[]"></div><br><br>'
+						+ '<div class="btn" onclick="addContact([])">Add Contact</div></div>';
 			addFields(html, 'sectionCards');
 			counter++;
 		}

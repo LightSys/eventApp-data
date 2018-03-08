@@ -69,13 +69,7 @@ if(isset($_POST['action'])) {
 	die();
 }
 
-$get_info_page_stmt = $db->prepare("SELECT * FROM info_page where event_ID=:id");
-$get_info_page_stmt->bindValue(":id",$event_id);
-$get_info_page_stmt->execute();
-
-function createCard($name, $icon, $counter, $sections) {
-	
-}
+include("../templates/check-event-exists.php");
 
 ?>
 
@@ -97,6 +91,10 @@ function createCard($name, $icon, $counter, $sections) {
 				<input type = "hidden" name="action" value="updateAll">
 				<div id="informationCards">
 					<?php 
+					$get_info_page_stmt = $db->prepare("SELECT * FROM info_page where event_ID=:id");
+					$get_info_page_stmt->bindValue(":id",$event_id);
+					$get_info_page_stmt->execute();
+					
 					$index = 0; 
 					while($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 
