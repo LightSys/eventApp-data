@@ -18,6 +18,9 @@
 			if (!($stmt->bindValue(':content', $content))) {
 				die(3);
 			}
+			if(!($stmt->execute())) {
+				die(4);
+			}
 		}
 	}
 ?>
