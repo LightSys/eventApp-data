@@ -1,3 +1,5 @@
+<?php include("../templates/check-event-exists.php"); ?>
+
 <html>
 	<head>
 		<script type="text/javascript" src="../scripts/advanced.js"></script>
