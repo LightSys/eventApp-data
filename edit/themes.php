@@ -13,18 +13,15 @@
 		}		
 	
 		else if ($_POST['action'] == 'updateTheme') {	
-		
 			//update all theme records in the event 
-			$stmt = $db->prepare("UPDATE themes set name = :name, address = :address, phone = :phone 
+			$stmt = $db->prepare("UPDATE themes set theme_name = :themeName, theme_color = :themeColor
 				where event_ID=:event_id and sequential_ID=:sequence");
-			foreach($_POST['name'] as $key => $name) {		
-				$address = $_POST['address'][$key];
-				$phone = $_POST['phone'][$key];
-				
-				$stmt->bindValue(":sequence",$key);
-				$stmt->bindValue(':name', $name);
-				$stmt->bindValue(':address', $address);
-				$stmt->bindValue(':phone', $phone);
+			foreach($_POST['themeName'] as $key => $name) {	
+				$themeColor = $_POST['themeColor'][$key];
+			
+				$stmt->bindValue(":sequence", $key);
+				$stmt->bindValue(":themeColor", "#".$themeColor);
+				$stmt->bindValue(":themeName", $name);
 				$stmt->bindValue(':event_id', $event_id);
 				$stmt->execute();
 			}
@@ -45,6 +42,9 @@
 ?>
 
 <html>
+	<head>
+		<script type="text/javascript" src="../scripts/jscolor.js"></script>
+	</head>
 	<?php include("../templates/head.php"); ?>
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
@@ -71,17 +71,16 @@
 					while($get_theme_res = $get_theme_stmt->fetch(PDO::FETCH_ASSOC)) {
 						echo '<div class="card">';
 						echo '<div class="btn" onclick="deleteTheme('.$get_theme_res["sequential_ID"].')">X</div>';
-						echo '<div class="input">Name: <input type="text" name="name['.$get_theme_res["sequential_ID"].']" 
-							value = \''.$get_theme_res["name"].'\'></div>';
-						echo '<div class="input">Address: <input type="text" name="address['.$get_theme_res["sequential_ID"].']" 
-							value = \''.$get_theme_res["address"].'\'></div>';
-						echo '<div class="input">Phone: <input type="text" name="phone['.$get_theme_res["sequential_ID"].']" 
-							value = \''.$get_theme_res["phone"].'\'></div></div>';
+						echo '<div class="input">Theme Name: <input type="text" name="themeName['.$get_theme_res["sequential_ID"].']" 
+								value="'.$get_theme_res['theme_name'].'"></div>';
+						echo '<div class = "input">Theme Color: <input class="jscolor {closable:true,closeText:"Close"}" 
+								name="themeColor['.$get_theme_res["sequential_ID"].']" 
+								value="'.str_replace("#", "", $get_theme_res['theme_color']).'"></div></div>';
 					}
 				?>
 				</div>
 				<div class="btn" onclick="addTheme()">+ Add Theme</div>
-				<input type="submit" value="Submit">
+				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
 		<!--Form to be submitted when the add Theme button is clicked.
@@ -92,7 +91,7 @@
 		</form>
 		
 		<!--Form to be submitted when the delete theme button is clicked-->
-		<form id="deleteTheme" action="Themes.php" method="post">
+		<form id="deleteTheme" action="themes.php" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="deleteTheme">
 			<input type = "hidden" name="sequence" value="">
@@ -103,6 +102,10 @@
 	<script>		
 		function addTheme() {
 			$("#addTheme").submit();
+		}
+		
+		function save() {
+			$("#themeForm").submit();
 		}
 
 		function deleteTheme(sequential_id) {
