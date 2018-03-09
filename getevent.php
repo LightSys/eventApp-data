@@ -2,22 +2,15 @@
 header('Content-Type: application/json');
 
 include("connection.php");
+include("header.php");
 
 
 ///// General data
 
 
-if (!($get_event_stmt = $db->prepare("SELECT * FROM event where ID=:id"))) {
-	die();
-}
-
-if(!$get_event_stmt->bindParam(":id",$_GET['id'])) {
-	die();
-}
-
-if(!$get_event_stmt->execute()) {
-	die();
-}
+$get_event_stmt = $db->prepare("SELECT * FROM event where ID=:id");
+$get_event_stmt->bindParam(":id",$_GET['id']);
+$get_event_stmt->execute();
 
 $get_event_res = $get_event_stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -33,7 +26,7 @@ $output = array(
 		"refresh_expire" => date("m/d/Y",strtotime($get_event_res["refresh_expire"])),
 		"time_zone" => $get_event_res["time_zone"],
 		"welcome_message" => $get_event_res["welcome_message"],
-		"notifications_url" => strtok(full_url($_SERVER),'?') . "?id=" . $_GET['id'] . "&type=notifications",
+		"notifications_url" => stripFileName(). "getnotifications.php?id=" . $_GET['id'],
 		"year" => $get_event_res["year"],
 		"logo" => $get_event_res["logo"]
 	)
@@ -42,17 +35,9 @@ $output = array(
 
 ///// Themes
 
-if (!($get_themes_stmt = $db->prepare("SELECT * FROM themes where event_ID=:id"))) {
-	die();
-}
-
-if (!$get_themes_stmt->bindValue(":id", $get_event_res["internal_ID"])) {
-	die();
-}
-
-if (!$get_themes_stmt->execute()) {
-	die();
-}
+$get_themes_stmt = $db->prepare("SELECT * FROM themes where event_ID=:id");
+$get_themes_stmt->bindValue(":id", $get_event_res["internal_ID"]);
+$get_themes_stmt->execute();
 
 if($get_themes_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$output["theme"] = array();
@@ -67,17 +52,9 @@ if($get_themes_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC)) {
 ///// Contact page sections
 
 
-if (!($get_cpages_stmt = $db->prepare("SELECT * FROM contact_page_sections where event_ID=:id"))) {
-	die();
-}
-
-if(!$get_cpages_stmt->bindValue(":id",$get_event_res["internal_ID"])) {
-	die();
-}
-
-if(!$get_cpages_stmt->execute()) {
-	die();
-}
+$get_cpages_stmt = $db->prepare("SELECT * FROM contact_page_sections where event_ID=:id");
+$get_cpages_stmt->bindValue(":id",$get_event_res["internal_ID"]);
+$get_cpages_stmt->execute();
 
 // If we have a contact page section then include the contact_page section.
 if($get_cpages_res = $get_cpages_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -98,18 +75,9 @@ if($get_cpages_res = $get_cpages_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 ////// Contacts
 
-
-if (!($get_contacts_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id"))) {
-	die();
-}
-
-if(!$get_contacts_stmt->bindValue(":id",$get_event_res["internal_ID"])) {
-	die();
-}
-
-if(!$get_contacts_stmt->execute()) {
-	die();
-}
+get_contacts_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id");
+$get_contacts_stmt->bindValue(":id",$get_event_res["internal_ID"]);
+$get_contacts_stmt->execute();
 
 // If we have a contacts then include that section.
 if($get_contacts_res = $get_contacts_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -127,17 +95,9 @@ if($get_contacts_res = $get_contacts_stmt->fetch(PDO::FETCH_ASSOC)) {
 ///// Schedule
 
 
-if (!($get_sched_item_stmt = $db->prepare("SELECT * FROM schedule_items where event_ID=:id"))) {
-	die();
-}
-
-if(!$get_sched_item_stmt->bindValue(":id",$get_event_res["internal_ID"])) {
-	die();
-}
-
-if(!$get_sched_item_stmt->execute()) {
-	die();
-}
+$get_sched_item_stmt = $db->prepare("SELECT * FROM schedule_items where event_ID=:id");
+$get_sched_item_stmt->bindValue(":id",$get_event_res["internal_ID"]);
+$get_sched_item_stmt->execute();
 
 // If we have a schedule items then include that section.
 if($get_sched_item_res = $get_sched_item_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -165,17 +125,9 @@ if($get_sched_item_res = $get_sched_item_stmt->fetch(PDO::FETCH_ASSOC)) {
 ///// Housing
 
 
-if (!($get_housing_stmt = $db->prepare("SELECT * FROM housing where event_ID=:id"))) {
-	die();
-}
-
-if(!$get_housing_stmt->bindValue(":id",$get_event_res["internal_ID"])) {
-	die();
-}
-
-if(!$get_housing_stmt->execute()) {
-	die();
-}
+$get_housing_stmt = $db->prepare("SELECT * FROM housing where event_ID=:id");
+$get_housing_stmt->bindValue(":id",$get_event_res["internal_ID"]);
+$get_housing_stmt->execute();
 
 // If we have a housing items then include that section.
 if($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -186,17 +138,9 @@ if($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	do {
 
-		if (!($get_guest_stmt = $db->prepare("SELECT * FROM attendees where house_ID=:id"))) {
-			die();
-		}
-
-		if(!$get_guest_stmt->bindValue(":id",$get_housing_res["ID"])) {
-			die();
-		}
-
-		if(!$get_guest_stmt->execute()) {
-			die();
-		}
+		$get_guest_stmt = $db->prepare("SELECT * FROM attendees where house_ID=:id"));
+		$get_guest_stmt->bindValue(":id",$get_housing_res["ID"]);
+		$get_guest_stmt->execute();
 
 		$str = "";
 		$first = true;
@@ -221,17 +165,9 @@ if($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
 ///// Prayer Partners
 
 
-if (!($get_prayer_partners_stmt = $db->prepare("SELECT * FROM prayer_partners where event_ID=:id"))) {
-	die();
-}
-
-if(!$get_prayer_partners_stmt->bindValue(":id",$get_event_res["internal_ID"])) {
-	die();
-}
-
-if(!$get_prayer_partners_stmt->execute()) {
-	die();
-}
+$get_prayer_partners_stmt = $db->prepare("SELECT * FROM prayer_partners where event_ID=:id"));
+$get_prayer_partners_stmt->bindValue(":id",$get_event_res["internal_ID"]);
+$get_prayer_partners_stmt->execute();
 
 // Includes a prayer partner page if there is one
 if($get_prayer_partners_res = $get_prayer_partners_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -244,17 +180,9 @@ if($get_prayer_partners_res = $get_prayer_partners_stmt->fetch(PDO::FETCH_ASSOC)
 
 	do {
 
-		if (!($get_attendee_stmt = $db->prepare("SELECT * FROM attendees where prayer_group_ID=:id"))) {
-			die();
-		}
-
-		if(!$get_attendee_stmt->bindValue(":id",$get_prayer_partners_res["group_ID"])) {
-			die();
-		}
-
-		if(!$get_attendee_stmt->execute()) {
-			die();
-		}
+		$get_attendee_stmt = $db->prepare("SELECT * FROM attendees where prayer_group_ID=:id"));
+		$get_attendee_stmt->bindValue(":id",$get_prayer_partners_res["group_ID"]);
+		$get_attendee_stmt->execute();
 
 		$str = "";
 		$first = true;
@@ -278,17 +206,9 @@ if($get_prayer_partners_res = $get_prayer_partners_stmt->fetch(PDO::FETCH_ASSOC)
 ///// Additional Information Pages
 
 
-if (!($get_info_page_stmt = $db->prepare("SELECT * FROM info_page where event_ID=:id"))) {
-	die();
-}
-
-if(!$get_info_page_stmt->bindValue(":id",$get_event_res["internal_ID"])) {
-	die();
-}
-
-if(!$get_info_page_stmt->execute()) {
-	die();
-}
+$get_info_page_stmt = $db->prepare("SELECT * FROM info_page where event_ID=:id"));
+$get_info_page_stmt->bindValue(":id",$get_event_res["internal_ID"]);
+$get_info_page_stmt->execute();
 
 // Includes any additional information pages
 if($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -304,17 +224,9 @@ if($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 			"icon" => $get_event_res["prayer_icon"]
 		);
 
-		if (!($get_info_section_stmt = $db->prepare("SELECT * FROM info_page_sections where info_page_ID=:id"))) {
-			die();
-		}
-
-		if(!$get_info_section_stmt->bindValue(":id",$get_info_page_res["ID"])) {
-			die();
-		}
-
-		if(!$get_info_section_stmt->execute()) {
-			die();
-		}
+		$get_info_section_stmt = $db->prepare("SELECT * FROM info_page_sections where info_page_ID=:id"));
+		$get_info_section_stmt->bindValue(":id",$get_info_page_res["ID"]);
+		$get_info_section_stmt->execute();
 
 		while($get_info_section_res = $get_info_section_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$output["information_page"][$page][] = array(

@@ -6,7 +6,7 @@
     if( isset($_POST['action']) )
 	{
 		if($_POST['action'] == 'addContact') {
-			$stmt = $db->prepare("INSERT into contacts(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from info_page where event_ID=:event_id) as temp))");
+			$stmt = $db->prepare("INSERT into contacts(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from contacts where event_ID=:event_id) as temp))");
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
 		}		
@@ -27,8 +27,12 @@
 			}
 		}
 		else if ($_POST['action'] == 'deleteContact') {
-			
+			$stmt = $db->prepare("DELETE from contacts where event_ID=:id and sequential_ID=:sequence");
+			$stmt->bindValue(":id",$event_id);
+			$stmt->bindValue(":sequence", $_POST['sequence']);
+			$stmt->execute();
 		}
+
 		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
 		die();
 	}
@@ -53,17 +57,19 @@
 				<div id="contactCards">
 				<?php			
 					$id = $_GET["id"];
-					$get_info_page_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id order by sequential_ID asc");
-					$get_info_page_stmt->bindValue(":id",$event_id);
-					$get_info_page_stmt->execute();
+					$get_contact_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id order by sequential_ID asc");
+					$get_contact_stmt->bindValue(":id",$event_id);
+					$get_contact_stmt->execute();
 
-					while($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
-						echo '<div class="card"><div class="input">Name: <input type="text" name="name['.$get_info_page_res["sequential_ID"].']" 
-							value = \''.$get_info_page_res["name"].'\'></div>';
-						echo '<div class="input">Address: <input type="text" name="address['.$get_info_page_res["sequential_ID"].']" 
-							value = \''.$get_info_page_res["address"].'\'></div>';
-						echo '<div class="input">Phone: <input type="text" name="phone['.$get_info_page_res["sequential_ID"].']" 
-							value = \''.$get_info_page_res["phone"].'\'></div></div>';
+					while($get_contact_res = $get_contact_stmt->fetch(PDO::FETCH_ASSOC)) {
+						echo '<div class="card">';
+						echo '<div class="btn" onclick="deleteContact('.$get_contact_res["sequential_ID"].')">X</div>';
+						echo '<div class="input">Name: <input type="text" name="name['.$get_contact_res["sequential_ID"].']" 
+							value = \''.$get_contact_res["name"].'\'></div>';
+						echo '<div class="input">Address: <input type="text" name="address['.$get_contact_res["sequential_ID"].']" 
+							value = \''.$get_contact_res["address"].'\'></div>';
+						echo '<div class="input">Phone: <input type="text" name="phone['.$get_contact_res["sequential_ID"].']" 
+							value = \''.$get_contact_res["phone"].'\'></div></div>';
 					}
 				?>
 				</div>
@@ -76,6 +82,12 @@
 			<input type="hidden" name="action" value = "addContact">
 		</form>
 
+		<form id="deleteContact" action="contacts.php" method="post">
+			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
+			<input type = "hidden" name="action" value="deleteContact">
+			<input type = "hidden" name="sequence" value="">
+		</form>
+
 	</body>
 
 	<script>		
@@ -85,6 +97,11 @@
 			//			+ '<div class="input">Phone: <input type="text" name="phone[]"></div>';
 			//addFields(html, 'contactCards');
 			$("#addContact").submit();
+		}
+
+		function deleteContact(sequential_id) {
+			$('#deleteContact > input[name="sequence"]').val(sequential_id);
+			$("#deleteContact").submit();
 		}
 	</script>
 </html>
