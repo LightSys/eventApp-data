@@ -64,7 +64,7 @@ include("connection.php");
 include("helper.php");
 
 if(isset($_SESSION["username"])) {
-	header("Location: ". stripFileName() . "events.php");
+    header("Location: " . "events.php");
 	die();
 }
 
@@ -118,7 +118,6 @@ if(isset($_POST["username"])) {
     <style>
         body {
             text-align: center;
-            background-color: lightgrey;
         }
 
         form {
