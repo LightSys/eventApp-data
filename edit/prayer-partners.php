@@ -1,6 +1,4 @@
 <?php 
-	include("../templates/check-event-exists.php");
-
 	include("../connection.php");
 	include("../helper.php");
 	
@@ -19,8 +17,11 @@
 				$stmt->bindValue(':prayer_group_ID', $get_prayer_group_res["group_ID"]);
 				$reset_stmt->bindValue(':prayer_group_ID', $get_prayer_group_res["group_ID"]);
 				$reset_stmt->execute();
-
-				foreach($_POST['partner'][$get_prayer_group_res["sequential_ID"]] as $key => $sequence) {				
+	
+				foreach($_POST['partner'][$get_prayer_group_res["sequential_ID"]] as $key => $sequence) {
+					if($sequence == "remove") {
+						continue;
+					}
 					$stmt->bindValue(":sequence",$sequence);
 					$stmt->bindValue(':event_id', $event_id);
 					$stmt->execute();
@@ -83,18 +84,24 @@
 							$get_info_prayer_res->execute();
 
 							while($get_attendees_house_res = $get_info_prayer_res->fetch(PDO::FETCH_ASSOC)) {
-								echo '<select id="partner[' . $get_prayer_group_res['sequential_ID'] . ']['.$get_attendees_house_res['sequential_ID'].']">';
+								echo '<select name="partner[' . $get_prayer_group_res['sequential_ID'] . '][]" autocomplete="off">';
 								
 								$get_attendees_stmt = $db->prepare("SELECT * FROM attendees where event_ID=:id");
 								$get_attendees_stmt->bindValue(":id", $event_id);
 								$get_attendees_stmt->execute();
 
+								echo '<option value="remove">Remove</option>';
+
 								while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
-									echo '<option value="'.$get_attendees_res["sequential_ID"].'">' . $get_attendees_res['name'] . '</option>';
+									if($get_attendees_res["sequential_ID"] == $get_attendees_house_res['sequential_ID']) {
+										echo '<option value="'.$get_attendees_res["sequential_ID"].'" selected="selected">' . $get_attendees_res['name'] . '</option>';
+									}
+									else {
+										echo '<option value="'.$get_attendees_res["sequential_ID"].'" >' . $get_attendees_res['name'] . '</option>';
+									}
 								}
 
 								echo '</select>';
-								echo '<div class="btn" onclick="deletePartner('.$get_prayer_group_res['sequential_ID'].','.$get_attendees_house_res['sequential_ID'].')">X</div>';
 							}		
 							echo '<div class="btn" onclick="addPartner(' . $get_prayer_group_res['sequential_ID'] . ')">Add Partner</div>';
 							echo '</div>';
@@ -102,7 +109,7 @@
 							echo '</div>';
 						}
 					?>
-				</div></div>
+				</div>
 				<div class="btn" onclick="addGroup()">Add Group</div>
 				<div class="btn" id="save">Save</div>
 			</form>
@@ -133,11 +140,13 @@
 		}
 
 		function addPartner(num) {
-			var html = '<select id="partner[]"><?php
+			var html = '<select name="partner['+num+'][]"><?php
 					
 				$get_attendees_stmt = $db->prepare("SELECT * FROM attendees where event_ID=:id");
 				$get_attendees_stmt->bindValue(":id", $event_id);
 				$get_attendees_stmt->execute();
+
+				echo '<option value="remove">Remove</option>';
 
 				while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
 					echo '<option value="'.$get_attendees_res["sequential_ID"].'">' . $get_attendees_res['name'] . '</option>';
@@ -145,6 +154,10 @@
 				?></select>';
 
 			addFields(html, 'partners\\[' + num + '\\]');
+		}
+
+		function deletePartner(num, index) {
+
 		}
 	</script>
 
