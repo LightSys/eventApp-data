@@ -94,13 +94,6 @@ function stripFileName() {
 	return $url;
 }
 
-function stripFileName() {
-	$url = url_origin($_SERVER);
-	$url .= dirname($_SERVER['REQUEST_URI']) . "/";
-
-	return $url;
-}
-
 function getParentDir() {
 	$url = url_origin($_SERVER);
 	$url .= dirname(dirname($_SERVER['REQUEST_URI'])) . "/";
