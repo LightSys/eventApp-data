@@ -1,18 +1,17 @@
 <?php include("../helper.php"); ?>
+
 <?php
+	// include the database connection
 	include("../connection.php");
 
-	// die(var_dump($_POST));
-
+	// If we are coming from the events page to create a new event
 	if(isset($_POST['action']) && $_POST['action'] == 'newEvent') {
-		// die("newEvent");
-		$new_event_stmt = $db->prepare("INSERT into event SET ID = UUID()");
-		// $new_event_stmt->bindValue('', $);
-		// mysql uuid
 
-		// insert into event(ID, name,refresh,refresh_expire,time_zone,welcome_message,logo) values (UUID(),"hello",60,CURDATE(),"GMT-04:00", "hello world", x'12abcdef');
+		// create a new event
+		$new_event_stmt = $db->prepare("INSERT into event SET ID = UUID()");
 		$new_event_stmt->execute();
 
+		// get the id of that event
 		$new_event_id_stmt = $db->prepare("SELECT * from event where internal_ID = (select MAX(internal_ID) from event)");
 		$new_event_id_stmt->execute();
 
@@ -21,12 +20,10 @@
 			$id = $new_event_id['ID'];
 		}
 
+		// reroute to this page with the new event id
 		header("Location: ".full_url($_SERVER)."?id=".$id);
 		die();
-	}
-
-	// die("check if event exists");
-	include("../templates/check-event-exists.php");
+	}	
 
     if(isset($_POST['name']))
 	{
@@ -88,6 +85,8 @@
 			// die(7);
 		}
 	}
+	
+	include("../templates/check-event-exists.php");
 ?>
 
 

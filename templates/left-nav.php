@@ -4,8 +4,9 @@
     echo ( 
         '<nav>'
         . '<ol>'
-        . '<a href="general.php?id=' . $id . '"><li id="general">General</li></a>'
-        .    '<a href="contact-page.php?id=' . $id . '"><li id="contact-page-sections">Contact Page Sections</li></a>'
+        .     '<a href="../events.php"><li>Back to View/Edit</li></a>'
+        .     '<a href="general.php?id=' . $id . '"><li id="general">General</li></a>'
+        .     '<a href="contact-page.php?id=' . $id . '"><li id="contact-page-sections">Contact Page Sections</li></a>'
         .     '<a href="contacts.php?id=' . $id . '"><li id="contacts">Contacts</li></a>'
 		.     '<a href="attendees.php?id=' . $id . '"><li id="attendees">Attendees</li></a>'
         .     '<a href="schedule.php?id=' . $id . '"><li id="schedule">Schedule</li></a>'
