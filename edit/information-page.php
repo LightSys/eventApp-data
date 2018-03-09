@@ -46,7 +46,7 @@ if(isset($_POST['action'])) {
 		$get_info_page_stmt->execute();
 
 		if(!$get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
-			echo "Error: Tried to add an information page section to a non-existent info page.";
+			echo "Error: Tried to add an information page section to a non-existent info page." . $event_id . " " . $_POST['sequence'];
 			die();
 		}
 
@@ -71,7 +71,7 @@ if(isset($_POST['action'])) {
 			die();
 		}
 
-		$stmt = $db->prepare("DELETE from info_page_sections where info_page_ID=:id and sequential_ID=:sequence");
+		$stmt = $db->prepare("DELETE from info_page_sections where info_page_ID=:id and sequential_ID=:sequence and (SELECT COUNT(*) FROM (select ID from info_page_sections where info_page_ID=:id) as temp) > 1");
 		$stmt->bindValue(":id",$get_info_page_res["ID"]);
 		$stmt->bindValue(":sequence", $_POST['section_sequence']);
 		$stmt->execute();
@@ -110,6 +110,7 @@ include("../templates/check-event-exists.php");
 					while($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 						echo '<div class="card">';
+						echo '<div class="btn" onclick="deletePage('.$get_info_page_res["sequential_ID"].')">X</div>';
 						echo '<div class="input">Navigation Name: <input type="text" name="name[' . $get_info_page_res["sequential_ID"] . ']" value="'.$get_info_page_res["nav"].'"></div>';
 						echo '<div class="input">Icon: <input type="text" name="icon[' . $get_info_page_res["sequential_ID"] . ']" value="'.$get_info_page_res["icon"].'"></div>';
 
@@ -119,6 +120,7 @@ include("../templates/check-event-exists.php");
 
 						while($get_section_res = $get_sections_stmt->fetch(PDO::FETCH_ASSOC)) {
 							echo '<div class="section">';
+							echo '<div class="btn" onclick="deleteSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].')">X</div>';
 							echo '<div class="input">Header: <input type="text" name="header['. $get_info_page_res["sequential_ID"] .'][' . $get_section_res["sequential_ID"] . ']" value="'.$get_section_res["header"].'"></div>';
 							echo '<div class="input">Content: <textarea name="content[' . $get_info_page_res["sequential_ID"] . ']['. $get_section_res["sequential_ID"] .']">'.$get_section_res["content"].'</textarea></div>';
 							echo '</div>';
@@ -144,6 +146,20 @@ include("../templates/check-event-exists.php");
 			<input type = "hidden" name="sequence" value="">
 		</form>
 
+		<form id="deleteInfoPage" action="information-page.php" method="post">
+			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
+			<input type = "hidden" name="action" value="removeInfoPage">
+			<input type = "hidden" name="sequence" value="">
+		</form>
+
+		<form id="deleteInfoPageSection" action="information-page.php" method="post">
+			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
+			<input type = "hidden" name="action" value="removeSection">
+			<input type = "hidden" name="page_sequence" value="">
+			<input type = "hidden" name="section_sequence" value="">
+		</form>
+
+
 	</body>
 
 	<script>
@@ -154,8 +170,19 @@ include("../templates/check-event-exists.php");
 			$("#updateForm").submit();
 		}
 		function addSection(sequential_id) {
-			$("#addInfoPageSection > #sequence").value(sequential_ID);
+			$('#addInfoPageSection > input[name="sequence"]').val(sequential_id);
 			$("#addInfoPageSection").submit();
+		}
+
+		function deletePage(sequential_id) {
+			$('#deleteInfoPage > input[name="sequence"]').val(sequential_id);
+			$("#deleteInfoPage").submit();
+		}
+
+		function deleteSection(page_sequential_id, section_sequential_id) {
+			$('#deleteInfoPageSection > input[name="page_sequence"]').val(page_sequential_id);
+			$('#deleteInfoPageSection > input[name="section_sequence"]').val(section_sequential_id);
+			$("#deleteInfoPageSection").submit();
 		}
 	</script>
 	<?php include("../templates/head.php"); ?>

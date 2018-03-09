@@ -121,7 +121,7 @@ create table prayer_partners(
     group_ID            int AUTO_INCREMENT,
     event_ID            int,
     sequential_ID       int,
-    
+
     primary key (group_ID),
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
@@ -130,6 +130,8 @@ create table prayer_partners(
 -- Contains the names of attendees and where they have been assigned
 create table attendees (
     ID                  int AUTO_INCREMENT,
+    event_ID            int,
+    sequential_ID       int,
     name                varchar(30),
     house_ID            int,
     prayer_group_ID     int,

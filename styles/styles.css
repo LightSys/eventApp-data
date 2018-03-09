@@ -102,6 +102,11 @@ textarea {
     float: right;
 }
 
+select {
+    width: 400px;
+    float: right;
+}
+
 .input {
     width: 600px;
     border-bottom: 1px dotted grey;
