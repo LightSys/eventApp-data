@@ -115,12 +115,32 @@ if(isset($_POST["username"])) {
     <!--<link rel="stylesheet" href="styles/styles.css" /> FIXME: breaks username field--> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="scripts/scripts.js"></script>
+
+    <style>
+        body {
+            text-align: center;
+            background-color: lightgrey;
+        }
+
+        form {
+            padding: 60px;
+            background-color: #3E52A9;
+            display: inline-block;
+            color: white;
+            -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75);
+            box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75);
+            margin-top: 200px;
+        }
+
+
+    </style>
 </head>
 <body>
     <form id="form" method="post">
         <input type="hidden" name="create" value="false">
-        Username:<input name="username" type="text">
-        Password:<input name="password" type="password">
+        Username:<input name="username" type="text"><br>
+        Password:<input name="password" type="password"><br>
         <input type="submit">
         <a onclick="createUser()">Create</a>
     </form>
