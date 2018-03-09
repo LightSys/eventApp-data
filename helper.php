@@ -63,21 +63,22 @@ function json_encode_noescape($a=false)
 function getEventId() {
 	global $db;
 	if (!($get_event_stmt = $db->prepare("SELECT internal_ID FROM event where ID=:id"))) {
-		die();
+		die("error in get event stmt");
 	}
 
 	if(!$get_event_stmt->bindParam(":id",$_REQUEST['id'])) {
-		die();
+		die("error in bind param");
 	}
 
 	if(!$get_event_stmt->execute()) {
-		die();
+		die("error in execute");
 	}
 
 	$get_event_res = $get_event_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 	if(count($get_event_res) != 1) {
-		die();
+		echo(count($get_event_res));
+		die("error count != 1");
 	}
 
 	$get_event_res = $get_event_res[0];
