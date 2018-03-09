@@ -81,7 +81,7 @@
 				?>
 				</div>
 				<div class="btn" onclick="addContact()">+ Add Contact</div>
-				<input type="submit" value="Submit">
+				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
 		<!--Form to be submitted when the add contact button is clicked.
@@ -103,6 +103,10 @@
 	<script>		
 		function addContact() {
 			$("#addContact").submit();
+		}
+		
+		function save() {
+			$("#contactForm").submit();
 		}
 
 		function deleteContact(sequential_id) {

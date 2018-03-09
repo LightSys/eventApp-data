@@ -73,7 +73,7 @@
 				?>
 				</div>
 				<div class="btn" onclick="addAttendee()">+ Add Attendee</div>
-				<input type="submit" value="Submit">
+				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
 		<!--Form to be submitted when the add attendee button is clicked.
@@ -95,6 +95,10 @@
 	<script>		
 		function addAttendee() {
 			$("#addAttendee").submit();
+		}
+		
+		function save() {
+			$("#attendeeForm").submit();
 		}
 		
 		function deleteAttendee(sequential_id) {
