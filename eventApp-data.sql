@@ -27,7 +27,6 @@ create table event (
     refresh_expire      date,
     time_zone           varchar(9),
     welcome_message     varchar(100),
-    notif_url           varchar(150),
     logo                blob,
     contact_nav         varchar(25),
     contact_icon        varchar(100),
@@ -51,7 +50,8 @@ create table event (
 create table themes (
     ID                  int AUTO_INCREMENT,
     event_ID            int,    
-    theme_name          varchar(50),
+    sequential_ID       int,
+        theme_name          varchar(50),
     theme_color         varchar(7),
 
     primary key (ID),
@@ -150,6 +150,7 @@ create table attendees (
 create table notifications (
     ID                  int AUTO_INCREMENT,
     event_ID            int,
+    sequential_ID       int,    
     title               varchar(100),
     body                text,
     date                datetime,
