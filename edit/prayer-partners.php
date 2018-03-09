@@ -1,4 +1,30 @@
-<?php include("../templates/check-event-exists.php"); ?>
+<?php 
+	include("../connection.php");
+	include("../helper.php");
+
+	$event_id = getEventId();
+
+	if (isset($_POST['action'])) {
+		if ($_POST['action'] == "addPartner") {
+			$stmt = $db->prepare("UPDATE attendees set prayer_group_ID=:group_ID where event_ID=:event_ID and name=:name");
+			$stmt->bindValue(":id", $event_id);
+
+		} else if ($_POST['action'] == "addGroup") {
+			$stmt = $db->prepare('INSERT into prayer_partners(event_ID, sequential_ID) values (:id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from prayer_partners where event_ID=:id) as temp), "", "")')
+			$stmt->bindValue(":id", $event_id);
+			$stmt->execute();
+		} else if ($_POST['action'] == "updateGroups") {
+			$stmt = $db->prepare("UPDATE attendees set prayer_group_ID=:group_ID where event_ID=:event_ID and name=:name");
+			$stmt->bindValue(":id", $event_id);
+
+			foreach()
+		} 
+		// deletes
+	}
+
+	include("../templates/check-event-exists.php"); 
+
+?>
 
 <html>
 	
