@@ -29,7 +29,7 @@
 		else if ($_POST['action'] == 'deleteContact') {
 			
 		}
-		header("Location: ".$_SERVER['REQUEST_URI']."?id=".$_POST['id']);
+		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
 		die();
 	}
 ?>
