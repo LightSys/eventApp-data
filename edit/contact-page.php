@@ -1,36 +1,52 @@
 <?php 
-	include("../templates/check-event-exists.php"); 
 	include("../helper.php");
-
-	$event_id = getEventId();
-	
 	include("../connection.php");
+	$event_id = getEventId();
 	if( isset($_POST['action'])) {
 		
-		if(isset($_POST['insertSection'])) {
-			
+		if($_POST['action'] =="insertSection") {
 		}
-		else if(isset($_POST['insertContact'])) {
-			
+		else if($_POST['action'] =="deleteSection") {
 		}
-		else if(isset($_POST['updateSection'])) {
-			
-			$stmt = $db->prepare("update contact_page_sections(event_ID, header, content) VALUES (:event_ID, :header, :content)");
-			foreach($_POST['header'] as $key => $header) {
-				
-				$event_ID = $_GET["id"];
-				$content = $_POST["content"][$key];
-				
-				$stmt->bindValue(':event_ID', $event_ID);
-				$stmt->bindValue(':header', $header);
-				$stmt->bindValue(':content', $content);
-				$stmt->execute();
+		else if($_POST['action'] =="updateSection") {
+			if(isset($_POST['header'])) {
+				$stmt = $db->prepare("UPDATE contact_page_sections set header=:header, content=:content where event_ID=:id and sequential_ID=:sequence");
+				$stmt->bindValue(':id', $event_id);
+
+				foreach($_POST['header'] as $key => $header) {
+					$content = $_POST["content"][$key];
+					
+					$stmt->bindValue(':sequence', $key);
+					$stmt->bindValue(':header', $header);
+					$stmt->bindValue(':content', $content);
+					$stmt->execute();
+				}
 			}
+
+			$contact_str="";
+			$first = true;
+			foreach($_POST['contact'] as $key => $name) {
+				if($first) {
+					$first = false;
+				}
+				else {
+					$contact_str .= ":";
+				}
+				$contact_str .= $name;
+			}
+
+			$stmt = $db->prepare("UPDATE contact_page_sections set header=:header, content=:content where event_ID=:id order by sequential_ID desc limit 1");
+			$stmt->bindValue(':id', $event_id);
+			$stmt->bindValue(':header', $_POST["contacts_header"]);
+			$stmt->bindValue(':content', $contact_str);
+			$stmt->execute();
 		}
-		else if(isset($_POST['updateSection'])) {
-			
-		}
+
+		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+		die();
 	}
+
+	include("../templates/check-event-exists.php"); 
 ?>
 
 <html>
@@ -46,67 +62,98 @@
 
 		<section id="main">
 			<h1>Contact Page Sections</h1>
-			<form id="form" method="post">
+			<form id="form" action="contact-page.php" method="post">
+				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
+				<input type="hidden" name="action" value = "updateSection">
+
 				<div id="contactCards">
 					<?php			
 						$id = $_GET["id"];
-						$get_info_page_stmt = $db->prepare("SELECT * FROM contact_page_sections where event_ID=:id order by sequential_ID asc");
-						$get_info_page_stmt->bindValue(":id",$event_id);
-						$get_info_page_stmt->execute();
+						$get_sections_stmt = $db->prepare("SELECT * FROM contact_page_sections where event_ID=:id and ID != (SELECT MAX(ID) FROM contact_page_sections where event_ID=:id) order by sequential_ID asc");
+						$get_sections_stmt->bindValue(":id",$event_id);
+						$get_sections_stmt->execute();
 
-						while($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
-							echo '<div class="card"><div class="input">Name: <input type="text" name="name['.$get_info_page_res["sequential_ID"].']" 
-								value = \''.$get_info_page_res["name"].'\'></div>';
-							echo '<div class="input">Address: <input type="text" name="address['.$get_info_page_res["sequential_ID"].']" 
-								value = \''.$get_info_page_res["address"].'\'></div>';
-							echo '<div class="input">Phone: <input type="text" name="phone['.$get_info_page_res["sequential_ID"].']" 
-								value = \''.$get_info_page_res["phone"].'\'></div></div>';
-								
-							echo '<div class="card"><div class="input">Header: <input type="text" name="header['.$get_info_page_res["sequential_ID"].']"></div>';
-							echo '<div class="input">Content: <textarea name="content['.$get_info_page_res["sequential_ID"].']"></textarea></div>';
-							echo '<div class="input">Contacts: <div id="contacts['.$get_info_page_res["sequential_ID"].']"></div><br><br>';
-							echo '<div class="btn" onclick="addContact()">Add Contact</div></div>';
+						while($get_sections_res = $get_sections_stmt->fetch(PDO::FETCH_ASSOC)) {
+							echo '<div class="card">'; 
+							echo '<div class="input">Header: <input type="text" name="header['.$get_sections_res["sequential_ID"].']" value="'.$get_sections_res["header"].'"></div>';
+							echo '<div class="input">Content: <textarea name="content['.$get_sections_res["sequential_ID"].']">'.$get_sections_res["content"].'</textarea></div>';
+							echo '</div>';
 						}
+
+						$get_last_section_stmt = $db->prepare("SELECT * FROM contact_page_sections where event_ID=:id order by sequential_ID desc limit 1");
+						$get_last_section_stmt->bindValue(":id",$event_id);
+						$get_last_section_stmt->execute();
+						$get_last_section_res = $get_last_section_stmt->fetch(PDO::FETCH_ASSOC);
+
+						$contacts = explode(":",$get_last_section_res["content"]);
+						if($get_last_section_res["content"] == "") {
+							$contacts = array();
+						}
+
+						echo '<div class="card">';
+						echo '<div class="input">Header: <input type="text" name="contacts_header" value="'.$get_last_section_res["header"].'"></div>';
+						echo '<div class="input">Contacts: <div id="contact_list">'; 
+
+						foreach($contacts as $contact) {
+
+							echo '<select name="contact[]" autocomplete="off">';
+							
+							$get_contacts_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id");
+							$get_contacts_stmt->bindValue(":id", $event_id);
+							$get_contacts_stmt->execute();
+
+							echo '<option value="remove">Remove</option>';
+
+							while($get_contacts_res = $get_contacts_stmt->fetch(PDO::FETCH_ASSOC)) {
+								if($get_contacts_res['name'] == $contact) {
+									echo '<option value='. $get_contacts_res['sequential_ID'] .' selected>' . $get_contacts_res['name'] . '</option>';
+								} else {
+									echo '<option>' . $get_contacts_res['name'] . '</option>';
+								}
+							}
+
+							echo '</select>';
+						}
+
+						echo'</div>';
+						echo '<div class="btn" onclick="addContact()">Add Contact</div></div>';
+						echo '</div>';
 					?>
 				</div>
-				<div class="btn" onclick="addSection()">+ Add Contact Page Section</div>
+				<!-- This is disabled for now. Once the app supports multiple sections, this should be added. -->
+				<!-- <div class="btn" onclick="addSection()">+ Add Contact Page Section</div> -->
 				<div class="btn" id="save">Save</div>
 			</form>
+
 			<form id = "addSection" action = "contact-page.php" method="post">	
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "addSection">
 			</form>
-			<form id = "addContact" action = "contact-page.php" method="post">	
-				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-				<input type="hidden" name="action" value = "addContact">
-			</form>
+
 		</section>
 
 	</body>
 
 	<?php include("../templates/head.php"); ?>
 	<script>
-		var counter = 0;
-		var contactCounters = [];
-		
-		$(document).ready(function() {
-			addSection();
-		});
 
 		function addSection() {
-			//contactCounters[counter] = 0;
-			//var html = '<div class="card"><div class="input">Header: <input type="text" name="header[]"></div>'
-				//		+ '<div class="input">Content: <textarea name="content[]"></textarea></div>'
-				//		+ '<div class="input">Contacts: <div id="contacts[]"></div><br><br>'
-				//		+ '<div class="btn" onclick="addContact([])">Add Contact</div></div>';
-			//addFields(html, 'sectionCards');
-			//counter++;
+		
 		}
 
-		function addContact(num) {
-			var html = '<select id="contact' + contactCounters[num] + '"><option>contact name</option></select>';
-			addFields(html, "contacts" + num);
-			contactCounters[num]++;
+		function addContact() {
+			var html = '<select name="contact[]" autocomplete="off"><?php
+					
+					$get_contacts_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id");
+					$get_contacts_stmt->bindValue(":id", $event_id);
+					$get_contacts_stmt->execute();
+
+					echo '<option value="remove">Remove</option>';
+					while($get_contacts_res = $get_contacts_stmt->fetch(PDO::FETCH_ASSOC)) {
+						echo '<option value="'. $get_contacts_res['name'] .'">' . $get_contacts_res['name'] . '</option>';
+					}
+					?></select>';
+			addFields(html, "contact_list");
 		}
 	</script>
 </html>
