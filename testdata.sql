@@ -5,6 +5,7 @@ insert into themes(theme_name, theme_color) values ('Cedarville Blue', '#003963'
 insert into housing(event_ID,sequential_id, host_name, driver) values (1,1, 'Godzilla', 'Baby');
 insert into prayer_partners(event_ID,sequential_id) values (1,1);
 insert into attendees(event_ID, sequential_ID,house_ID, prayer_group_ID, name) values (1,1,1, 1, 'First Last');
+insert into attendees(event_ID, sequential_ID,house_ID, prayer_group_ID, name) values (1,2,null, null, 'Josiah Bills');
 insert into notifications(event_ID, title, body, date, refresh) values (1, 'Data in Tables', 'Look! There\'s data! Isn\'t that exciting?', CURDATE(), 30);
 insert into notifications(event_ID, title, body, date, refresh) values (1, 'Notification', 'This is another notification.', CURDATE(), 30);
 insert into schedule_items(event_ID,sequential_id, date, start_time, length, description, location, category) values (1,1, CURDATE(), 800, 53, 'Crying internally', 'Nowhere', 'Cedarville Blue');
