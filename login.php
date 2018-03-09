@@ -48,8 +48,8 @@ function hash_equals($knownString, $userInput) {
         trigger_error('Expected user_input to be a string, '.gettype($userInput).' given', E_USER_WARNING);
         return false;
     }
-    $knownLen = Binary::strlen($knownString);
-    $userLen = Binary::strlen($userInput);
+    $knownLen = strlen($knownString);
+    $userLen = strlen($userInput);
     if ($knownLen !== $userLen) {
         return false;
     }
@@ -64,7 +64,7 @@ include("connection.php");
 include("helper.php");
 
 if(isset($_SESSION["username"])) {
-	header("Location: ". stripFileName() . "/events.php");
+	header("Location: ". stripFileName() . "events.php");
 	die();
 }
 
@@ -92,7 +92,7 @@ if(isset($_POST["username"])) {
 	}
 
 	$split = explode('$', $get_info_page_res["password"]);
-	$salt =  pack("H*" $split[1]);
+	$salt =  pack("H*", $split[1]);
 	$password = $split[0];
 
 	$res = pbkdf2('sha256', $_POST["password"], $salt, 64000, 512);
@@ -110,18 +110,23 @@ if(isset($_POST["username"])) {
 ?>
 
 <html>
-<?php include("templates/head.php"); ?>
+<head>
+    <title>LightSys Event App Data Generator</title>
+    <!--<link rel="stylesheet" href="styles/styles.css" /> FIXME: breaks username field--> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="scripts/scripts.js"></script>
+</head>
 <body>
-<form id="form" method="post">
-<input type="hidden" name="create" value="false">
-Username:<input name="username" type="text">
-Password:<input name="password" type="password">
-<input type="submit">
-<a onclick="create()">Create</a>
-</form>
+    <form id="form" method="post">
+        <input type="hidden" name="create" value="false">
+        Username:<input name="username" type="text">
+        Password:<input name="password" type="password">
+        <input type="submit">
+        <a onclick="createUser()">Create</a>
+    </form>
 </body>
 <script>
-	function create() {
+	function createUser() {
 		$("#form > input[name='create']").val("true");
 		$("#form").submit();
 	}
