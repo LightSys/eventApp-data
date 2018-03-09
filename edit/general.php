@@ -44,7 +44,7 @@
 	}	
 
     if(isset($_POST['name'])) {
-		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone, welcome_message = :welcome_message, visible = :visible, logo = :logo WHERE id = :id");
+		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone, welcome_message = :welcome_message, visible = :visible, logo = :logo, contact_nav=:contact_nav,contact_icon=:contact_icon,sched_nav=:sched_nav,sched_icon=:sched_icon,housing_nav=:housing_nav,housing_icon=:housing_icon,prayer_nav=:prayer_nav,prayer_icon=:prayer_icon,notif_nav=:notif_nav,notif_icon=:notif_icon WHERE id = :id");
 		
 		$name = $_POST['name'];
 		$timeZone = $_POST['timezone'];
@@ -84,6 +84,17 @@
 		$stmt->bindValue(':id', $id);
 		$stmt->bindValue(':visible', $visible);	
 		$stmt->bindValue(':logo', $logo);
+
+		$stmt->bindValue(":contact_nav", $_POST["contact_nav"]);
+		$stmt->bindValue(":contact_icon", $_POST["contact_icon"]);
+		$stmt->bindValue(":sched_nav", $_POST["sched_nav"]);
+		$stmt->bindValue(":sched_icon", $_POST["sched_icon"]);
+		$stmt->bindValue(":housing_nav", $_POST["housing_nav"]);
+		$stmt->bindValue(":housing_icon", $_POST["housing_icon"]);
+		$stmt->bindValue(":prayer_nav", $_POST["prayer_nav"]);
+		$stmt->bindValue(":prayer_icon", $_POST["prayer_icon"]);
+		$stmt->bindValue(":notif_nav", $_POST["notif_nav"]);
+		$stmt->bindValue(":notif_icon", $_POST["notif_icon"]);
 		$stmt->execute();
 
 		// reroute to this page with the new event id
@@ -93,7 +104,7 @@
 	
 	include("../templates/check-event-exists.php");
 
-	$get_event_stmt = $db->prepare("SELECT name, time_zone, welcome_message, visible FROM event where ID=:id");
+	$get_event_stmt = $db->prepare("SELECT name, time_zone, welcome_message, visible,contact_nav,contact_icon,sched_nav,sched_icon,housing_nav,housing_icon,prayer_nav,prayer_icon,notif_nav,notif_icon FROM event where ID=:id");
 	$get_event_stmt->bindValue(":id", $_GET["id"]);
 	$get_event_stmt->execute();
 
@@ -127,6 +138,16 @@
 						<div class="input">Logo:<input type="file" name="logo" ></div>
 						<div class="input">Time Zone:<input type="text" name="timezone" value="<?php echo $get_event_res["time_zone"] ?>"></div>
 						<div class="input">Welcome Message:<input type="text" name="welcome" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
+						<div class="input">Contact Page Nav:<input type="text" name="contact_nav" value="<?php echo $get_event_res["contact_nav"] ?>"></div>
+						<div class="input">Contact Page Icon:<input type="text" name="contact_icon" value="<?php echo $get_event_res["contact_icon"] ?>"></div>
+						<div class="input">Schedule Page Nav:<input type="text" name="sched_nav" value="<?php echo $get_event_res["sched_nav"] ?>"></div>
+						<div class="input">Schedule Page Icon:<input type="text" name="sched_icon" value="<?php echo $get_event_res["sched_icon"] ?>"></div>
+						<div class="input">Housing Page Nav:<input type="text" name="housing_nav" value="<?php echo $get_event_res["housing_nav"] ?>"></div>
+						<div class="input">Housing Page Icon:<input type="text" name="housing_icon" value="<?php echo $get_event_res["housing_icon"] ?>"></div>
+						<div class="input">Prayer Partners Page Nav:<input type="text" name="prayer_nav" value="<?php echo $get_event_res["prayer_nav"] ?>"></div>
+						<div class="input">Prayer Partners Page Icon:<input type="text" name="prayer_icon" value="<?php echo $get_event_res["prayer_icon"] ?>"></div>
+						<div class="input">Notification Page Nav:<input type="text" name="notif_nav" value="<?php echo $get_event_res["notif_nav"] ?>"></div>
+						<div class="input">Notification Page Icon:<input type="text" name="notif_icon" value="<?php echo $get_event_res["notif_icon"] ?>"></div>
 						<div class="input">Visible:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
 					</div>
 					<br>
