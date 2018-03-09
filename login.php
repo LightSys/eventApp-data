@@ -112,7 +112,6 @@ if(isset($_POST["username"])) {
 <html>
 <head>
     <title>LightSys Event App Data Generator</title>
-    <!--<link rel="stylesheet" href="styles/styles.css" /> FIXME: breaks username field--> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="scripts/scripts.js"></script>
 
@@ -140,7 +139,7 @@ if(isset($_POST["username"])) {
     <form id="form" method="post">
         <input type="hidden" name="create" value="false">
         Username:<input name="username" type="text"><br>
-        Password:<input name="password" type="password"><br>
+        Password:&nbsp;<input name="password" type="password"><br>
         <input type="submit">
         <a onclick="createUser()">Create</a>
     </form>
