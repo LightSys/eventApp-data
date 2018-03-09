@@ -138,6 +138,8 @@ create table attendees (
     prayer_group_ID     int,
 
     primary key (ID),
+    foreign key(event_ID) references event(internal_ID)
+        on delete cascade,
     foreign key (house_ID) references housing(ID)
         on delete set null,
     foreign key (prayer_group_ID) references prayer_partners(group_ID)
