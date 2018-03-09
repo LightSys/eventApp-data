@@ -1,6 +1,29 @@
+<?php include("../helper.php"); ?>
+
 <?php
+	// include the database connection
 	include("../connection.php");
-	include("../templates/check-event-exists.php");
+
+	// If we are coming from the events page to create a new event
+	if(isset($_POST['action']) && $_POST['action'] == 'newEvent') {
+
+		// create a new event
+		$new_event_stmt = $db->prepare("INSERT into event SET ID = UUID()");
+		$new_event_stmt->execute();
+
+		// get the id of that event
+		$new_event_id_stmt = $db->prepare("SELECT * from event where internal_ID = (select MAX(internal_ID) from event)");
+		$new_event_id_stmt->execute();
+
+		$id;
+		while($new_event_id = $new_event_id_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$id = $new_event_id['ID'];
+		}
+
+		// reroute to this page with the new event id
+		header("Location: ".full_url($_SERVER)."?id=".$id);
+		die();
+	}	
 
     if(isset($_POST['name']))
 	{
@@ -62,6 +85,8 @@
 			// die(7);
 		}
 	}
+	
+	include("../templates/check-event-exists.php");
 ?>
 
 

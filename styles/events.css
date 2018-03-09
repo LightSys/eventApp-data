@@ -1,0 +1,52 @@
+.event-btn {
+    width: 300px;
+    height: 300px;
+    display: block;
+    margin: 30px;
+    padding: 10px;
+    background-color: #3E52A9;
+    float: left;
+    text-align: center;
+    color: white;
+    border-radius: 5px;
+    font-size: 16pt;
+    font-family: sans-serif;
+
+    /* Buttons are not selectable */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.event-btn:hover {
+    display: inline-block;
+    padding-left: 19px;
+    padding-right: 19px;
+    padding: 9px;
+    border: 1px solid #3E52A9;
+    color: #3E52A9;
+    border-radius: 5px;
+    background-color: transparent;
+
+    /* Buttons are not selectable */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.center-row {
+    margin: auto; 
+    margin-top: 200px;
+    display: block; 
+    width: 780px;
+}
+
+.btn-contents {
+    margin-top: 100px;
+}
