@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 
 include("connection.php");
-include("header.php");
+include("helper.php");
 
 
 ///// General data

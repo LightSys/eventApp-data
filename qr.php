@@ -1,4 +1,5 @@
 <?php
+// Generates QR code for event that is used to obtain JSON files for app
 
     include('phpqrcode/qrlib.php');
     include('helper.php');
