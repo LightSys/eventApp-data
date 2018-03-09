@@ -9,10 +9,11 @@
     $stmt->execute();
 
     $color;
-    if($stmt_res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $stmt_res = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($stmt_res['theme_color'] != '') {
         $color = $stmt_res['theme_color'];
     } else {
-        $color = "#3E52A";
+        $color = "#3E52A9";
     }
 
     echo ( 
@@ -29,7 +30,6 @@
         .     '<a href="housing.php?id=' . $id . '"><li id="housing">Housing</li></a>'
         .     '<a href="prayer-partners.php?id=' . $id . '"><li id="prayer-partners">Prayer Partners</li></a>'
         .     '<a href="advanced.php?id=' . $id . '"><li id="advanced">Advanced</li></a>'
-        .     '<a href="../qr.php?id=' . $id . '"><li id="qr">Generate QR Code</li></a>'
         . '</ol>'
         . '</nav>');
 
