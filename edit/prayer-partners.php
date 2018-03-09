@@ -1,4 +1,6 @@
 <?php 
+	include("../templates/check-event-exists.php");
+
 	include("../connection.php");
 	include("../helper.php");
 	
@@ -24,6 +26,7 @@
 			$stmt = $db->prepare("INSERT into prayer-partners(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from prayer-partners where event_ID=:event_id) as temp))");
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
+
 		}
 		else if ($_POST['action'] == 'deleteGroup') {
 			
@@ -31,7 +34,6 @@
 		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
 		die();
 	}
-
 	include("../templates/check-event-exists.php");
 
 ?>
