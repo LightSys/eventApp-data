@@ -84,4 +84,21 @@ function getEventId() {
 
 	return $get_event_res["internal_ID"];
 }
+
+function stripFileName() {
+	$url = full_url($_SERVER);
+    $url = substr($url, 7);
+    $token = strtok($url, "/");
+
+    $val = substr_count($url, "/");
+
+    $url = "";
+    while ($val > 0 && $token !== false) {
+        $url .= $token."/";
+        $token = strtok("/");
+        $val--;
+	}
+	
+	return $url;
+}
 ?>

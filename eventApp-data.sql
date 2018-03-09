@@ -61,6 +61,7 @@ create table themes (
 create table contact_page_sections (
     ID                  int AUTO_INCREMENT,
     event_ID            int,
+    sequential_ID       int,
     header              varchar(100),
     content             text,
 
@@ -73,6 +74,7 @@ create table contact_page_sections (
 create table contacts (
     ID                  int AUTO_INCREMENT,
     event_ID            int,    
+    sequential_ID       int,
     name                varchar(100),
     address             varchar(100),
     phone               varchar(17),
@@ -86,7 +88,8 @@ create table contacts (
 -- Contains information to lay out a schedule
 create table schedule_items (
     ID                  int AUTO_INCREMENT,
-    event_ID            int,    
+    event_ID            int,
+    sequential_ID       int,    
     date                date,
     start_time          numeric(4,0),
     length              int,
@@ -104,6 +107,7 @@ create table schedule_items (
 create table housing (
     ID                  int AUTO_INCREMENT,
     event_ID            int,    
+    sequential_ID       int,
     host_name           varchar(100),
     driver              varchar(100),
 
@@ -116,7 +120,8 @@ create table housing (
 create table prayer_partners(
     group_ID            int AUTO_INCREMENT,
     event_ID            int,
-
+    sequential_ID       int,
+    
     primary key (group_ID),
     foreign key (event_ID) references event(internal_ID)
         on delete cascade

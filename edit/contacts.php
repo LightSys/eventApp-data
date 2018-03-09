@@ -1,4 +1,3 @@
-<?php include("../templates/check-event-exists.php"); ?>
 <?php	
 	include("../connection.php");
 	include("../helper.php");
@@ -7,16 +6,13 @@
     if( isset($_POST['action']) )
 	{
 		if($_POST['action'] == 'addContact') {
-			$stmt = $db->prepare("INSERT into contacts(event_id) values(:event_id)");
+			$stmt = $db->prepare("INSERT into contacts(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from info_page where event_ID=:event_id) as temp))");
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
-			
-			header("Location: ".$_SERVER['REQUEST_URI']."?id=".$_POST['id']);
-			die();
 		}		
 		else if ($_POST['action'] == 'updateContact') {		
-			$stmt = $db->prepare("UPDATE contacts set name = :name, address = :address, phone = :phone, 
-				event_ID = :event_id where event_ID=:id and sequential_ID=:sequence");
+			$stmt = $db->prepare("UPDATE contacts set name = :name, address = :address, phone = :phone 
+				where event_ID=:event_id and sequential_ID=:sequence");
 		
 			foreach($_POST['name'] as $key => $name) {		
 				$address = $_POST['address'][$key];
@@ -33,6 +29,8 @@
 		else if ($_POST['action'] == 'deleteContact') {
 			
 		}
+		header("Location: ".$_SERVER['REQUEST_URI']."?id=".$_POST['id']);
+		die();
 	}
 ?>
 
@@ -54,18 +52,21 @@
 				<input type="hidden" name="action" value = "updateContact">
 				<div id="contactCards">
 				<?php			
-					$event_id = $_GET["id"];
-					$get_info_page_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id");
+					$id = $_GET["id"];
+					$get_info_page_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id order by sequential_ID asc");
 					$get_info_page_stmt->bindValue(":id",$event_id);
 					$get_info_page_stmt->execute();
 
 					while($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
-						echo '<div class="card"><div class="input">Name: <input type="text" name="name[]" value = \''.$get_info_page_res["name"].'\'></div>';
-						echo '<div class="input">Address: <input type="text" name="address[]" value = \''.$get_info_page_res["address"].'\'></div>';
-						echo '<div class="input">Phone: <input type="text" name="phone[]" value = \''.$get_info_page_res["phone"].'\'></div>';
+						echo '<div class="card"><div class="input">Name: <input type="text" name="name['.$get_info_page_res["sequential_ID"].']" 
+							value = \''.$get_info_page_res["name"].'\'></div>';
+						echo '<div class="input">Address: <input type="text" name="address['.$get_info_page_res["sequential_ID"].']" 
+							value = \''.$get_info_page_res["address"].'\'></div>';
+						echo '<div class="input">Phone: <input type="text" name="phone['.$get_info_page_res["sequential_ID"].']" 
+							value = \''.$get_info_page_res["phone"].'\'></div></div>';
 					}
 				?>
-				</div></br>
+				</div>
 				<div class="btn" onclick="addContact()">+ Add Contact</div>
 				<input type="submit" value="Submit">
 			</form>
