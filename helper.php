@@ -87,9 +87,23 @@ function getEventId() {
 }
 
 // Preserves and returns the full url with the file name at the end removed
-function stripFileName($distance=1) {
+function stripFileName() {
 	$url = url_origin($_SERVER);
-	$url .= dirname($_SERVER['REQUEST_URI'],$distance) . "/";
+	$url .= dirname($_SERVER['REQUEST_URI']) . "/";
+
+	return $url;
+}
+
+function stripFileName() {
+	$url = url_origin($_SERVER);
+	$url .= dirname($_SERVER['REQUEST_URI']) . "/";
+
+	return $url;
+}
+
+function getParentDir() {
+	$url = url_origin($_SERVER);
+	$url .= dirname(dirname($_SERVER['REQUEST_URI'])) . "/";
 
 	return $url;
 }
