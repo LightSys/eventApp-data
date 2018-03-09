@@ -85,20 +85,11 @@ function getEventId() {
 	return $get_event_res["internal_ID"];
 }
 
+// Preserves and returns the full url with the file name at the end removed
 function stripFileName() {
-	$url = full_url($_SERVER);
-    $url = substr($url, 7);
-    $token = strtok($url, "/");
+	$url = url_origin($_SERVER);
+	$url .= dirname($_SERVER['REQUEST_URI']) . "/";
 
-    $val = substr_count($url, "/");
-
-    $url = "";
-    while ($val > 0 && $token !== false) {
-        $url .= $token."/";
-        $token = strtok("/");
-        $val--;
-	}
-	
 	return $url;
 }
 ?>
