@@ -26,9 +26,7 @@
 			$stmt = $db->prepare("INSERT into prayer-partners(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from prayer-partners where event_ID=:event_id) as temp))");
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
-		}		
-		else if ($_POST['action'] == 'deletePartner') {
-			
+
 		}
 		else if ($_POST['action'] == 'deleteGroup') {
 			
@@ -36,6 +34,8 @@
 		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
 		die();
 	}
+	include("../templates/check-event-exists.php");
+
 ?>
 
 <html>
@@ -104,21 +104,8 @@
 	</body>
 	<?php include("../templates/head.php"); ?>
 	<script>
-		//var counter = 0;
-		//var partnerCounters = [];
-		
-		//$(document).ready(function() {
-		//	addGroup();
-		//});
 
 		function addGroup() {
-			//partnerCounters[counter] = 0;
-			//var html = '<div class="card">Partners: <br><div id="partners' + counter + '">'
-			//			+ '<div class="input"><input type="text" name="partner' + partnerCounters[counter] + '"></div></div>'					
-			//			+ '<br><div class="btn" onclick="addPartner(' + counter + ')">Add Partner</div></div>';
-			//addFields(html, 'sectionCards');
-			//partnerCounters[counter]++;
-			//counter++;
 			$("#addGroup").submit();
 		}
 

@@ -1,5 +1,6 @@
 -- Recreates database with event data
 
+SET FOREIGN_KEY_CHECKS = 0;
 drop table event;
 drop table contact_page_sections;
 drop table contacts;
@@ -13,6 +14,7 @@ drop table notifications;
 drop table themes;
 drop table users;
 drop table event_users;
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- Contains general information about events and data needed
 -- for an event's navigation menu
@@ -43,7 +45,7 @@ create table event (
     visible             boolean,
 
     primary key (internal_ID)
-);
+) ENGINE = INNODB;
 
 -- Contains information about themes
 create table themes (
@@ -55,7 +57,7 @@ create table themes (
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
-);
+) ENGINE = INNODB;
 
 -- Contains information for laying out sections of the contact page
 create table contact_page_sections (
@@ -68,7 +70,7 @@ create table contact_page_sections (
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
-);
+) ENGINE = INNODB;
 
 -- Stores contact information to populate contact page
 create table contacts (
@@ -83,7 +85,7 @@ create table contacts (
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
-);
+) ENGINE = INNODB;
 
 -- Contains information to lay out a schedule
 create table schedule_items (
@@ -99,9 +101,8 @@ create table schedule_items (
 
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
-        on delete cascade,
-    foreign key (category) references theme(theme_name)
-);
+        on delete cascade
+) ENGINE = INNODB;
 
 -- Contains information about housing arrangements
 create table housing (
@@ -114,7 +115,7 @@ create table housing (
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
-);
+) ENGINE = INNODB;
 
 -- Contains information about the placement of people in prayer groups
 create table prayer_partners(
@@ -125,7 +126,7 @@ create table prayer_partners(
     primary key (group_ID),
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
-);
+) ENGINE = INNODB;
 
 -- Contains the names of attendees and where they have been assigned
 create table attendees (
@@ -139,9 +140,9 @@ create table attendees (
     primary key (ID),
     foreign key (house_ID) references housing(ID)
         on delete set null,
-    foreign key (prayer_group_ID) references prayer_partners(ID)
+    foreign key (prayer_group_ID) references prayer_partners(group_ID)
         on delete set null
-);
+) ENGINE = INNODB;
 
 -- Stores any information needed for a notification
 create table notifications (
@@ -155,7 +156,7 @@ create table notifications (
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
-);
+) ENGINE = INNODB;
 
 -- Defines a link on the nav bar for a user-defined page
 create table info_page (
@@ -168,7 +169,7 @@ create table info_page (
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
-);
+) ENGINE = INNODB;
 
 -- Contains information to lay out a user-defined page
 create table info_page_sections (
@@ -181,16 +182,16 @@ create table info_page_sections (
     primary key (ID),
     foreign key (info_page_ID) references info_page(ID)
         on delete cascade
-);
+) ENGINE = INNODB;
 
 -- Stores usernames and hashed passwords
 create table users (
     ID                  int AUTO_INCREMENT,
     username            varchar(30) UNIQUE,
-    password            varchar(98),
+    password            varchar(2048),
 
     primary key (ID)
-);
+) ENGINE = INNODB;
 
 -- Associates users with events they have created or can access
 create table event_users (
@@ -203,4 +204,4 @@ create table event_users (
         on delete set null,
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
-);
+) ENGINE = INNODB;

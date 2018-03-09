@@ -34,7 +34,7 @@ nav > ol > a > li {
 #main {
     padding: 50px;
     float: left;
-    width: calc(100% - 200px);
+    width: calc(100% - 300px);
     margin-left: 200px;
 }
 
