@@ -53,7 +53,7 @@
 
 		<section id="main">
 			<h1>Attendees</h1>
-			<form id="form" action = "attendees.php" method="post">
+			<form id="attendeeForm" action = "attendees.php" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateAttendee">
 				<div id="attendeeCards">
