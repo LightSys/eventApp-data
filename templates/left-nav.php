@@ -29,6 +29,7 @@
         .     '<a href="housing.php?id=' . $id . '"><li id="housing">Housing</li></a>'
         .     '<a href="prayer-partners.php?id=' . $id . '"><li id="prayer-partners">Prayer Partners</li></a>'
         .     '<a href="advanced.php?id=' . $id . '"><li id="advanced">Advanced</li></a>'
+        .     '<a href="../qr.php?id=' . $id . '"><li id="qr">Generate QR Code</li></a>'
         . '</ol>'
         . '</nav>');
 
