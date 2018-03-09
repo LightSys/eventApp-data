@@ -3,17 +3,11 @@ header('Content-Type: application/json');
 
 include("connection.php");
 
-if (!($get_event_stmt = $db->prepare("SELECT internal_ID,notif_nav,notif_icon FROM event where ID=:id"))) {
-	die();
-}
+$get_event_stmt = $db->prepare("SELECT internal_ID,notif_nav,notif_icon FROM event where ID=:id");
 
-if(!$get_event_stmt->bindParam(":id",$_GET['id'])) {
-	die();
-}
+$get_event_stmt->bindParam(":id",$_GET['id']);
 
-if(!$get_event_stmt->execute()) {
-	die();
-}
+$get_event_stmt->execute();
 
 $get_event_res = $get_event_stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -30,17 +24,11 @@ $output = array(
 	)
 );
 
-if (!($get_notif_stmt = $db->prepare("SELECT * FROM notifications where event_ID=:id"))) {
-	die();
-}
+$get_notif_stmt = $db->prepare("SELECT * FROM notifications where event_ID=:id");
 
-if(!$get_notif_stmt->bindValue(":id",$get_event_res["internal_ID"])) {
-	die();
-}
+$get_notif_stmt->bindValue(":id",$get_event_res["internal_ID"]);
 
-if(!$get_notif_stmt->execute()) {
-	die();
-}
+$get_notif_stmt->execute();
 
 // If we have a contact page section then include the contact_page section.
 while($get_notif_res = $get_notif_stmt->fetch(PDO::FETCH_ASSOC)) {
