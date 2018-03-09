@@ -71,7 +71,7 @@ if(isset($_POST['action'])) {
 			die();
 		}
 
-		$stmt = $db->prepare("DELETE from info_page_sections where info_page_ID=:id and sequential_ID=:sequence");
+		$stmt = $db->prepare("DELETE from info_page_sections where info_page_ID=:id and sequential_ID=:sequence and (SELECT COUNT(*) FROM (select ID from info_page_sections where info_page_ID=:id) as temp) > 1");
 		$stmt->bindValue(":id",$get_info_page_res["ID"]);
 		$stmt->bindValue(":sequence", $_POST['section_sequence']);
 		$stmt->execute();
