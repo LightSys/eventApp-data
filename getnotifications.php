@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 
 include("connection.php");
+include("helper.php");
 
 $get_event_stmt = $db->prepare("SELECT internal_ID,notif_nav,notif_icon FROM event where ID=:id");
 
