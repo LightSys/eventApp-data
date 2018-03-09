@@ -1,5 +1,6 @@
 function addFields(html, form) {
-    $("#" + form).append(html)
+    $("#" + form).append(html);
+    
 }
 
 $( "#save" ).click(function() {

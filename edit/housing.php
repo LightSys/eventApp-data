@@ -6,8 +6,6 @@ include("../connection.php");
 
 if( isset($_POST['action'] )) {
 
-	//die(var_dump($_POST));
-
 	if($_POST['action'] == 'addHousing') {
 
 		$event_id = getEventID();
@@ -22,10 +20,8 @@ if( isset($_POST['action'] )) {
 		$stmt = $db->prepare("UPDATE housing set host_name = :host_name, driver = :driver where event_ID = :event_ID and sequential_ID = :sequential_ID");
 
 		$stmt->bindValue(':event_ID', $ID);
-		
 
 		foreach($_POST['host'] as $key => $host) {
-			// echo "foreach" . $key . "\n";
 			$driver = $_POST['driver'][$key];
 			
 			$stmt->bindValue(':host_name', $host);
@@ -34,7 +30,6 @@ if( isset($_POST['action'] )) {
 
 			$stmt->execute();
 		}
-		// die();
 	}
 
 	header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
@@ -69,11 +64,9 @@ if( isset($_POST['action'] )) {
 					$get_housing_stmt = $db->prepare("SELECT * FROM housing where event_ID=:id order by sequential_ID");
 					$get_housing_stmt->bindValue(":id",$event_id);
 					$get_housing_stmt->execute();
-
-
-
+					
 					// look through query
-					while($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)){ 
+					while($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) { 
 						echo '<div id="sectionCards"><div class="card"><div class="input">Host: '
 						. '<select name="host[' . $get_housing_res['sequential_ID'] . ']">';
 
@@ -90,12 +83,21 @@ if( isset($_POST['action'] )) {
 						}
 
 						echo '</select>'
-//						. '<input type="text" name="host[]" value = '.$get_housing_res['host_name'].'>'
 						. '</div>'
 						. '<div class="input">Driver: <input type="text" name="driver[' . $get_housing_res['sequential_ID'] . ']" value = ' .$get_housing_res['driver'].'></div>'
-						// . '<input type = "hidden" name="sequence" value="' . $get_housing_res['sequential_ID'] . '">'
-						. '<div class="input">Guests: <div id="guests[' . $get_housing_res['sequential_ID'] . ']"><select id="contact[' . $get_housing_res['sequential_ID'] . ']"><option>contact name</option></select></div><br><br>'
-						. '<div class="btn" onclick="addGuest([])">Add Guest</div></div></div>';
+						. '<div class="input">Guests: <div id="guests[' . $get_housing_res['sequential_ID'] . ']"><select id="contact[' . $get_housing_res['sequential_ID'] . ']">';
+						
+
+						$get_attendees_stmt = $db->prepare("SELECT * FROM attendees where event_ID=:id");
+						$get_attendees_stmt->bindValue(":id", $event_id);
+						$get_attendees_stmt->execute();
+
+						while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
+							echo '<option>' . $get_attendees_res['name'] . '</option>';
+						}
+
+						echo '</select></div><br><br>'
+						. '<div class="btn" onclick="addGuest(' . $get_housing_res['sequential_ID'] . ')">Add Guest</div></div></div>';
 					}
 				?>
 				<br>
@@ -118,8 +120,18 @@ if( isset($_POST['action'] )) {
 		}
 
 		function addGuest(num) {
-			var html = '<select id="contact[]"><option>contact name</option></select>';
-			addFields(html, 'guests' + num);
+			var html = '<select id="contact[]"><?php
+					
+					$get_attendees_stmt = $db->prepare("SELECT * FROM attendees where event_ID=:id");
+					$get_attendees_stmt->bindValue(":id", $event_id);
+					$get_attendees_stmt->execute();
+
+					while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
+						echo '<option>' . $get_attendees_res['name'] . '</option>';
+					}
+					?></select>';
+
+			addFields(html, 'guests\\[' + num + '\\]');
 		}
 	</script>
 
