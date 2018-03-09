@@ -8,8 +8,10 @@ $event_id = getEventID();
 
 if( isset($_POST['action'] )) {
 
+	// if we are adding a new host
 	if($_POST['action'] == 'addHousing') {
 
+		// insert a new blank record into the housing table for this event
 		$event_id = getEventID();
 
 		$stmt = $db->prepare('INSERT into housing(event_ID, sequential_ID) values (:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from housing where event_ID=:event_id) as temp))');
@@ -17,11 +19,15 @@ if( isset($_POST['action'] )) {
 		$stmt->execute();
 
 	} 
+	// if we are updating the information for this host
 	else if ($_POST['action'] == 'updateHousing') {	
+		// statement to update the values
 		$stmt = $db->prepare("UPDATE housing set host_name = :host_name, driver = :driver where event_ID = :event_ID and sequential_ID = :sequential_ID");
 
+		// bind the correct values to insert to it.
 		$stmt->bindValue(':event_ID', $event_id);
 
+		// Execute the update statement for each of the hosts
 		foreach($_POST['host'] as $key => $host) {
 			$driver = $_POST['driver'][$key];
 			
@@ -32,6 +38,7 @@ if( isset($_POST['action'] )) {
 			$stmt->execute();
 		}
 
+		
 		$get_housing_stmt = $db->prepare("SELECT * FROM housing where event_ID=:id order by sequential_ID asc");
 		$get_housing_stmt->bindValue(":id",$event_id);
 		$get_housing_stmt->execute();
@@ -44,8 +51,6 @@ if( isset($_POST['action'] )) {
 			$reset_stmt->bindValue(':housing_ID', $get_housing_res["ID"]);
 			$reset_stmt->execute();
 
-			// var_dump($_POST['guest'][$get_housing_res["sequential_ID"]]);
-			// die();
 			foreach($_POST['guest'][$get_housing_res["sequential_ID"]] as $key => $sequence) {
 				if($sequence == "remove") {
 					continue;
@@ -56,6 +61,7 @@ if( isset($_POST['action'] )) {
 			}
 		}
 	} 
+	// delete housing
 	else if ($_POST['action'] == 'deleteHousing') {
 		$stmt = $db->prepare("DELETE from housing where event_ID=:id and sequential_ID=:sequence");
 		$stmt->bindValue(":id",$event_id);
@@ -63,6 +69,7 @@ if( isset($_POST['action'] )) {
 		$stmt->execute();
 	}
 
+	// reroute to this page with the correct event id
 	header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
 	die();
 }

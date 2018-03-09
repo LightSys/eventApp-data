@@ -4,5 +4,6 @@ function addFields(html, form) {
 }
 
 $( "#save" ).click(function() {
+    console.log("save");
     $( "#form" ).submit();
 });

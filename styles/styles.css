@@ -8,7 +8,7 @@ nav {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #3E52A9;
+    /* background-color: #3E52A9; */
     width: 200px;
     height: 100%;
     -webkit-box-shadow: 4px 0px 6px 0px rgba(107,101,107,1);
@@ -43,7 +43,7 @@ nav > ol > a > li {
     padding-left: 20px;
     padding-right: 20px;
     padding: 10px;
-    background-color: #3E52A9;
+    /* background-color: #3E52A9; */
     color: white;
     border-radius: 5px;
     border: none;
@@ -63,8 +63,8 @@ nav > ol > a > li {
     padding-left: 19px;
     padding-right: 19px;
     padding: 9px;
-    border: 1px solid #3E52A9;
-    color: #3E52A9;
+    /* border: 1px solid #3E52A9;
+    color: #3E52A9; */
     border-radius: 5px;
     background-color: transparent;
 

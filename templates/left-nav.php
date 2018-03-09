@@ -1,8 +1,22 @@
 <?php 
     $id = $_GET['id'];
 
+    // include the database connection
+    include("../connection.php");
+    
+    $stmt = $db->prepare('SELECT theme_color FROM event where ID = :id');
+    $stmt->bindValue(":id", $id);
+    $stmt->execute();
+
+    $color;
+    if($stmt_res = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $color = $stmt_res['theme_color'];
+    } else {
+        $color = "#3E52A";
+    }
+
     echo ( 
-        '<nav>'
+        '<nav style="background-color: ' . $color . ';">'
         . '<ol>'
         .     '<a href="../events.php"><li>Back to View/Edit</li></a>'
         .     '<a href="general.php?id=' . $id . '"><li id="general">General</li></a>'
@@ -17,4 +31,18 @@
         .     '<a href="advanced.php?id=' . $id . '"><li id="advanced">Advanced</li></a>'
         . '</ol>'
         . '</nav>');
+
+    echo (
+        '<style>
+            .btn {
+                background-color: ' . $color . ';
+            }
+
+            .btn:hover {
+                border: 1px solid ' . $color . ';
+                color: ' . $color . ';
+            }
+            
+        </style>'
+    )
 ?>

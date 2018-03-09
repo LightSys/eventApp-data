@@ -7,7 +7,7 @@
 	{
 		if($_POST['action'] == 'addAttendee') {
 			//add a blank attendee record
-			$stmt = $db->prepare("INSERT into attendees(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from info_page where event_ID=:event_id) as temp))");
+			$stmt = $db->prepare("INSERT into attendees(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from attendees where event_ID=:event_id) as temp))");
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
 		}		
@@ -53,7 +53,7 @@
 
 		<section id="main">
 			<h1>Attendees</h1>
-			<form id="attendeeForm" action = "attendees.php" method="post">
+			<form id="form" action = "attendees.php" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateAttendee">
 				<div id="attendeeCards">
@@ -73,7 +73,7 @@
 				?>
 				</div>
 				<div class="btn" onclick="addAttendee()">+ Add Attendee</div>
-				<input type="submit" value="Submit">
+				<div class="btn" id="save">Save</div>
 			</form>
 		</section>
 		<!--Form to be submitted when the add attendee button is clicked.
