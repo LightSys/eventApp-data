@@ -1,6 +1,6 @@
-<?php include("../helper.php"); ?>
-
 <?php
+	include("../helper.php");
+
 	// include the database connection
 	include("../connection.php");
 
@@ -20,6 +20,24 @@
 			$id = $new_event_id['ID'];
 		}
 
+		// get the internal id
+		$get_event_stmt = $db->prepare("SELECT internal_ID FROM event where ID=:id");
+		$get_event_stmt->bindParam(":id",$id);
+		$get_event_stmt->execute();
+		$get_event_res = $get_event_stmt->fetchAll(PDO::FETCH_ASSOC);
+		if(count($get_event_res) != 1) {
+			die("error count != 1");
+		}
+		$get_event_res = $get_event_res[0];
+		$internalEventID = $get_event_res["internal_ID"];
+
+		// Create two blank contact page sections
+		for($i = 0; $i < 2; $i++) {
+			$new_contact_pages_stmt = $db->prepare("INSERT into contact_page_sections SET event_ID = :internalEventID, sequential_ID = (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from contact_page_sections where event_ID=:internalEventID) as temp)");
+			$new_contact_pages_stmt->bindValue('internalEventID',$internalEventID);
+			$new_contact_pages_stmt->execute();
+		}
+		
 		// reroute to this page with the new event id
 		header("Location: ".full_url($_SERVER)."?id=".$id);
 		die();
@@ -31,7 +49,7 @@
 		$name = $_POST['name'];
 		$timeZone = $_POST['timezone'];
 		$welcomeMessage = $_POST['welcome'];
-		$visible = $_POST['visible'];
+		$visible = isset($_POST['visible']);
 		$id = $_POST["id"];
 		$logo = null;
 
@@ -74,6 +92,18 @@
 	}
 	
 	include("../templates/check-event-exists.php");
+
+	$get_event_stmt = $db->prepare("SELECT name, time_zone, welcome_message, visible FROM event where ID=:id");
+	$get_event_stmt->bindValue(":id", $_GET["id"]);
+	$get_event_stmt->execute();
+
+	$get_event_res = $get_event_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	if(count($get_event_res) != 1) {
+		die();
+	}
+
+	$get_event_res = $get_event_res[0];
 ?>
 
 
@@ -93,11 +123,11 @@
 				<form action = "general.php" method = "post" enctype="multipart/form-data" id="form">
 					<div class="card">
 						<input type="hidden" name="id" value="<?php echo($_GET['id'])?>">
-						<div class="input">Event Name:<input type="text" name="name"></div>
-						<div class="input">Logo:<input type="file" name="logo"></div>
-						<div class="input">Time Zone:<input type="text" name="timezone"></div>
-						<div class="input">Welcome Message:<input type="text" name="welcome"></div>
-						<div class="input">Visible:<input type="checkbox" name="visible" value="false" checked="unchecked"></div>
+						<div class="input">Event Name:<input type="text" name="name" value="<?php echo $get_event_res["name"] ?>"></div>
+						<div class="input">Logo:<input type="file" name="logo" ></div>
+						<div class="input">Time Zone:<input type="text" name="timezone" value="<?php echo $get_event_res["time_zone"] ?>"></div>
+						<div class="input">Welcome Message:<input type="text" name="welcome" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
+						<div class="input">Visible:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
 					</div>
 					<br>
 					<div class="btn" id="save">Save</div>

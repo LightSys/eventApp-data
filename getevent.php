@@ -20,6 +20,10 @@ if(count($get_event_res) != 1) {
 
 $get_event_res = $get_event_res[0];
 
+if(!$get_event_res["visible"]) {
+	die();
+}
+
 $output = array(
 	"general" => array(
 		"refresh" => $get_event_res["refresh"],
@@ -64,10 +68,10 @@ if($get_cpages_res = $get_cpages_stmt->fetch(PDO::FETCH_ASSOC)) {
 	);
 
 	do {
-		$output["contact_page"]["section_" . $get_cpages_res["ID"]] = array(
+		$output["contact_page"]["section_" . $get_cpages_res["sequential_ID"]] = array(
 			"header" => $get_cpages_res["header"],
 			"content" => $get_cpages_res["content"],
-			"id" => $get_cpages_res["ID"]-1
+			"id" => $get_cpages_res["sequetial_ID"]-1
 		);
 	} while($get_cpages_res = $get_cpages_stmt->fetch(PDO::FETCH_ASSOC));
 }
@@ -75,7 +79,7 @@ if($get_cpages_res = $get_cpages_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 ////// Contacts
 
-get_contacts_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id");
+$get_contacts_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id");
 $get_contacts_stmt->bindValue(":id",$get_event_res["internal_ID"]);
 $get_contacts_stmt->execute();
 
@@ -138,7 +142,7 @@ if($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	do {
 
-		$get_guest_stmt = $db->prepare("SELECT * FROM attendees where house_ID=:id"));
+		$get_guest_stmt = $db->prepare("SELECT * FROM attendees where house_ID=:id");
 		$get_guest_stmt->bindValue(":id",$get_housing_res["ID"]);
 		$get_guest_stmt->execute();
 
@@ -165,7 +169,7 @@ if($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
 ///// Prayer Partners
 
 
-$get_prayer_partners_stmt = $db->prepare("SELECT * FROM prayer_partners where event_ID=:id"));
+$get_prayer_partners_stmt = $db->prepare("SELECT * FROM prayer_partners where event_ID=:id");
 $get_prayer_partners_stmt->bindValue(":id",$get_event_res["internal_ID"]);
 $get_prayer_partners_stmt->execute();
 
@@ -180,7 +184,7 @@ if($get_prayer_partners_res = $get_prayer_partners_stmt->fetch(PDO::FETCH_ASSOC)
 
 	do {
 
-		$get_attendee_stmt = $db->prepare("SELECT * FROM attendees where prayer_group_ID=:id"));
+		$get_attendee_stmt = $db->prepare("SELECT * FROM attendees where prayer_group_ID=:id");
 		$get_attendee_stmt->bindValue(":id",$get_prayer_partners_res["group_ID"]);
 		$get_attendee_stmt->execute();
 
@@ -206,7 +210,7 @@ if($get_prayer_partners_res = $get_prayer_partners_stmt->fetch(PDO::FETCH_ASSOC)
 ///// Additional Information Pages
 
 
-$get_info_page_stmt = $db->prepare("SELECT * FROM info_page where event_ID=:id"));
+$get_info_page_stmt = $db->prepare("SELECT * FROM info_page where event_ID=:id");
 $get_info_page_stmt->bindValue(":id",$get_event_res["internal_ID"]);
 $get_info_page_stmt->execute();
 
@@ -216,7 +220,7 @@ if($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$output["information_page"] = array();
 
 	do {
-		$page = "page_" . $get_info_page_res["ID"];
+		$page = "page_" . $get_info_page_res["sequential_ID"];
 		$output["information_page"][$page] = array();
 
 		$output["information_page"][$page][] = array(
@@ -224,8 +228,8 @@ if($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 			"icon" => $get_event_res["prayer_icon"]
 		);
 
-		$get_info_section_stmt = $db->prepare("SELECT * FROM info_page_sections where info_page_ID=:id"));
-		$get_info_section_stmt->bindValue(":id",$get_info_page_res["ID"]);
+		$get_info_section_stmt = $db->prepare("SELECT * FROM info_page_sections where info_page_ID=:id");
+		$get_info_section_stmt->bindValue(":id",$get_info_page_res["sequential_ID"]);
 		$get_info_section_stmt->execute();
 
 		while($get_info_section_res = $get_info_section_stmt->fetch(PDO::FETCH_ASSOC)) {
