@@ -1,12 +1,32 @@
-<?php
-	include("../connection.php");
-	include("../templates/check-event-exists.php");
+<?php include("../helper.php"); ?>
 
-    if(isset($_POST['name']))
-	{
-		if (!($stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone, welcome_message = :welcome_message visible = :visible, logo = :logo WHERE id = :id"))) {
-			// die(0);
+<?php
+	// include the database connection
+	include("../connection.php");
+
+	// If we are coming from the events page to create a new event
+	if(isset($_POST['action']) && $_POST['action'] == 'newEvent') {
+
+		// create a new event
+		$new_event_stmt = $db->prepare("INSERT into event SET ID = UUID()");
+		$new_event_stmt->execute();
+
+		// get the id of that event
+		$new_event_id_stmt = $db->prepare("SELECT * from event where internal_ID = (select MAX(internal_ID) from event)");
+		$new_event_id_stmt->execute();
+
+		$id;
+		while($new_event_id = $new_event_id_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$id = $new_event_id['ID'];
 		}
+
+		// reroute to this page with the new event id
+		header("Location: ".full_url($_SERVER)."?id=".$id);
+		die();
+	}	
+
+    if(isset($_POST['name'])) {
+		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone, welcome_message = :welcome_message, visible = :visible, logo = :logo WHERE id = :id");
 		
 		$name = $_POST['name'];
 		$timeZone = $_POST['timezone'];
@@ -40,28 +60,20 @@
 			}
 		}
 		
-		if (!($stmt->bindValue(':name', $name))) {
-			// die(1);
-		}
-		if (!($stmt->bindValue(':time_zone', $timeZone))) {
-			// die(2);
-		}
-		if (!($stmt->bindValue(':welcome_message', $welcomeMessage))) {
-			// die(3);
-		}
-		if (!($stmt->bindValue(':id', $id))) {
-			// die(4);
-		}	
-		if (!($stmt->bindValue(':visible', $visible))) {
-			// die(5);
-		}	
-		if (!($stmt->bindValue(':logo', $logo))) {
-			// die(6);
-		}	
-		if(!($stmt->execute())) {
-			// die(7);
-		}
+		$stmt->bindValue(':name', $name);
+		$stmt->bindValue(':time_zone', $timeZone);
+		$stmt->bindValue(':welcome_message', $welcomeMessage);
+		$stmt->bindValue(':id', $id);
+		$stmt->bindValue(':visible', $visible);	
+		$stmt->bindValue(':logo', $logo);
+		$stmt->execute();
+
+		// reroute to this page with the new event id
+		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+		die();
 	}
+	
+	include("../templates/check-event-exists.php");
 ?>
 
 
@@ -80,6 +92,7 @@
 			<h1>General</h1>
 				<form action = "general.php" method = "post" enctype="multipart/form-data" id="form">
 					<div class="card">
+						<input type="hidden" name="id" value="<?php echo($_GET['id'])?>">
 						<div class="input">Event Name:<input type="text" name="name"></div>
 						<div class="input">Logo:<input type="file" name="logo"></div>
 						<div class="input">Time Zone:<input type="text" name="timezone"></div>
