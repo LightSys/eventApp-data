@@ -149,6 +149,7 @@
 						<div class="input">Notification Page Nav:<input type="text" name="notif_nav" value="<?php echo $get_event_res["notif_nav"] ?>"></div>
 						<div class="input">Notification Page Icon:<input type="text" name="notif_icon" value="<?php echo $get_event_res["notif_icon"] ?>"></div>
 						<div class="input">Visible:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
+						<div><img src=<?php echo "'".getParentDir(2)."qr.php?id=".$_GET['id']. "'";?> alt="Mountain View">
 					</div>
 					<br>
 					<div class="btn" id="save">Save</div>
