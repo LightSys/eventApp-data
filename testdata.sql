@@ -6,8 +6,8 @@ insert into housing(event_ID,sequential_id, host_name, driver) values (1,1, 'God
 insert into prayer_partners(event_ID,sequential_id) values (1,1);
 insert into attendees(event_ID, sequential_ID,house_ID, prayer_group_ID, name) values (1,1,1, 1, 'First Last');
 insert into attendees(event_ID, sequential_ID,house_ID, prayer_group_ID, name) values (1,2,null, null, 'Josiah Bills');
-insert into notifications(event_ID, title, body, date, refresh) values (1, 'Data in Tables', 'Look! There\'s data! Isn\'t that exciting?', CURDATE(), 30);
-insert into notifications(event_ID, title, body, date, refresh) values (1, 'Notification', 'This is another notification.', CURDATE(), 30);
+insert into notifications(event_ID, sequential_id, title, body, date, refresh) values (1,1, 'Data in Tables', 'Look! There\'s data! Isn\'t that exciting?', CURDATE(), 30);
+insert into notifications(event_ID,sequential_id, title, body, date, refresh) values (1,2, 'Notification', 'This is another notification.', CURDATE(), 30);
 insert into schedule_items(event_ID,sequential_id, date, start_time, length, description, location, category) values (1,1, CURDATE(), 800, 53, 'Crying internally', 'Nowhere', 'Cedarville Blue');
 insert into info_page(event_ID,sequential_id, nav, icon) values (1,1, 'All the INFO', '12abcdef');
 insert into info_page_sections(info_page_ID,sequential_id, header, content) values (1,1, 'Info! Info! Info!', 'This is information you need.');
