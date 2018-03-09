@@ -59,6 +59,8 @@ include("../templates/check-event-exists.php");
 					$get_schedule_stmt->bindValue(":id",$event_id);
 					$get_schedule_stmt->execute();
 
+
+
 					while($get_schedule_res = $get_schedule_stmt->fetch(PDO::FETCH_ASSOC)) {
 						echo '<div class="card">'; 
 						echo '<div class="btn" onclick="deleteItem('.$get_schedule_res["sequential_ID"].')">X</div>';
@@ -67,7 +69,18 @@ include("../templates/check-event-exists.php");
 						echo '<div class="input">Length: <input type="text" name="length[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["length"].'"></div>';
 						echo '<div class="input">Description: <input type="text" name="description[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["description"].'"></div>';
 						echo '<div class="input">Location: <input type="text" name="location[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["location"].'"></div>';
-						echo '<div class="input">Category: <input type="text" name="category[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["category"].'"></div>'; 
+
+						echo '<div class="input">Category: ';
+
+						$get_themes_stmt = $db->prepare("SELECT * from themes where event_ID=:id");
+						$get_themes_stmt->bindValue(":id",$event_id);
+						$get_themes_stmt->execute();
+
+						echo '<select name="category[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["category"] . '">';
+						while($get_theme_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC)) {
+							echo '<option>' . $get_theme_res['theme_name'] . '</option>';
+						}
+						echo '</select></div>';
 						echo '</div>';
 					}
 					?>	
