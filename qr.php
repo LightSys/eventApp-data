@@ -7,6 +7,7 @@
     $event_ID = (isset($_GET['id']) ? "?id=".$_GET['id'] : "");
     $url = stripFileName();
     $url .= "getevent.php" . $event_ID;
+    // echo $url;
     QRcode::png($url);
     
 ?>

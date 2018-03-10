@@ -43,14 +43,22 @@ $get_themes_stmt = $db->prepare("SELECT * FROM themes where event_ID=:id");
 $get_themes_stmt->bindValue(":id", $get_event_res["internal_ID"]);
 $get_themes_stmt->execute();
 
-if($get_themes_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC)) {
-	$output["theme"] = array();
+$output["theme"] = array(
+	array(
+		"themeColor" => $get_event_res["theme_color"]
+	),
+	array(
+		"themeMedium" => $get_event_res["theme_medium"]
+	),
+	array(
+		"themeDark" => $get_event_res["theme_dark"]
+	)
+);
 
-	do {
-		$output["theme"][] = array(
-			$get_themes_res["theme_name"] => $get_themes_res["theme_color"],
-		);
-	} while ($get_themes_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC));
+while ($get_themes_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC)) {
+	$output["theme"][] = array(
+		$get_themes_res["theme_name"] => $get_themes_res["theme_color"],
+	);
 }
 
 ///// Contact page sections
