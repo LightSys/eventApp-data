@@ -1,6 +1,9 @@
-<?php 
+<?php   session_start();
 	include("../helper.php");
 	include("../connection.php");
+        secure();
+
+
 	$event_id = getEventId();
 	if( isset($_POST['action'])) {
 		
@@ -42,11 +45,13 @@
 			$stmt->execute();
 		}
 
-		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+		header("Location: contact-page.php?id=".$_POST['id']);
 		die();
 	}
 
 	include("../templates/check-event-exists.php"); 
+	 
+
 ?>
 
 <html>
@@ -62,7 +67,7 @@
 
 		<section id="main">
 			<h1>Contact Page Sections</h1>
-			<form id="form" action="contact-page.php" method="post">
+			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateSection">
 
@@ -125,7 +130,7 @@
 				<div class="btn" id="save">Save</div>
 			</form>
 
-			<form id = "addSection" action = "contact-page.php" method="post">	
+			<form id = "addSection"  method="post">	
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "addSection">
 			</form>

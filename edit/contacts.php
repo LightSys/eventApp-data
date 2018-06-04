@@ -1,6 +1,9 @@
-<?php	
+<?php   session_start();	
 	include("../connection.php");
 	include("../helper.php");
+	secure();	
+	
+
 
 	$event_id = getEventId();
     if( isset($_POST['action']) )
@@ -39,9 +42,15 @@
 		
 		// Redirect to the original address with parameters intact since they are dropped on form submit.
 		// The records just added or updated will be added to the page
-		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+		header("Location: contacts.php?id=".$_POST['id']);
 		die();
 	}
+
+
+
+        
+
+
 ?>
 
 <html>
@@ -57,7 +66,7 @@
 
 		<section id="main">
 			<h1>Contacts</h1>
-			<form id="contactForm" action = "contacts.php" method="post">
+			<form id="contactForm" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateContact">
 				<div id="contactCards">
@@ -86,13 +95,13 @@
 		</section>
 		<!--Form to be submitted when the add contact button is clicked.
 			This allows the postinng of data-->
-		<form id = "addContact" action = "contacts.php" method="post">	
+		<form id = "addContact" method="post">	
 			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 			<input type="hidden" name="action" value = "addContact">
 		</form>
 		
 		<!--Form to be submitted when the delete contact button is clicked-->
-		<form id="deleteContact" action="contacts.php" method="post">
+		<form id="deleteContact" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="deleteContact">
 			<input type = "hidden" name="sequence" value="">

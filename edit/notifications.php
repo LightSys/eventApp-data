@@ -1,7 +1,7 @@
-<?php	
+<?php	session_start();
 	include("../connection.php");
 	include("../helper.php");
-
+	secure();
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
@@ -40,9 +40,11 @@
 		
 		// Redirect to the original address with parameters intact since they are dropped on form submit.
 		// The records just added or updated will be added to the page
-		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+		header("Location: notifications.php?id=".$_POST['id']);
 		die();
 	}
+	
+       
 ?>
 
 <html>
@@ -58,7 +60,7 @@
 
 		<section id="main">
 			<h1>Notifications</h1>
-			<form id="notificationForm" action = "notifications.php" method="post">
+			<form id="notificationForm"  method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateNotification">
 				<div id="notificationCards">
@@ -82,18 +84,18 @@
 				?>
 				</div>
 				<div class="btn" onclick="addNotification()">+ Add Notifications</div>
-				<input type="submit" value="Submit">
+				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
 		<!--Form to be submitted when the add notification button is clicked.
 			This allows the postinng of data-->
-		<form id = "addNotification" action = "notifications.php" method="post">	
+		<form id = "addNotification" method="post">	
 			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 			<input type="hidden" name="action" value = "addNotification">
 		</form>
 		
 		<!--Form to be submitted when the delete notification button is clicked-->
-		<form id="deleteNotification" action="notifications.php" method="post">
+		<form id="deleteNotification" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="deleteNotification">
 			<input type = "hidden" name="sequence" value="">
@@ -109,6 +111,9 @@
 		function deleteNotification(sequential_id) {
 			$('#deleteNotification > input[name="sequence"]').val(sequential_id);
 			$("#deleteNotification").submit();
+		}
+		function save(){
+			$("#notificationForm").submit();
 		}
 	</script>
 </html>

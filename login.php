@@ -1,6 +1,7 @@
 <?php 
 session_start();
 
+$_SESSION['timestamp']=time();
 function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output = false)
 {
     $algorithm = strtolower($algorithm);
@@ -69,7 +70,7 @@ if(isset($_SESSION["username"])) {
 }
 
 if(isset($_POST["username"])) {
-	if($_POST["create"] == "true") {
+/*	if($_POST["create"] == "true") {
 		$salt = mcrypt_create_iv(64, MCRYPT_DEV_URANDOM);
 		$res = pbkdf2('sha256', $_POST["password"], $salt, 64000, 512);
 
@@ -81,13 +82,13 @@ if(isset($_POST["username"])) {
 		header("Location: ".full_url($_SERVER));
 		die();
 	}
-
+*/
 	$get_info_page_stmt = $db->prepare("SELECT password FROM users where username=:username");
 	$get_info_page_stmt->bindValue(":username",$_POST["username"]);
 	$get_info_page_stmt->execute();
 
 	if(!$get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
-		echo "Error: Username not found.";
+		echo "Error: Username and/or password is incorrect";
 		die();
 	}
 
@@ -103,7 +104,7 @@ if(isset($_POST["username"])) {
 		die();
 	}
 	else {
-		echo "Error: Incorrect password.";
+		echo "Error: Username and/or password is incorrect";
 		die();
 	}
 }
@@ -140,13 +141,13 @@ if(isset($_POST["username"])) {
         Username:<input name="username" type="text"><br>
         Password:&nbsp;<input name="password" type="password"><br>
         <input type="submit">
-        <a onclick="createUser()">Create</a>
+       <!-- <a onclick="createUser()">Create</a> -->
     </form>
 </body>
-<script>
+<!-- <script>
 	function createUser() {
 		$("#form > input[name='create']").val("true");
 		$("#form").submit();
 	}
-</script>
+</script> -->
 </html>

@@ -1,8 +1,11 @@
-<?php	
-	include("../connection.php");
-	include("../helper.php");
+<?php session_start();	
+    include("../connection.php");
+    include("../helper.php");
+    
+    secure($_GET["id"]);
 
-	$event_id = getEventId();
+    $event_id=getEventId();	
+	
     if( isset($_POST['action']) )
 	{
 		if($_POST['action'] == 'addAttendee') {
@@ -35,9 +38,15 @@
 		
 		// Redirect to the original address with parameters intact since they are dropped on form submit.
 		// The records just added or updated will be added to the page
-		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+		header("Location: attendees.php?id=".$_POST['id']);
 		die();
 	}
+	
+
+       
+
+        
+
 ?>
 
 <html>
@@ -53,7 +62,7 @@
 
 		<section id="main">
 			<h1>Attendees</h1>
-			<form id="attendeeForm" action = "attendees.php" method="post">
+			<form id="attendeeForm" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateAttendee">
 				<div id="attendeeCards">
@@ -78,13 +87,13 @@
 		</section>
 		<!--Form to be submitted when the add attendee button is clicked.
 			This allows the postinng of data-->
-		<form id = "addAttendee" action = "attendees.php" method="post">	
+		<form id = "addAttendee" method="post">	
 			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 			<input type="hidden" name="action" value = "addAttendee">
 		</form>
 		
 		<!--Form to be submitted when the delete attendee button is clicked-->
-		<form id="deleteAttendee" action="attendees.php" method="post">
+		<form id="deleteAttendee" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="deleteAttendee">
 			<input type = "hidden" name="sequence" value="">

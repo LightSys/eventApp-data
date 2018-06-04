@@ -1,8 +1,11 @@
-<?php include("../helper.php"); ?>
+<?php   session_start();
 
-<?php
+
+ include("../helper.php");  
 
 include("../connection.php");
+
+secure();
 
 $event_id = getEventID();
 
@@ -70,9 +73,11 @@ if( isset($_POST['action'] )) {
 	}
 
 	// reroute to this page with the correct event id
-	header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+	header("Location: housing.php?id=".$_POST['id']);
 	die();
 }
+
+
  ?>
 
  <?php include("../templates/check-event-exists.php"); ?>
@@ -92,7 +97,7 @@ if( isset($_POST['action'] )) {
 
 		<section id="main">
 			<h1>Housing</h1>
-			<form id="form" action="housing.php" method="post">
+			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateHousing">
 				
@@ -170,13 +175,13 @@ if( isset($_POST['action'] )) {
 			</form>
 		</section>
 
-		<form id = "addHousing" action = "housing.php" method="post">
+		<form id = "addHousing" method="post">
 			<input type = "hidden" name="sequence" value="">
 			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 			<input type="hidden" name="action" value = "addHousing">
 		</form>
 
-		<form id="deleteHousing" action="housing.php" method="post">
+		<form id="deleteHousing" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="deleteHousing">
 			<input type = "hidden" name="sequence" value="">

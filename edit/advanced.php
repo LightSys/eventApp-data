@@ -1,12 +1,13 @@
-<?php	
+<?php   session_start();
 	include("../connection.php");
 	include("../helper.php");
-
-	$event_id = getEventId();
-	
+	$event_id = getEventId();	
+	secure();	
 	if( isset($_POST['action']) )
-	{
+	{      
+	 
 		if($_POST['action'] == 'updateEvent') {
+	 
 			//update event record
 			$stmt = $db->prepare("UPDATE event set refresh = :refresh, refresh_expire = :refreshExpire, 
 			theme_dark = :themeDark, theme_medium = :themeMedium, theme_color = :themeColor where ID=:event_id");		
@@ -22,15 +23,24 @@
 			$stmt->bindValue(':themeMedium', "#".$themeMedium);
 			$stmt->bindValue(':themeColor', "#".$themeColor);
 			$stmt->bindValue(':event_id', $_POST["id"]);
-			$stmt->execute();	
+			$stmt->execute();
+				
+	
+			
 		}		
 		
 		// Redirect to the original address with parameters intact since they are dropped on form submit.
 		// The records just added or updated will be added to the page
-		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+		header("Location: advanced.php?id=".$_POST['id']);
 		die();
 	}
-	include("../templates/check-event-exists.php"); 
+	include("../templates/check-event-exists.php");
+
+	
+      
+
+             
+ 
 ?>
 
 <html>
@@ -49,7 +59,7 @@
 		
 		<section id="main">
 			<h1>Advanced</h1>
-			<form id="form" action = "advanced.php" method="post">
+			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateEvent">
 				<div class="card">

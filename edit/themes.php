@@ -1,7 +1,7 @@
-<?php	
+<?php	session_start();
 	include("../connection.php");
 	include("../helper.php");
-
+        secure();
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
@@ -36,9 +36,12 @@
 		
 		// Redirect to the original address with parameters intact since they are dropped on form submit.
 		// The records just added or updated will be added to the page
-		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+		header("Location: themes.php?id=".$_POST['id']);
 		die();
 	}
+  
+
+        
 ?>
 
 <html>
@@ -57,7 +60,7 @@
 
 		<section id="main">
 			<h1>Themes</h1>
-			<form id="themeForm" action = "themes.php" method="post">
+			<form id="themeForm" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateTheme">
 				<div id="themeCards">
@@ -85,13 +88,13 @@
 		</section>
 		<!--Form to be submitted when the add Theme button is clicked.
 			This allows the postinng of data-->
-		<form id = "addTheme" action = "themes.php" method="post">	
+		<form id = "addTheme" method="post">	
 			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 			<input type="hidden" name="action" value = "addTheme">
 		</form>
 		
 		<!--Form to be submitted when the delete theme button is clicked-->
-		<form id="deleteTheme" action="themes.php" method="post">
+		<form id="deleteTheme" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="deleteTheme">
 			<input type = "hidden" name="sequence" value="">

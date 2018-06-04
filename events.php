@@ -1,5 +1,11 @@
+<?php
+	session_start();
+	 include("connection.php");
+	include("helper.php");
+	eventSecure();
+ ?>
 
-<?php include("connection.php"); ?>
+
 <html>
 	<head>
 		<link rel="stylesheet" href="styles/events.css" />
@@ -17,12 +23,14 @@
 						<select name="id">
 							<?php
 								// Get all the events from the database and add them to a selector
-								$get_events_stmt = $db->prepare("SELECT * from event");
+								$get_events_stmt = $db->prepare("SELECT * from event WHERE admin=:user");
+								$get_events_stmt ->bindValue(":user",$_SESSION['username']);
 								$get_events_stmt->execute();
 
 								while($get_events_res = $get_events_stmt->fetch(PDO::FETCH_ASSOC)) {
 									echo '<option value="' . $get_events_res['ID'] . '">' . $get_events_res['name'] . '</option>';
 								}
+							
 							?>
 						</select>
 						<input type="submit" value="Select">

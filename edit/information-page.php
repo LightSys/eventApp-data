@@ -1,6 +1,8 @@
-<?php
+<?php session_start();
 include("../connection.php");
 include("../helper.php");
+
+secure();
 
 $event_id = getEventId();
 
@@ -159,12 +161,43 @@ if(isset($_POST['action'])) {
 		}
 	}
 
-	header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+	header("Location: information-page.php?id=".$_POST['id']);
 	die();
+
+	 
+        
+        
+
 }
 
 include("../templates/check-event-exists.php");
+ $get_event_stmt = $db->prepare("SELECT admin from event where ID=:id");
+        $get_event_stmt->bindValue(":id", $_GET["id"]);
 
+        $get_event_stmt->execute();
+
+
+
+        $get_event_res = $get_event_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
+        if(count($get_event_res) != 1) {
+
+                die();
+
+        }
+
+
+
+        $get_event_res = $get_event_res[0];
+        if(!is_null($get_event_res['admin']) && (!isset($_SESSION["username"])||$get_event_res['admin']!=$_SESSION['username'])){
+                header("Location: https://lightsys.org/");
+				die();
+        }
+
+        
 ?>
 
 <html>
@@ -180,7 +213,7 @@ include("../templates/check-event-exists.php");
 
 		<section id="main">
 			<h1>Information Pages</h1>
-			<form id="updateForm" action="information-page.php" method="post">
+			<form id="updateForm"  method="post">
 				<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 				<input type = "hidden" name="action" value="updateAll">
 				<div id="informationCards">
@@ -221,31 +254,31 @@ include("../templates/check-event-exists.php");
 				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
-		<form id="addInfoPage" action="information-page.php" method="post">
+		<form id="addInfoPage" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="addInfoPage">
 		</form>
 
-		<form id="addInfoPageSection" action="information-page.php" method="post">
+		<form id="addInfoPageSection" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="addSection">
 			<input type = "hidden" name="sequence" value="">
 		</form>
 
-		<form id="deleteInfoPage" action="information-page.php" method="post">
+		<form id="deleteInfoPage" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="removeInfoPage">
 			<input type = "hidden" name="sequence" value="">
 		</form>
 
-		<form id="deleteInfoPageSection" action="information-page.php" method="post">
+		<form id="deleteInfoPageSection" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="removeSection">
 			<input type = "hidden" name="page_sequence" value="">
 			<input type = "hidden" name="section_sequence" value="">
 		</form>
 
-		<form id="moveSection" action="information-page.php" method="post">
+		<form id="moveSection" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="moveSection">
 			<input type = "hidden" name="page_sequence" value="">
@@ -253,7 +286,7 @@ include("../templates/check-event-exists.php");
 			<input type = "hidden" name="direction" value="down">
 		</form>
 
-		<form id="movePage" action="information-page.php" method="post">
+		<form id="movePage" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="movePage">
 			<input type = "hidden" name="sequence" value="">

@@ -1,7 +1,7 @@
-<?php 
+<?php session_start(); 
 include("../connection.php");
 include("../helper.php");
-
+secure();
 $event_id = getEventId();
 
 if(isset($_POST['action'])) {
@@ -32,11 +32,14 @@ if(isset($_POST['action'])) {
 		$stmt->execute();
 	}
 
-	header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+	header("Location: schedule.php?id=".$_POST['id']);
 	die();
 }
 
-include("../templates/check-event-exists.php"); 
+include("../templates/check-event-exists.php");
+
+        
+
 ?>
 
 <html>
@@ -50,7 +53,7 @@ include("../templates/check-event-exists.php");
 		</style>
 		<section id="main">
 			<h1>Schedule</h1>
-			<form id="updateForm" action="schedule.php" method="post">
+			<form id="updateForm" method="post">
 				<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 				<input type = "hidden" name="action" value="updateAll">
 				<div id="scheduleDiv">
@@ -90,12 +93,12 @@ include("../templates/check-event-exists.php");
 			</form>
 		</section>
 
-		<form id="addItem" action="schedule.php" method="post">
+		<form id="addItem" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="addItem">
 		</form>
 
-		<form id="deleteItem" action="schedule.php" method="post">
+		<form id="deleteItem" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="deleteItem">
 			<input type = "hidden" name="sequence" value="">

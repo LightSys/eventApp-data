@@ -42,7 +42,7 @@ create table event (
     theme_medium        varchar(7),
     theme_color         varchar(7),
     visible             boolean,
-
+    admin		varchar(30),
     primary key (internal_ID)
 ) ENGINE = INNODB;
 

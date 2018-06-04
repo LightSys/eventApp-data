@@ -1,7 +1,8 @@
-<?php 
+<?php   session_start();
 	include("../connection.php");
 	include("../helper.php");
-	
+	secure();
+
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
@@ -41,10 +42,14 @@
 			$stmt->execute();
 		}
 
-		header("Location: ".full_url($_SERVER)."?id=".$_POST['id']);
+		header("Location: prayer-partners.php?id=".$_POST['id']);
 		die();
 	}
 	include("../templates/check-event-exists.php");
+
+	 
+
+        
 
 ?>
 
@@ -62,7 +67,7 @@
 
 		<section id="main">
 			<h1>Prayer Partners</h1>
-			<form id="form" action = "prayer-partners.php" method="post">
+			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updatePartners">
 				<div id="sectionCards">
@@ -115,12 +120,12 @@
 			</form>
 		</section>
 
-		<form id = "addGroup" action = "prayer-partners.php" method="post">	
+		<form id = "addGroup" method="post">	
 			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 			<input type="hidden" name="action" value = "addGroup">
 		</form>
 
-		<form id="deleteGroup" action="prayer-partners.php" method="post">
+		<form id="deleteGroup" method="post">
 			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 			<input type = "hidden" name="action" value="deleteGroup">
 			<input type = "hidden" name="sequence" value="">
