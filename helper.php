@@ -14,6 +14,37 @@ function url_origin( $s, $use_forwarded_host = false ) {
 function full_url( $s, $use_forwarded_host = false ) {
 	return url_origin( $s, $use_forwarded_host ) . $s['REQUEST_URI'];
 }
+function whitelistChars($allowedChars,$testString){
+	/* made by judson hayes
+	
+	returns 0 on any string that contains charecters not in the allowedChars array/regular expression
+	returns 1 on a string that only contains charecters from the allowedChars array
+	allowedChars must be a pattern able to be interpreted by preg_replace or the integer 1, in the special case of
+	the integer 1, it allows  alphabetical characters without special annotations, numbers, and the '-' symbol. 
+		
+
+	
+	*/
+	
+	if($allowedChars==1){
+		$testString=strtolower($testString);
+		$allowedChars=array('/q/','/w/','/e/','/r/','/t/','/y/','/u/','/i/','/o/','/p/','/a/','/s/','/d/','/f/','/g/','/h/','/j/','/k/','/l/','/z/','/x/','/c/','/v/','/b/','/n/','/m/','/1/','/2/','/3/','/4/','/5/','/6/','/7/','/8/','/9/','/0/','/-/');
+	        $result=preg_replace($allowedChars,'',$testString);
+
+       		 if(!$result){
+               		 return 1;
+       		 }
+       		 else return 0;		
+	}
+
+        $result=preg_replace($allowedChars,'',$testString);
+
+	if(!$result){
+		return 1;
+	}
+	else return 0;
+}
+
 
 function json_encode_noescape($a=false)
 {
@@ -68,7 +99,10 @@ function secure(){
 	$get_event_stmt = $db->prepare("SELECT admin FROM event WHERE ID =:id");
 
 	$tempid= $_GET["id"];	
-
+	if(!whitelistChars(1,$tempid)){
+		header("Location: http://10.5.11.121/emmett/eventApp-data/templates/logout.php");
+	}
+		
         $get_event_stmt->bindValue(":id",$tempid);
 
         $get_event_stmt->execute();
@@ -103,7 +137,7 @@ function secure(){
 }
 
 function eventSecure(){
-	 $timelimit=1200;
+	$timelimit=1200;
         $tempTime=time();
         
         include("connection.php");
