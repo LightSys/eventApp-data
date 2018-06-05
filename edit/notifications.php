@@ -5,31 +5,31 @@
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
+
+                //update all notification records in the event
+                $stmt = $db->prepare("UPDATE notifications set title = :title, body = :body, date=TIMESTAMP(:date, :time), refresh = :refresh where event_ID=:event_id and sequential_ID=:sequence");
+                $stmt->bindValue(':event_id', $event_id);
+                foreach($_POST['title'] as $key => $value) {
+                        $stmt->bindValue(":sequence",$key);
+                        $stmt->bindValue(':title', $value);
+                        $stmt->bindValue(':body', $_POST['body'][$key]);
+                        $stmt->bindValue(':date', $_POST['date'][$key]);
+                        $stmt->bindValue(':time', $_POST['time'][$key]);
+
+                        // echo isset($_POST['refresh'][$key]);
+                        // die();
+
+                        $stmt->bindValue(':refresh', isset($_POST['refresh'][$key]));
+                        $stmt->execute();
+                }
+
 		if($_POST['action'] == 'addNotification') {
 			//add a blank notification record
 			$stmt = $db->prepare('INSERT into notifications(event_ID, sequential_ID,title,body,date,refresh) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from notifications where event_ID=:event_id) as temp), "","", CURDATE(), 0)');
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
 		}		
-		else if ($_POST['action'] == 'updateNotification') {	
-		
-			//update all notification records in the event 
-			$stmt = $db->prepare("UPDATE notifications set title = :title, body = :body, date=TIMESTAMP(:date, :time), refresh = :refresh where event_ID=:event_id and sequential_ID=:sequence");
-			$stmt->bindValue(':event_id', $event_id);
-			foreach($_POST['title'] as $key => $value) {
-				$stmt->bindValue(":sequence",$key);
-				$stmt->bindValue(':title', $value);
-				$stmt->bindValue(':body', $_POST['body'][$key]);
-				$stmt->bindValue(':date', $_POST['date'][$key]);
-				$stmt->bindValue(':time', $_POST['time'][$key]);
 
-				// echo isset($_POST['refresh'][$key]);
-				// die();
-
-				$stmt->bindValue(':refresh', isset($_POST['refresh'][$key]));
-				$stmt->execute();
-			}
-		}
 		else if ($_POST['action'] == 'deleteNotification') {
 			//delete notification record
 			$stmt = $db->prepare("DELETE from notifications where event_ID=:id and sequential_ID=:sequence");
@@ -62,7 +62,8 @@
 			<h1>Notifications</h1>
 			<form id="notificationForm"  method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-				<input type="hidden" name="action" value = "updateNotification">
+				<input type="hidden" name="action">
+				<input type="hidden" name="sequence">
 				<div id="notificationCards">
 				<?php			
 					$id = $_GET["id"];
@@ -87,32 +88,21 @@
 				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
-		<!--Form to be submitted when the add notification button is clicked.
-			This allows the postinng of data-->
-		<form id = "addNotification" method="post">	
-			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-			<input type="hidden" name="action" value = "addNotification">
-		</form>
-		
-		<!--Form to be submitted when the delete notification button is clicked-->
-		<form id="deleteNotification" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="deleteNotification">
-			<input type = "hidden" name="sequence" value="">
-		</form>
-
 	</body>
 
 	<script>		
 		function addNotification() {
-			$("#addNotification").submit();
+			document.forms['notificationForm']['action'].value = "addNotification";
+			$("#notificationForm").submit();
 		}
 
 		function deleteNotification(sequential_id) {
-			$('#deleteNotification > input[name="sequence"]').val(sequential_id);
-			$("#deleteNotification").submit();
+                        document.forms['notificationForm']['action'].value = "deleteNotification";
+                        document.forms['notificationForm']['sequence'].value = sequential_id;
+			$("#notificationForm").submit();
 		}
 		function save(){
+                        document.forms['notificationForm']['action'].value = "save";
 			$("#notificationForm").submit();
 		}
 	</script>

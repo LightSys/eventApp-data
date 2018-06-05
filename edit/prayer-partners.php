@@ -6,30 +6,29 @@
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
-		if($_POST['action'] == 'updatePartners') {
-			$get_prayer_group_stmt = $db->prepare("SELECT * FROM prayer_partners where event_ID=:id order by sequential_ID asc");
-			$get_prayer_group_stmt->bindValue(":id",$event_id);
-			$get_prayer_group_stmt->execute();
+		$get_prayer_group_stmt = $db->prepare("SELECT * FROM prayer_partners where event_ID=:id order by sequential_ID asc");
+		$get_prayer_group_stmt->bindValue(":id",$event_id);
+		$get_prayer_group_stmt->execute();
 
-			$reset_stmt = $db->prepare("UPDATE attendees set prayer_group_ID = null where prayer_group_ID=:prayer_group_ID");
+		$reset_stmt = $db->prepare("UPDATE attendees set prayer_group_ID = null where prayer_group_ID=:prayer_group_ID");
 
-			$stmt = $db->prepare("UPDATE attendees set prayer_group_ID = :prayer_group_ID where event_ID=:event_id and sequential_ID=:sequence");
-			while($get_prayer_group_res = $get_prayer_group_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$stmt->bindValue(':prayer_group_ID', $get_prayer_group_res["group_ID"]);
-				$reset_stmt->bindValue(':prayer_group_ID', $get_prayer_group_res["group_ID"]);
-				$reset_stmt->execute();
+		$stmt = $db->prepare("UPDATE attendees set prayer_group_ID = :prayer_group_ID where event_ID=:event_id and sequential_ID=:sequence");
+		while($get_prayer_group_res = $get_prayer_group_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$stmt->bindValue(':prayer_group_ID', $get_prayer_group_res["group_ID"]);
+			$reset_stmt->bindValue(':prayer_group_ID', $get_prayer_group_res["group_ID"]);
+			$reset_stmt->execute();
 	
-				foreach($_POST['partner'][$get_prayer_group_res["sequential_ID"]] as $key => $sequence) {
-					if($sequence == "remove") {
-						continue;
-					}
-					$stmt->bindValue(":sequence",$sequence);
-					$stmt->bindValue(':event_id', $event_id);
-					$stmt->execute();
+			foreach($_POST['partner'][$get_prayer_group_res["sequential_ID"]] as $key => $sequence) {
+				if($sequence == "remove") {
+					continue;
 				}
+				$stmt->bindValue(":sequence",$sequence);
+				$stmt->bindValue(':event_id', $event_id);
+				$stmt->execute();
 			}
 		}
-		else if($_POST['action'] == 'addGroup') {
+		
+		if($_POST['action'] == 'addGroup') {
 			$stmt = $db->prepare("INSERT into prayer_partners(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from prayer_partners where event_ID=:event_id) as temp))");
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
@@ -69,7 +68,8 @@
 			<h1>Prayer Partners</h1>
 			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-				<input type="hidden" name="action" value = "updatePartners">
+				<input type="hidden" name="action">
+				<input type="hidden" name="sequence">
 				<div id="sectionCards">
 					<?php			
 						$id = $_GET["id"];
@@ -120,28 +120,19 @@
 			</form>
 		</section>
 
-		<form id = "addGroup" method="post">	
-			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-			<input type="hidden" name="action" value = "addGroup">
-		</form>
-
-		<form id="deleteGroup" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="deleteGroup">
-			<input type = "hidden" name="sequence" value="">
-		</form>
-
 	</body>
 	<?php include("../templates/head.php"); ?>
 	<script>
 
 		function addGroup() {
-			$("#addGroup").submit();
+			document.forms['form']['action'].value="addGroup";
+			$("#form").submit();
 		}
 
 		function deleteGroup(sequential_id) {
-			$('#deleteGroup > input[name="sequence"]').val(sequential_id);
-			$("#deleteGroup").submit();
+                        document.forms['form']['action'].value="deleteGroup";
+                        document.forms['form']['sequence'].value=sequential_id;
+			$("#form").submit();
 		}
 
 		function addPartner(num) {

@@ -3,32 +3,30 @@
     include("../helper.php");
     
     secure($_GET["id"]);
-
     $event_id=getEventId();	
 	
     if( isset($_POST['action']) )
 	{
-		if($_POST['action'] == 'addAttendee') {
+		//update all attendee records in the event 
+                $stmt = $db->prepare("UPDATE attendees set name = :name
+                        where event_ID=:event_id and sequential_ID=:sequence");
+
+                foreach($_POST['name'] as $key => $name) {
+
+                        $stmt->bindValue(":sequence",$key);
+                        $stmt->bindValue(':name', $name);
+                        $stmt->bindValue(':event_id', $event_id);
+                        $stmt->execute();
+                }
+
+		if($_POST['action'] == 'addAttendee'){
 			//add a blank attendee record
 			$stmt = $db->prepare("INSERT into attendees(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from attendees where event_ID=:event_id) as temp))");
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
 		}		
 		
-		//update all attendee records in the event 
-		else if ($_POST['action'] == 'updateAttendee') {		
-			$stmt = $db->prepare("UPDATE attendees set name = :name
-				where event_ID=:event_id and sequential_ID=:sequence");
-		
-			foreach($_POST['name'] as $key => $name) {		
-				
-				$stmt->bindValue(":sequence",$key);
-				$stmt->bindValue(':name', $name);
-				$stmt->bindValue(':event_id', $event_id);
-				$stmt->execute();
-			}
-		}
-		else if ($_POST['action'] == 'deleteAttendee') {
+		else if ($_POST['action'] == 'deleteAttendee'){
 			//delete attendee record
 			$stmt = $db->prepare("DELETE from attendees where event_ID=:id and sequential_ID=:sequence");
 			$stmt->bindValue(":id",$event_id);
@@ -42,11 +40,8 @@
 		die();
 	}
 	
-
        
-
         
-
 ?>
 
 <html>
@@ -64,7 +59,8 @@
 			<h1>Attendees</h1>
 			<form id="attendeeForm" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-				<input type="hidden" name="action" value = "updateAttendee">
+				<input type="hidden" name="action">
+				<input type="hidden" name="sequence">
 				<div id="attendeeCards">
 				<?php			
 					$id = $_GET["id"];
@@ -85,35 +81,24 @@
 				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
-		<!--Form to be submitted when the add attendee button is clicked.
-			This allows the postinng of data-->
-		<form id = "addAttendee" method="post">	
-			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-			<input type="hidden" name="action" value = "addAttendee">
-		</form>
-		
-		<!--Form to be submitted when the delete attendee button is clicked-->
-		<form id="deleteAttendee" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="deleteAttendee">
-			<input type = "hidden" name="sequence" value="">
-		</form>
 
 	</body>
 
 	<script>		
 		function addAttendee() {
-			$("#addAttendee").submit();
+			document.forms['attendeeForm']['action'].value="addAttendee";
+			$("#attendeeForm").submit();
 		}
 		
 		function save() {
+			document.forms['attendeeForm']['action'].value="updateAttendee";			
 			$("#attendeeForm").submit();
 		}
 		
 		function deleteAttendee(sequential_id) {
-			$('#deleteAttendee > input[name="sequence"]').val(sequential_id);
-			$("#deleteAttendee").submit();
+			document.forms['attendeeForm']['action'].value="deleteAttendee";
+			document.forms['attendeeForm']['sequence'].value=sequential_id;
+			$("#attendeeForm").submit();
 		}
 	</script>
 </html>
-
