@@ -5,27 +5,26 @@
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
+			//update all theme records in the event 
+                        $stmt = $db->prepare("UPDATE themes set theme_name = :themeName, theme_color = :themeColor
+                                where event_ID=:event_id and sequential_ID=:sequence");
+                        foreach($_POST['themeName'] as $key => $name) {
+                                $themeColor = $_POST['themeColor'][$key];
+
+                                $stmt->bindValue(":sequence", $key);
+                                $stmt->bindValue(":themeColor", "#".$themeColor);
+                                $stmt->bindValue(":themeName", $name);
+                                $stmt->bindValue(':event_id', $event_id);
+                                $stmt->execute();
+                        }
+
 		if($_POST['action'] == 'addTheme') {
 			//add a blank theme record
 			$stmt = $db->prepare("INSERT into themes(event_ID, sequential_ID) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from themes where event_ID=:event_id) as temp))");
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
 		}		
-	
-		else if ($_POST['action'] == 'updateTheme') {	
-			//update all theme records in the event 
-			$stmt = $db->prepare("UPDATE themes set theme_name = :themeName, theme_color = :themeColor
-				where event_ID=:event_id and sequential_ID=:sequence");
-			foreach($_POST['themeName'] as $key => $name) {	
-				$themeColor = $_POST['themeColor'][$key];
-			
-				$stmt->bindValue(":sequence", $key);
-				$stmt->bindValue(":themeColor", "#".$themeColor);
-				$stmt->bindValue(":themeName", $name);
-				$stmt->bindValue(':event_id', $event_id);
-				$stmt->execute();
-			}
-		}
+
 		else if ($_POST['action'] == 'deleteTheme') {
 			//delete theme record
 			$stmt = $db->prepare("DELETE from themes where event_ID=:id and sequential_ID=:sequence");
@@ -62,7 +61,8 @@
 			<h1>Themes</h1>
 			<form id="themeForm" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-				<input type="hidden" name="action" value = "updateTheme">
+				<input type="hidden" name="action">
+				<input type="hidden" name="sequence">
 				<div id="themeCards">
 				<?php			
 					$id = $_GET["id"];
@@ -86,34 +86,24 @@
 				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
-		<!--Form to be submitted when the add Theme button is clicked.
-			This allows the postinng of data-->
-		<form id = "addTheme" method="post">	
-			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-			<input type="hidden" name="action" value = "addTheme">
-		</form>
-		
-		<!--Form to be submitted when the delete theme button is clicked-->
-		<form id="deleteTheme" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="deleteTheme">
-			<input type = "hidden" name="sequence" value="">
-		</form>
 
 	</body>
 
 	<script>		
 		function addTheme() {
-			$("#addTheme").submit();
+			document.forms["themeForm"]["action"].value = "addTheme";
+			$("#themeForm").submit();
 		}
 		
 		function save() {
+			document.forms["themeForm"]["action"].value = "updateTheme";
 			$("#themeForm").submit();
 		}
 
 		function deleteTheme(sequential_id) {
-			$('#deleteTheme > input[name="sequence"]').val(sequential_id);
-			$("#deleteTheme").submit();
+			document.forms["themeForm"]["action"].value = "deleteTheme";
+			document.forms["themeForm"]["sequence"].value = sequential_id;
+			$("#themeForm").submit();
 		}
 	</script>
 </html>

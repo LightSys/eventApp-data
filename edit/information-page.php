@@ -6,31 +6,31 @@ secure();
 
 $event_id = getEventId();
 
-if(isset($_POST['action'])) {
-	if($_POST['action'] == "updateAll") {
-		$stmt = $db->prepare("UPDATE info_page set nav=:name, icon=:icon where event_ID=:id and sequential_ID=:sequence");
-		$stmt->bindValue(":id",$event_id);
+if(isset($_POST['action'])){
 
-		foreach ($_POST['name'] as $key => $value) {
-			$stmt->bindValue(":sequence",$key);
-			$stmt->bindValue(":name",$value);
-			$stmt->bindValue(":icon",$_POST['icon'][$key]);
-			$stmt->execute();
+	$stmt = $db->prepare("UPDATE info_page set nav=:name, icon=:icon where event_ID=:id and sequential_ID=:sequence");
+	$stmt->bindValue(":id",$event_id);
 
-			$section_stmt = $db->prepare("UPDATE info_page_sections set header=:header, content=:content where info_page_ID=(select ID from info_page  where event_ID=:id and sequential_ID=:page_sequence) and sequential_ID=:section_sequence");
-			$section_stmt->bindValue(":id",$event_id);
-			$section_stmt->bindValue(":page_sequence",$key);
+	foreach ($_POST['name'] as $key => $value) {
+		$stmt->bindValue(":sequence",$key);
+		$stmt->bindValue(":name",$value);
+		$stmt->bindValue(":icon",$_POST['icon'][$key]);
+		$stmt->execute();
 
-			foreach ($_POST['header'][$key] as $section_key => $section_value) {
-				$section_stmt->bindValue(":section_sequence",$section_key);
-				$section_stmt->bindValue(":header",$section_value);
-				$section_stmt->bindValue(":content",$_POST['content'][$key][$section_key]);
-				$section_stmt->execute();
-			}
+		$section_stmt = $db->prepare("UPDATE info_page_sections set header=:header, content=:content where info_page_ID=(select ID from info_page  where event_ID=:id and sequential_ID=:page_sequence) and sequential_ID=:section_sequence");
+		$section_stmt->bindValue(":id",$event_id);
+		$section_stmt->bindValue(":page_sequence",$key);
 
+		foreach ($_POST['header'][$key] as $section_key => $section_value) {
+			$section_stmt->bindValue(":section_sequence",$section_key);
+			$section_stmt->bindValue(":header",$section_value);
+			$section_stmt->bindValue(":content",$_POST['content'][$key][$section_key]);
+			$section_stmt->execute();
 		}
+
 	}
-	else if($_POST['action'] == "addInfoPage") {
+	
+	if($_POST['action'] == "addInfoPage") {
 		$stmt = $db->prepare('INSERT into info_page(event_ID, sequential_ID, nav, icon) values (:id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from info_page where event_ID=:id) as temp), "", "")');
 		$stmt->bindValue(":id",$event_id);
 		$stmt->execute();
@@ -41,6 +41,7 @@ if(isset($_POST['action'])) {
 		$stmt->bindValue(":id",$info_page_id);
 		$stmt->execute();
 	}
+
 	else if($_POST['action'] == "addSection") {
 		$get_info_page_stmt = $db->prepare("SELECT (ID) FROM info_page where event_ID=:id and sequential_ID=:sequence");
 		$get_info_page_stmt->bindValue(":id",$event_id);
@@ -215,7 +216,11 @@ include("../templates/check-event-exists.php");
 			<h1>Information Pages</h1>
 			<form id="updateForm"  method="post">
 				<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-				<input type = "hidden" name="action" value="updateAll">
+				<input type = "hidden" name="action">
+				<input type = "hidden" name="sequence">
+				<input type = "hidden" name="page_sequence">
+				<input type = "hidden" name="section_sequence">
+				<input type = "hidden" name="direction" value="down">
 				<div id="informationCards">
 					<?php 
 					$get_info_page_stmt = $db->prepare("SELECT * FROM info_page where event_ID=:id order by sequential_ID asc");
@@ -254,81 +259,49 @@ include("../templates/check-event-exists.php");
 				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
-		<form id="addInfoPage" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="addInfoPage">
-		</form>
-
-		<form id="addInfoPageSection" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="addSection">
-			<input type = "hidden" name="sequence" value="">
-		</form>
-
-		<form id="deleteInfoPage" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="removeInfoPage">
-			<input type = "hidden" name="sequence" value="">
-		</form>
-
-		<form id="deleteInfoPageSection" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="removeSection">
-			<input type = "hidden" name="page_sequence" value="">
-			<input type = "hidden" name="section_sequence" value="">
-		</form>
-
-		<form id="moveSection" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="moveSection">
-			<input type = "hidden" name="page_sequence" value="">
-			<input type = "hidden" name="section_sequence" value="">
-			<input type = "hidden" name="direction" value="down">
-		</form>
-
-		<form id="movePage" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="movePage">
-			<input type = "hidden" name="sequence" value="">
-			<input type = "hidden" name="direction" value="down">
-		</form>
-
 	</body>
 
 	<script>
 		function addPage() {
-			$("#addInfoPage").submit();
+			document.forms['updateForm']['action'].value = "addInfoPage";
+			$("#updateForm").submit();
 		}
 		function save() {
+                        document.forms['updateForm']['action'].value = "updateAll";
 			$("#updateForm").submit();
 		}
 		function addSection(sequential_id) {
-			$('#addInfoPageSection > input[name="sequence"]').val(sequential_id);
-			$("#addInfoPageSection").submit();
+                        document.forms['updateForm']['action'].value = "addSection";
+                        document.forms['updateForm']['sequence'].value = sequential_id;
+			$("#updateForm").submit();
 		}
 
 		function deletePage(sequential_id) {
-			$('#deleteInfoPage > input[name="sequence"]').val(sequential_id);
-			$("#deleteInfoPage").submit();
+                        document.forms['updateForm']['action'].value = "removeInfoPage";
+                        document.forms['updateForm']['sequence'].value = sequential_id;
+			$("#updateForm").submit();
 		}
 
 		function deleteSection(page_sequential_id, section_sequential_id) {
-			$('#deleteInfoPageSection > input[name="page_sequence"]').val(page_sequential_id);
-			$('#deleteInfoPageSection > input[name="section_sequence"]').val(section_sequential_id);
-			$("#deleteInfoPageSection").submit();
+                        document.forms['updateForm']['action'].value = "removeSection";
+                        document.forms['updateForm']['page_sequence'].value = page_sequential_id;
+                        document.forms['updateForm']['section_sequence'].value = section_sequential_id;
+			$("#updateForm").submit();
 		}
 
 		function moveSection(page_sequential_id, section_sequential_id, dir) {
-			$('#moveSection > input[name="page_sequence"]').val(page_sequential_id);
-			$('#moveSection > input[name="section_sequence"]').val(section_sequential_id);
-			$('#moveSection > input[name="direction"]').val(dir);
-			$("#moveSection").submit();
+                        document.forms['updateForm']['action'].value = "moveSection";
+                        document.forms['updateForm']['page_sequence'].value = page_sequential_id;
+                        document.forms['updateForm']['section_sequence'].value = section_sequential_id;
+			$('#updateForm > input[name="direction"]').val(dir);
+			$("#updateForm").submit();
 		}
 
 		function movePage(sequential_id,dir) {
-			$('#movePage > input[name="sequence"]').val(sequential_id);
-			$('#movePage > input[name="direction"]').val(dir);
-			$("#movePage").submit();
+                        document.forms['updateForm']['action'].value = "movePage";
+                        document.forms['updateForm']['sequence'].value = sequential_id;
+			$('#updateForm > input[name="direction"]').val(dir);
+			$("#updateForm").submit();
 		}
 
 	</script>

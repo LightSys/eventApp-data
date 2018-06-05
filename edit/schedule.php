@@ -5,26 +5,27 @@ secure();
 $event_id = getEventId();
 
 if(isset($_POST['action'])) {
-	if($_POST['action'] == "updateAll") {
-		$stmt = $db->prepare("UPDATE schedule_items set date=:date, start_time=:start_time, length=:length, description=:description, location=:location, category=:category where event_ID=:id and sequential_ID=:sequence");
-		$stmt->bindValue(":id",$event_id);
 
-		foreach ($_POST['date'] as $key => $value) {
-			$stmt->bindValue(":sequence",$key);
-			$stmt->bindValue(":date",$value);
-			$stmt->bindValue(":start_time",$_POST['starttime'][$key]);
-			$stmt->bindValue(":length",$_POST['length'][$key]);
-			$stmt->bindValue(":description",$_POST['description'][$key]);
-			$stmt->bindValue(":location",$_POST['location'][$key]);
-			$stmt->bindValue(":category",$_POST['category'][$key]);
-			$stmt->execute();
-		}
+	$stmt = $db->prepare("UPDATE schedule_items set date=:date, start_time=:start_time, length=:length, description=:description, location=:location, category=:category where event_ID=:id and sequential_ID=:sequence");
+	$stmt->bindValue(":id",$event_id);
+
+	foreach ($_POST['date'] as $key => $value) {
+		$stmt->bindValue(":sequence",$key);
+		$stmt->bindValue(":date",$value);
+		$stmt->bindValue(":start_time",$_POST['starttime'][$key]);
+		$stmt->bindValue(":length",$_POST['length'][$key]);
+		$stmt->bindValue(":description",$_POST['description'][$key]);
+		$stmt->bindValue(":location",$_POST['location'][$key]);
+		$stmt->bindValue(":category",$_POST['category'][$key]);
+		$stmt->execute();
 	}
-	else if($_POST['action'] == "addItem") {
+
+	if($_POST['action'] == "addItem") {
 		$stmt = $db->prepare('INSERT into schedule_items(event_ID, sequential_ID, date,start_time,length,description,location,category) values (:id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from schedule_items where event_ID=:id) as temp), CURDATE(), "0000", "", "","", "#000000")');
 		$stmt->bindValue(":id",$event_id);
 		$stmt->execute();
 	}
+
 	else if($_POST['action'] == "deleteItem") {
 		$stmt = $db->prepare("DELETE from schedule_items where event_ID=:id and sequential_ID=:sequence");
 		$stmt->bindValue(":id",$event_id);
@@ -55,7 +56,8 @@ include("../templates/check-event-exists.php");
 			<h1>Schedule</h1>
 			<form id="updateForm" method="post">
 				<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-				<input type = "hidden" name="action" value="updateAll">
+				<input type = "hidden" name="action">
+				<input type = "hidden" name="sequence">
 				<div id="scheduleDiv">
 					<?php 
 					$get_schedule_stmt = $db->prepare("SELECT * FROM schedule_items where event_ID=:id order by date,start_time asc");
@@ -92,32 +94,25 @@ include("../templates/check-event-exists.php");
 				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
-
-		<form id="addItem" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="addItem">
-		</form>
-
-		<form id="deleteItem" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="deleteItem">
-			<input type = "hidden" name="sequence" value="">
-		</form>
 	</body>
 	<?php include("../templates/head.php"); ?>
 	<script>
 
 		function addScheduleItem() {
-			$("#addItem").submit();
+			document.forms['updateForm']['action'].value = "addItem";
+			$("#updateForm").submit();
 		}
 
 		function save() {
+			document.forms['updateForm']['action'].value = "updateAll";			
 			$("#updateForm").submit();
 		}
 
 		function deleteItem(sequential_id) {
-			$('#deleteItem > input[name="sequence"]').val(sequential_id);
-			$("#deleteItem").submit();
+			document.forms['updateForm']['action'].value = "deleteItem";
+			document.forms['updateForm']['sequence'].value = sequential_id;
+			$("#updateForm").submit();
 		}
 	</script>
 </html>
+

@@ -10,6 +10,47 @@ secure();
 $event_id = getEventID();
 
 if( isset($_POST['action'] )) {
+               
+		//Saves all the housing selections whenever a action is done
+		// statement to update the values
+                $stmt = $db->prepare("UPDATE housing set host_name = :host_name, driver = :driver where event_ID = :event_ID and sequential_ID = :sequential_ID");
+
+                // bind the correct values to insert to it.
+                $stmt->bindValue(':event_ID', $event_id);
+
+                // Execute the update statement for each of the hosts
+                foreach($_POST['host'] as $key => $host) {
+                        $driver = $_POST['driver'][$key];
+
+                        $stmt->bindValue(':host_name', $host);
+                        $stmt->bindValue(':driver', $driver);
+                        $stmt->bindValue(":sequential_ID", $key);
+
+                        $stmt->execute();
+                }
+
+
+                $get_housing_stmt = $db->prepare("SELECT * FROM housing where event_ID=:id order by sequential_ID asc");
+                $get_housing_stmt->bindValue(":id",$event_id);
+                $get_housing_stmt->execute();
+
+                $reset_stmt = $db->prepare("UPDATE attendees set house_ID = null where house_ID=:housing_ID");
+                $update_stmt = $db->prepare("UPDATE attendees set house_ID = :housing_ID where event_ID=:event_id and sequential_ID=:sequence");
+
+                while($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $update_stmt->bindValue(':housing_ID', $get_housing_res["ID"]);
+                        $reset_stmt->bindValue(':housing_ID', $get_housing_res["ID"]);
+                        $reset_stmt->execute();
+
+                        foreach($_POST['guest'][$get_housing_res["sequential_ID"]] as $key => $sequence) {
+                                if($sequence == "remove") {
+                                        continue;
+                                }
+                                $update_stmt->bindValue(":sequence",$sequence);
+                                $update_stmt->bindValue(':event_id', $event_id);
+                                $update_stmt->execute();
+                        }
+                }
 
 	// if we are adding a new host
 	if($_POST['action'] == 'addHousing') {
@@ -21,48 +62,6 @@ if( isset($_POST['action'] )) {
 		$stmt->bindValue(":event_id",$event_id);
 		$stmt->execute();
 
-	} 
-	// if we are updating the information for this host
-	else if ($_POST['action'] == 'updateHousing') {	
-		// statement to update the values
-		$stmt = $db->prepare("UPDATE housing set host_name = :host_name, driver = :driver where event_ID = :event_ID and sequential_ID = :sequential_ID");
-
-		// bind the correct values to insert to it.
-		$stmt->bindValue(':event_ID', $event_id);
-
-		// Execute the update statement for each of the hosts
-		foreach($_POST['host'] as $key => $host) {
-			$driver = $_POST['driver'][$key];
-			
-			$stmt->bindValue(':host_name', $host);
-			$stmt->bindValue(':driver', $driver);
-			$stmt->bindValue(":sequential_ID", $key);
-
-			$stmt->execute();
-		}
-
-		
-		$get_housing_stmt = $db->prepare("SELECT * FROM housing where event_ID=:id order by sequential_ID asc");
-		$get_housing_stmt->bindValue(":id",$event_id);
-		$get_housing_stmt->execute();
-
-		$reset_stmt = $db->prepare("UPDATE attendees set house_ID = null where house_ID=:housing_ID");
-		$update_stmt = $db->prepare("UPDATE attendees set house_ID = :housing_ID where event_ID=:event_id and sequential_ID=:sequence");
-
-		while($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$update_stmt->bindValue(':housing_ID', $get_housing_res["ID"]);
-			$reset_stmt->bindValue(':housing_ID', $get_housing_res["ID"]);
-			$reset_stmt->execute();
-
-			foreach($_POST['guest'][$get_housing_res["sequential_ID"]] as $key => $sequence) {
-				if($sequence == "remove") {
-					continue;
-				}
-				$update_stmt->bindValue(":sequence",$sequence);
-				$update_stmt->bindValue(':event_id', $event_id);
-				$update_stmt->execute();
-			}
-		}
 	} 
 	// delete housing
 	else if ($_POST['action'] == 'deleteHousing') {
@@ -99,8 +98,8 @@ if( isset($_POST['action'] )) {
 			<h1>Housing</h1>
 			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-				<input type="hidden" name="action" value = "updateHousing">
-				
+				<input type="hidden" name="action">
+				<input type="hidden" name="sequence">			
 				<div id="sectionCards">
 				<?php
 					$event_id = getEventID();
@@ -175,29 +174,20 @@ if( isset($_POST['action'] )) {
 			</form>
 		</section>
 
-		<form id = "addHousing" method="post">
-			<input type = "hidden" name="sequence" value="">
-			<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-			<input type="hidden" name="action" value = "addHousing">
-		</form>
-
-		<form id="deleteHousing" method="post">
-			<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
-			<input type = "hidden" name="action" value="deleteHousing">
-			<input type = "hidden" name="sequence" value="">
-		</form>
-
 	</body>
 
 	<?php include("../templates/head.php"); ?>
 	<script>
 		function addHost() {
-			$("#addHousing").submit();
+			document.forms['form']['action'].value="addHousing";
+                        document.forms['form']['sequence'].value="";
+			$("#form").submit();
 		}
 
 		function deleteHousing(sequential_id) {
-			$('#deleteHousing > input[name="sequence"]').val(sequential_id);
-			$("#deleteHousing").submit();
+                        document.forms['form']['action'].value="deleteHousing";
+                        document.forms['form']['sequence'].value=sequential_id;
+			$("#form").submit();
 		}
 
 		function addGuest(num) {
