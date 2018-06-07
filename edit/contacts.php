@@ -78,11 +78,11 @@
 						echo '<div class="card">';
 						echo '<div class="btn" onclick="deleteContact('.$get_contact_res["sequential_ID"].')">X</div>';
 						echo '<div class="input">Name: <input type="text" name="name['.$get_contact_res["sequential_ID"].']" 
-							value = \''.$get_contact_res["name"].'\'></div>';
+							maxlength="100" value = \''.$get_contact_res["name"].'\'></div>';
 						echo '<div class="input">Address: <input type="text" name="address['.$get_contact_res["sequential_ID"].']" 
-							value = \''.$get_contact_res["address"].'\'></div>';
+							maxlength="100" value = \''.$get_contact_res["address"].'\'></div>';
 						echo '<div class="input">Phone: <input type="tel" name="phone['.$get_contact_res["sequential_ID"].']" 
-							value = \''.$get_contact_res["phone"].'\'></div></div>';
+							maxlength="17" value = \''.$get_contact_res["phone"].'\'></div></div>';
 					}
 				?>
 				</div>

@@ -75,7 +75,7 @@
 					while($get_notification_res = $get_notification_stmt->fetch(PDO::FETCH_ASSOC)) {
 						echo '<div class="card">';
 						echo '<div class="btn" onclick="deleteNotification('.$get_notification_res["sequential_ID"].')">X</div>';
-						echo '<div class="input">Title: <input type="text" name="title['.$get_notification_res["sequential_ID"].']" value = \''.$get_notification_res["title"].'\'></div>';
+						echo '<div class="input">Title: <input type="text" name="title['.$get_notification_res["sequential_ID"].']" maxlength="100" value = \''.$get_notification_res["title"].'\'></div>';
 						echo '<div class="input">body: <textarea name="body['. $get_notification_res["sequential_ID"] .']">'.$get_notification_res["body"].'</textarea></div>';
 						echo '<div class="input">Date: <input type="date" name="date['.$get_notification_res["sequential_ID"].']" value="'. date("Y-m-d",strtotime($get_notification_res["date"])).'"></div>';
 						echo '<div class="input">Time: <input type="time" name="time['.$get_notification_res["sequential_ID"].']" value="'. date("H:i",strtotime($get_notification_res["date"])).'"></div>';

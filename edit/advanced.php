@@ -71,14 +71,14 @@
 						$get_contact_res = $get_contact_stmt->fetch(PDO::FETCH_ASSOC);
 						
 						//populate page from database 
-						echo '<div class="input">Refresh: <input type="text" name="refresh" value="'.$get_contact_res['refresh'].'"></div>';
+						echo '<div class="input">Refresh: <input type="number" name="refresh" value="'.$get_contact_res['refresh'].'"></div>';
 						echo '<div class="input">Refresh Expire: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
 						echo '<div class = "input">Theme Dark: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeDark" 
-								value="'.str_replace("#", "", $get_contact_res['theme_dark']).'"></div>';
+								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_dark']).'"></div>';
 						echo '<div class = "input">Theme Medium: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeMedium" 
-								value="'.str_replace("#", "", $get_contact_res['theme_medium']).'"></div>';
+								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_medium']).'"></div>';
 						echo '<div class = "input">Theme Color: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeColor" 
-								value="'.str_replace("#", "", $get_contact_res['theme_color']).'"></div>';
+								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_color']).'"></div>';
 					?>
 
 				</div>

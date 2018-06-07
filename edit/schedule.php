@@ -71,11 +71,11 @@ include("../templates/check-event-exists.php");
 						echo '<div class="btn" onclick="deleteItem('.$get_schedule_res["sequential_ID"].')">X</div>';
 						echo '<div class="input">Date: <input type="date" name="date[' . $get_schedule_res["sequential_ID"] . ']" value="'. date("Y-m-d",strtotime($get_schedule_res["date"])).'"></div>'; 
 						echo '<div class="input">Start Time: <input type="time" name="starttime[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["start_time"].'"></div>';
-						echo '<div class="input">Length: <input type="text" name="length[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["length"].'"></div>';
-						echo '<div class="input">Description: <input type="text" name="description[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["description"].'"></div>';
-						echo '<div class="input">Location: <input type="text" name="location[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["location"].'"></div>';
+						echo '<div class="input">Length in Minutes: <input type="number" name="length[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["length"].'"></div>';
+						echo '<div class="input">Description: <input type="text" name="description[' . $get_schedule_res["sequential_ID"] . ']" maxlength="150" value="'. $get_schedule_res["description"].'"></div>';
+						echo '<div class="input">Location: <input type="text" name="location[' . $get_schedule_res["sequential_ID"] . ']" maxlength="50" value="'. $get_schedule_res["location"].'"></div>';
 
-						echo '<div class="input">Category: ';
+						echo '<div class="input">Theme: ';
 
 						$get_themes_stmt = $db->prepare("SELECT * from themes where event_ID=:id");
 						$get_themes_stmt->bindValue(":id",$event_id);

@@ -47,6 +47,7 @@
 		die();
 	}
 	secure();
+
         $get_event_stmt = $db->prepare("SELECT name,time_zone,TZcatagory,welcome_message, visible,contact_nav,contact_icon,sched_nav,sched_icon,housing_nav,housing_icon,prayer_nav,prayer_icon,notif_nav,notif_icon FROM event WHERE ID =:id");
 	
         $get_event_stmt->bindValue(":id", $_GET["id"]);
@@ -64,6 +65,8 @@
 		$timeZone = $_POST['timezone'];
 		$welcomeMessage = $_POST['welcome'];
 		$visible = isset($_POST['visible']);
+		$custom = isset($_POST['custom']);
+		$remote = isset($_POST['remote']);
 		$id = $_POST["id"];
 		$logo = null;
 		// If the user specified a logo file
@@ -79,7 +82,9 @@
 			//	die("encoding should be successful"); failed by this point
 				echo "<p>File succesfully uploaded</p>";
 			} else {
+
 				//die("error uploading file"); //apparently there is a permission failure
+
 				echo "<p>Error uploading file</p>";
 			}
 		
@@ -100,7 +105,9 @@
 		}
 		$stmt->bindValue(':welcome_message', $welcomeMessage);
 		$stmt->bindValue(':id', $id);
-		$stmt->bindValue(':visible', $visible);	
+		$stmt->bindValue(':visible', $visible);
+		$stmt->bindValue(':custom', $custom);
+		$stmt->bindValue(':remote', $remote);
 		$stmt->bindValue(':logo', $logo);
 		$stmt->bindValue(":contact_nav", $_POST["contact_nav"]);
 		$stmt->bindValue(":contact_icon", $_POST["contact_icon"]);
@@ -152,9 +159,10 @@
 
 						<input type="hidden" name="id" value="<?php echo($_GET['id'])?>">
 
-						<div class="input">Event Name:<input type="text" name="name" value="<?php echo $get_event_res["name"] ?>"></div>
+						<input type="hidden" name="contact_icon" maxlength="100" value="ic_contact">
 
-						<div class="input">Logo:<input type="file" name="logo" ></div>
+
+						
 						<?php
 							echo "<div class='input'>Time Zone:<select name='timeCatagory'>";
 							$TZ_Cats=array();
@@ -198,27 +206,29 @@
 						</div>
 						
 
-						<div class="input">Welcome Message:<input type="text" name="welcome" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
+						<input type="hidden" name="notif_icon" maxlength="100" value="ic_bell">
 
-						<div class="input">Contact Page Nav:<input type="text" name="contact_nav" value="<?php echo $get_event_res["contact_nav"] ?>"></div>
+						<div class="input">Event Name:<input type="text" name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
 
-						<div class="input">Contact Page Icon:<input type="text" name="contact_icon" value="<?php echo $get_event_res["contact_icon"] ?>"></div>
+						<div class="input">Logo:<input type="file" name="logo" ></div>
 
-						<div class="input">Schedule Page Nav:<input type="text" name="sched_nav" value="<?php echo $get_event_res["sched_nav"] ?>"></div>
+						<div class="input">Time Zone:<input type="text" name="timezone" maxlength="9" value="<?php echo $get_event_res["time_zone"] ?>"></div>
 
-						<div class="input">Schedule Page Icon:<input type="text" name="sched_icon" value="<?php echo $get_event_res["sched_icon"] ?>"></div>
+						<div class="input">Welcome Message:<input type="text" name="welcome" maxlength="100" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
 
-						<div class="input">Housing Page Nav:<input type="text" name="housing_nav" value="<?php echo $get_event_res["housing_nav"] ?>"></div>
+						<div class="input">Contact Page Nav:<input type="text" name="contact_nav" maxlength="25" value="<?php echo $get_event_res["contact_nav"] ?>"></div>
 
-						<div class="input">Housing Page Icon:<input type="text" name="housing_icon" value="<?php echo $get_event_res["housing_icon"] ?>"></div>
+						<div class="input">Schedule Page Nav:<input type="text" name="sched_nav" maxlength="25" value="<?php echo $get_event_res["sched_nav"] ?>"></div>
 
-						<div class="input">Prayer Partners Page Nav:<input type="text" name="prayer_nav" value="<?php echo $get_event_res["prayer_nav"] ?>"></div>
+						<div class="input">Housing Page Nav:<input type="text" name="housing_nav" maxlength="25" value="<?php echo $get_event_res["housing_nav"] ?>"></div>
 
-						<div class="input">Prayer Partners Page Icon:<input type="text" name="prayer_icon" value="<?php echo $get_event_res["prayer_icon"] ?>"></div>
+						<div class="input">Prayer Partners Page Nav:<input type="text" name="prayer_nav" maxlength="25" value="<?php echo $get_event_res["prayer_nav"] ?>"></div>
 
-						<div class="input">Notification Page Nav:<input type="text" name="notif_nav" value="<?php echo $get_event_res["notif_nav"] ?>"></div>
+						<div class="input">Notification Page Nav:<input type="text" name="notif_nav" maxlength="25" value="<?php echo $get_event_res["notif_nav"] ?>"></div>
 
-						<div class="input">Notification Page Icon:<input type="text" name="notif_icon" value="<?php echo $get_event_res["notif_icon"] ?>"></div>
+                                                <div class="input">Allow a user to create a custom timezone:<input autocomplete="off" type="checkbox" name="custom" value="true" <?php echo ($get_event_res["custom_tz"]) ? "checked" : ""; ?>></div>
+
+                                                <div class="input">Allow a user to attend remotely:<input autocomplete="off" type="checkbox" name="remote" value="true" <?php echo ($get_event_res["view_remote"]) ? "checked" : ""; ?>></div>
 
 						<div class="input">Visible:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
 
