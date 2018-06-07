@@ -161,7 +161,11 @@
 
 						<input type="hidden" name="contact_icon" maxlength="100" value="ic_contact">
 
+						<input type="hidden" name="notif_icon" maxlength="100" value="ic_bell">
 
+                                                <div class="input">Event Name:<input type="text" name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
+
+                                                <div class="input">Logo:<input type="file" name="logo" ></div>
 						
 						<?php
 							echo "<div class='input'>Time Zone:<select name='timeCatagory'>";
@@ -206,13 +210,8 @@
 						</div>
 						
 
-						<input type="hidden" name="notif_icon" maxlength="100" value="ic_bell">
-
-						<div class="input">Event Name:<input type="text" name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
-
-						<div class="input">Logo:<input type="file" name="logo" ></div>
-
-						<div class="input">Time Zone:<input type="text" name="timezone" maxlength="9" value="<?php echo $get_event_res["time_zone"] ?>"></div>
+						
+						
 
 						<div class="input">Welcome Message:<input type="text" name="welcome" maxlength="100" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
 
