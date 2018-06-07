@@ -47,7 +47,7 @@
 		die();
 	}
 	secure();
-        $get_event_stmt = $db->prepare("SELECT name,time_zone,welcome_message, visible,contact_nav,contact_icon,sched_nav,sched_icon,housing_nav,housing_icon,prayer_nav,prayer_icon,notif_nav,notif_icon FROM event WHERE ID =:id");
+        $get_event_stmt = $db->prepare("SELECT name,time_zone,TZcatagory,welcome_message, visible,contact_nav,contact_icon,sched_nav,sched_icon,housing_nav,housing_icon,prayer_nav,prayer_icon,notif_nav,notif_icon FROM event WHERE ID =:id");
 	
         $get_event_stmt->bindValue(":id", $_GET["id"]);
 	
@@ -59,7 +59,7 @@
         $get_event_res = $get_event_res[0];
         
     if(isset($_POST['name'])) {
-		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone, welcome_message = :welcome_message, visible = :visible, logo = :logo, contact_nav= :contact_nav,contact_icon= :contact_icon,sched_nav= :sched_nav,sched_icon= :sched_icon,housing_nav= :housing_nav,housing_icon= :housing_icon,prayer_nav= :prayer_nav,prayer_icon= :prayer_icon,notif_nav= :notif_nav,notif_icon= :notif_icon WHERE id = :id");
+		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone, TZcatagory=:TZ_catagory, welcome_message = :welcome_message, visible = :visible, logo = :logo, contact_nav= :contact_nav,contact_icon= :contact_icon,sched_nav= :sched_nav,sched_icon= :sched_icon,housing_nav= :housing_nav,housing_icon= :housing_icon,prayer_nav= :prayer_nav,prayer_icon= :prayer_icon,notif_nav= :notif_nav,notif_icon= :notif_icon WHERE id = :id");
 		$name = $_POST['name'];
 		$timeZone = $_POST['timezone'];
 		$welcomeMessage = $_POST['welcome'];
@@ -79,7 +79,7 @@
 			//	die("encoding should be successful"); failed by this point
 				echo "<p>File succesfully uploaded</p>";
 			} else {
-				die("error uploading file"); //apparently there is a permission failure
+				//die("error uploading file"); //apparently there is a permission failure
 				echo "<p>Error uploading file</p>";
 			}
 		
@@ -90,9 +90,14 @@
 					unlink($file); 		// delete file
 			}
 		}
-		
+				
 		$stmt->bindValue(':name', $name);
-		$stmt->bindValue(':time_zone', $timeZone);
+	        if($_POST["timeCatagory"]!=$get_event_res["TZcatagory"]){
+			$stmt->bindValue(':time_zone', '');
+                }
+		else{
+		$stmt->bindValue(':time_zone', $_POST["time_zone"]);
+		}
 		$stmt->bindValue(':welcome_message', $welcomeMessage);
 		$stmt->bindValue(':id', $id);
 		$stmt->bindValue(':visible', $visible);	
@@ -107,6 +112,7 @@
 		$stmt->bindValue(":prayer_icon", $_POST["prayer_icon"]);
 		$stmt->bindValue(":notif_nav", $_POST["notif_nav"]);
 		$stmt->bindValue(":notif_icon", $_POST["notif_icon"]);
+		$stmt->bindValue(":TZ_catagory", $_POST["timeCatagory"]);
 		$stmt->execute();
 		// reroute to this page with the new event id
 		header("Location: general.php?id=".$_POST['id']);
@@ -140,7 +146,7 @@
 
 			<h1>General</h1>
 
-				<form method = "post" enctype="multipart/form-data" id="form">
+			<form method = "post" enctype="multipart/form-data" id="form">
 
 					<div class="card">
 
@@ -149,8 +155,48 @@
 						<div class="input">Event Name:<input type="text" name="name" value="<?php echo $get_event_res["name"] ?>"></div>
 
 						<div class="input">Logo:<input type="file" name="logo" ></div>
-
-						<div class="input">Time Zone:<input type="text" name="timezone" value="<?php echo $get_event_res["time_zone"] ?>"></div>
+						<?php
+							echo "<div class='input'>Time Zone:<select name='timeCatagory'>";
+							$TZ_Cats=array();
+							$TZNames=DateTimeZone::ListIdentifiers();
+							$tempmatch;
+							for($i=0;$i<sizeof($TZNames);$i++){
+								$tempmatch=preg_split('/[\W]+/',$TZNames[$i]);
+								if(!in_array($tempmatch[0],$TZ_Cats)){
+									if($tempmatch[0]==$get_event_res["TZcatagory"]){
+										echo "<option selected>" .$tempmatch[0] ."</option>";
+										array_push($TZ_Cats, $tempmatch[0]);
+									} 
+									else{
+										array_push($TZ_Cats,$tempmatch[0]);
+										echo "<option>" .$tempmatch[0] ."</option>";
+									}
+								}
+							}
+							echo "</select>";
+							echo  "<select name='time_zone'>";
+							for ($i=0;$i<sizeof($TZNames);$i++){
+								$tempstring=preg_split('/[\W]+/',$TZNames[$i],2);
+								if ($tempstring[0]==$get_event_res["TZcatagory"]){
+								        if($tempstring[1]==$get_event_res["time_zone"]){
+                                                                                echo "<option selected>" .$tempstring[1] ."</option>";
+                                                                                
+                                                                        }
+                                                                        else{
+                                                                                
+                                                                                echo "<option>" .$tempstring[1] ."</option>";
+                                                                        }
+                                                                }
+                                                        }
+                                                        echo "</select>";	
+							
+								
+							
+						?>
+						
+						<div class='btn' id="savetz" onclick="save()">confirm general area</div>
+						</div>
+						
 
 						<div class="input">Welcome Message:<input type="text" name="welcome" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
 
@@ -182,7 +228,7 @@
 
 					<br>
 
-					<div class="btn" id="save">Save</div>
+					<div class="btn" id="save" onclick="save()">Save</div>
 
 				</form>
 
@@ -193,7 +239,12 @@
 
 
 	<?php include("../templates/head.php"); ?>
+	<script>
 
+	function save(){
+		$("#form").submit();	
+	}
+	</script>
 
 
 </html>
