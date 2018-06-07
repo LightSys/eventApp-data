@@ -130,7 +130,7 @@ if( isset($_POST['action'] )) {
 
 						echo '</select>';
 						echo '</div>';
-						echo '<div class="input">Driver: <input type="text" name="driver[' . $get_housing_res['sequential_ID'] . ']" value = ' .$get_housing_res['driver'].'></div>';
+						echo '<div class="input">Driver: <input type="text" name="driver[' . $get_housing_res['sequential_ID'] . ']" maxlength="100" value = ' .$get_housing_res['driver'].'></div>';
 						echo '<div class="input">Guests: ';
 						echo '<div id="guests[' . $get_housing_res['sequential_ID'] . ']">';
 

@@ -73,7 +73,7 @@
 						echo '<div class="card">';
 						echo '<div class="btn" onclick="deleteAttendee('.$get_contact_page_res["sequential_ID"].')">X</div>';
 						echo '<div class="input">Name: <input type="text" name="name['.$get_contact_page_res["sequential_ID"].']" 
-							value = \''.$get_contact_page_res["name"].'\'></div></div>';
+							maxlength="30" value = \''.$get_contact_page_res["name"].'\'></div></div>';
 					}
 				?>
 				</div>

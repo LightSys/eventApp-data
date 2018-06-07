@@ -233,8 +233,35 @@ include("../templates/check-event-exists.php");
 						echo '<div class="btn" onclick="deletePage('.$get_info_page_res["sequential_ID"].')">X</div>';
 						echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'up\')">Up</div>';
 							echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'down\')">Down</div>';
-						echo '<div class="input">Navigation Name: <input type="text" name="name[' . $get_info_page_res["sequential_ID"] . ']" value="'.$get_info_page_res["nav"].'"></div>';
-						echo '<div class="input">Icon: <input type="text" name="icon[' . $get_info_page_res["sequential_ID"] . ']" value="'.$get_info_page_res["icon"].'"></div>';
+						echo '<div class="input">Navigation Name: <input type="text" name="name[' . $get_info_page_res["sequential_ID"] . ']" maxlength="25" value="'.$get_info_page_res["nav"].'"></div>';
+						echo '<div class="input">Information Page Icon: <select name="icon[' . $get_info_page_res["sequential_ID"] . ']">';
+						
+						//When this code was written only two icons were unused in the app. They are in the array below and a user may choose beteen them.
+						//If or when more icons are added to the app through android studio xml vectors simply add their names to the array so a user may choose them.
+							$availible_icons = array(
+
+								0 => "ic_clipboard",
+								1 => "ic_mountains",
+
+							);
+
+
+						for($i=0; $i<sizeof($availible_icons); $i++) {
+
+							if ($get_info_page_res['icon'] == $availible_icons[$i]) {
+
+								echo '<option selected>' . $availible_icons[$i] . '</option>';
+
+							} else {
+
+								echo '<option>' . $availible_icons[$i] . '</option>';
+
+							}
+
+						}
+
+						echo '</select>';
+						echo '</div>';
 
 						$get_sections_stmt = $db->prepare("SELECT * FROM info_page_sections where info_page_ID=:id order by sequential_ID asc");
 						$get_sections_stmt->bindValue(":id",$get_info_page_res["ID"]);
@@ -245,7 +272,7 @@ include("../templates/check-event-exists.php");
 							echo '<div class="btn" onclick="deleteSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].')">X</div>';
 							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'up\')">Up</div>';
 							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'down\')">Down</div>';
-							echo '<div class="input">Header: <input type="text" name="header['. $get_info_page_res["sequential_ID"] .'][' . $get_section_res["sequential_ID"] . ']" value="'.$get_section_res["header"].'"></div>';
+							echo '<div class="input">Header: <input type="text" name="header['. $get_info_page_res["sequential_ID"] .'][' . $get_section_res["sequential_ID"] . ']" maxlength="100" value="'.$get_section_res["header"].'"></div>';
 							echo '<div class="input">Content: <textarea name="content[' . $get_info_page_res["sequential_ID"] . ']['. $get_section_res["sequential_ID"] .']">'.$get_section_res["content"].'</textarea></div>';
 							echo '</div>';
 						}

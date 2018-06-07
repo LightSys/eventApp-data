@@ -75,10 +75,10 @@
 						echo '<div class="card">';
 						echo '<div class="btn" onclick="deleteTheme('.$get_theme_res["sequential_ID"].')">X</div>';
 						echo '<div class="input">Theme Name: <input type="text" name="themeName['.$get_theme_res["sequential_ID"].']" 
-								value="'.$get_theme_res['theme_name'].'"></div>';
+								maxlength="50" value="'.$get_theme_res['theme_name'].'"></div>';
 						echo '<div class = "input">Theme Color: <input class="jscolor {closable:true,closeText:"Close"}" 
 								name="themeColor['.$get_theme_res["sequential_ID"].']" 
-								value="'.str_replace("#", "", $get_theme_res['theme_color']).'"></div></div>';
+								maxlength="7" value="'.str_replace("#", "", $get_theme_res['theme_color']).'"></div></div>';
 					}
 				?>
 				</div>

@@ -80,7 +80,7 @@
 
 						while($get_sections_res = $get_sections_stmt->fetch(PDO::FETCH_ASSOC)) {
 							echo '<div class="card">'; 
-							echo '<div class="input">Header: <input type="text" name="header['.$get_sections_res["sequential_ID"].']" value="'.$get_sections_res["header"].'"></div>';
+							echo '<div class="input">Header: <input type="text" name="header['.$get_sections_res["sequential_ID"].']" maxlength="100" value="'.$get_sections_res["header"].'"></div>';
 							echo '<div class="input">Content: <textarea name="content['.$get_sections_res["sequential_ID"].']">'.$get_sections_res["content"].'</textarea></div>';
 							echo '</div>';
 						}
@@ -96,7 +96,7 @@
 						}
 
 						echo '<div class="card">';
-						echo '<div class="input">Header: <input type="text" name="contacts_header" value="'.$get_last_section_res["header"].'"></div>';
+						echo '<div class="input">Header: <input type="text" name="contacts_header" maxlength="100"value="'.$get_last_section_res["header"].'"></div>';
 						echo '<div class="input">Contacts: <div id="contact_list">'; 
 
 						foreach($contacts as $contact) {
