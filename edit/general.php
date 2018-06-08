@@ -60,18 +60,18 @@
         $get_event_res = $get_event_res[0];
         
     if(isset($_POST['name'])) {
-		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone, TZcatagory=:TZ_catagory, welcome_message = :welcome_message, visible = :visible, logo = :logo, contact_nav= :contact_nav,contact_icon= :contact_icon,sched_nav= :sched_nav,sched_icon= :sched_icon,housing_nav= :housing_nav,housing_icon= :housing_icon,prayer_nav= :prayer_nav,prayer_icon= :prayer_icon,notif_nav= :notif_nav,notif_icon= :notif_icon WHERE id = :id");
+		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone,custom_tz= :custom, view_remote=:remote, TZcatagory=:TZ_catagory, welcome_message = :welcome_message, visible = :visible, logo = :logo, contact_nav= :contact_nav,contact_icon= :contact_icon,sched_nav= :sched_nav,sched_icon= :sched_icon,housing_nav= :housing_nav,housing_icon= :housing_icon,prayer_nav= :prayer_nav,prayer_icon= :prayer_icon,notif_nav= :notif_nav,notif_icon= :notif_icon WHERE id = :id");
 		$name = $_POST['name'];
-		$timeZone = $_POST['timezone'];
+		$timeZone = $_POST['time_zone'];
 		$welcomeMessage = $_POST['welcome'];
 		$visible = isset($_POST['visible']);
 		$custom = isset($_POST['custom']);
 		$remote = isset($_POST['remote']);
 		$id = $_POST["id"];
-		$logo = null;
 		// If the user specified a logo file
 		if(isset($_FILES["logo"]["name"])) {
-			//die( "attempted upload"); we got this far
+			$logo = null;
+			die( "attempted upload");// we got this far
 			// The directory to save the file to
 			$uploaddir = '../temp/';
 			// Get the full path to save the uploaded file to
@@ -83,7 +83,7 @@
 				echo "<p>File succesfully uploaded</p>";
 			} else {
 
-				//die("error uploading file"); //apparently there is a permission failure
+			//	die("   did not move file"); //apparently there is a permission failure
 
 				echo "<p>Error uploading file</p>";
 			}
@@ -101,7 +101,7 @@
 			$stmt->bindValue(':time_zone', '');
                 }
 		else{
-		$stmt->bindValue(':time_zone', $_POST["time_zone"]);
+			$stmt->bindValue(':time_zone', $_POST["time_zone"]);
 		}
 		$stmt->bindValue(':welcome_message', $welcomeMessage);
 		$stmt->bindValue(':id', $id);
@@ -156,7 +156,12 @@
 			<form method = "post" enctype="multipart/form-data" id="form">
 
 					<div class="card">
-
+						<input type="hidden" name="sched_icon" maxlength="100" value="ic_schedule">
+					
+						<input type="hidden" name="housing_icon" maxlength="100" value="ic_house">
+					
+						<input type="hidden" name="prayer_icon" maxlength="100" value="ic_group">
+						
 						<input type="hidden" name="id" value="<?php echo($_GET['id'])?>">
 
 						<input type="hidden" name="contact_icon" maxlength="100" value="ic_contact">
