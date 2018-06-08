@@ -68,11 +68,11 @@
 		$custom = isset($_POST['custom']);
 		$remote = isset($_POST['remote']);
 		$id = $_POST["id"];
+		$logo = null;
 		// If the user specified a logo file
 		if(isset($_FILES["logo"]["name"])) {
-			$logo = null;
 			die( "attempted upload");// we got this far
-			// The directory to save the file to
+			//The directory to save the file to
 			$uploaddir = '../temp/';
 			// Get the full path to save the uploaded file to
 			$uploadfile = $uploaddir . basename($_FILES['logo']['name']);
