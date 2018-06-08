@@ -48,7 +48,7 @@
 	}
 	secure();
 
-        $get_event_stmt = $db->prepare("SELECT logo,name,time_zone,TZcatagory,welcome_message, visible,contact_nav,contact_icon,sched_nav,sched_icon,housing_nav,housing_icon,prayer_nav,prayer_icon,notif_nav,notif_icon FROM event WHERE ID =:id");
+        $get_event_stmt = $db->prepare("SELECT custom_tz,view_remote,logo,name,time_zone,TZcatagory,welcome_message, visible,contact_nav,contact_icon,sched_nav,sched_icon,housing_nav,housing_icon,prayer_nav,prayer_icon,notif_nav,notif_icon FROM event WHERE ID =:id");
 	
         $get_event_stmt->bindValue(":id", $_GET["id"]);
 	
@@ -85,7 +85,7 @@
 				echo "<p>File succesfully uploaded</p>";
 			} else {
 
-				die("   did not move file"); //apparently there is a permission failure
+				//die("   did not move file"); //apparently there is a permission failure
 
 				echo "<p>Error uploading file</p>";
 			}
@@ -258,7 +258,6 @@
 	</body>
 
 
-
 	<?php include("../templates/head.php"); ?>
 	<script>
 
@@ -268,4 +267,4 @@
 	</script>
 
 
-</html>
+2</html>
