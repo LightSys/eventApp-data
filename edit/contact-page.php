@@ -31,11 +31,13 @@
 			foreach($_POST['contact'] as $key => $name) {
 				if($first) {
 					$first = false;
+					$contact_str .= $name;
 				}
+				elseif($name=="remove"){}
 				else {
 					$contact_str .= ":";
+					$contact_str .= $name;
 				}
-				$contact_str .= $name;
 			}
 
 			$stmt = $db->prepare("UPDATE contact_page_sections set header=:header, content=:content where event_ID=:id order by sequential_ID desc limit 1");
@@ -80,7 +82,7 @@
 
 						while($get_sections_res = $get_sections_stmt->fetch(PDO::FETCH_ASSOC)) {
 							echo '<div class="card">'; 
-							echo '<div class="input">Header: <input type="text" name="header['.$get_sections_res["sequential_ID"].']" maxlength="100" value="'.$get_sections_res["header"].'"></div>';
+							echo '<div class="input">Header: <input type="text" name="header['.$get_sections_res["sequential_ID"].']" value="'.$get_sections_res["header"].'"></div>';
 							echo '<div class="input">Content: <textarea name="content['.$get_sections_res["sequential_ID"].']">'.$get_sections_res["content"].'</textarea></div>';
 							echo '</div>';
 						}
@@ -96,7 +98,7 @@
 						}
 
 						echo '<div class="card">';
-						echo '<div class="input">Header: <input type="text" name="contacts_header" maxlength="100"value="'.$get_last_section_res["header"].'"></div>';
+						echo '<div class="input">Header: <input type="text" name="contacts_header" value="'.$get_last_section_res["header"].'"></div>';
 						echo '<div class="input">Contacts: <div id="contact_list">'; 
 
 						foreach($contacts as $contact) {
@@ -111,7 +113,7 @@
 
 							while($get_contacts_res = $get_contacts_stmt->fetch(PDO::FETCH_ASSOC)) {
 								if($get_contacts_res['name'] == $contact) {
-									echo '<option value='. $get_contacts_res['sequential_ID'] .' selected>' . $get_contacts_res['name'] . '</option>';
+									echo '<option selected>' . $get_contacts_res['name'] . '</option>';
 								} else {
 									echo '<option>' . $get_contacts_res['name'] . '</option>';
 								}
