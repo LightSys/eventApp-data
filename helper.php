@@ -91,16 +91,27 @@ function json_encode_noescape($a=false)
 	}
 }
 function secure(){
-	$timelimit=1200;
+	
+	$timelimit=12;
 	$tempTime=time();
 	//include("templates/check-event-exists.php");
 	include("connection.php");
+
+	//decide realitive path to logout
+	
+	if(getParentDir()=="edit"){
+		$logoutpath=getbasedir()."/templates/logout.php";
+	}
+	else{
+		$logoutpath=getbasedir()."/templates/logout.php";
+	}
 
 	$get_event_stmt = $db->prepare("SELECT admin FROM event WHERE ID =:id");
 
 	$tempid= $_GET["id"];	
 	if(!whitelistChars(1,$tempid)){
-		header("Location: http://10.5.11.121/emmett/eventApp-data/templates/logout.php");
+		
+		header("Location: http:// ".$logoutpath);
 	}
 		
         $get_event_stmt->bindValue(":id",$tempid);
@@ -122,14 +133,15 @@ function secure(){
 
 	if($tempTime- $_SESSION['timestamp']>$timelimit){
 		
-		header("Location: http://10.5.11.121/emmett/eventApp-data/templates/logout.php/");
+		header("Location: http://".$logoutpath);
 		
 		die("session time expired");
 	}
 
         $get_event_res = $get_event_res[0];
         if(!is_null($get_event_res['admin']) && (!isset($_SESSION["username"])||$get_event_res['admin']!=$_SESSION['username'])){
-                header("Location: http://10.5.11.121/emmett/eventApp-data/templates/logout.php");
+                
+		header("Location: http://".$logoutpath);
                 die();
         }
 
@@ -137,18 +149,29 @@ function secure(){
 }
 
 function eventSecure(){
-	$timelimit=1200;
+	$timelimit=12;
         $tempTime=time();
+         //decide realitive path to logout
+
         
+          if(getParentDir()=="edit"){
+                $logoutpath=getbasedir()."/templates/logout.php";
+        }
+        else{
+                $logoutpath=getbasedir()."/templates/logout.php";
+        }
+        
+
+	
         include("connection.php");
 	 if(!isset($_SESSION['username'])){
-                 header("location: http://10.5.11.121/emmett/eventApp-data/templates/logout.php");
+                 header_remove();
+		 header("Location: http://".$logoutpath);
                  die();
 
           }
 	if($tempTime- $_SESSION['timestamp']>$timelimit){
-
-                header("Location: http://10.5.11.121/emmett/eventApp-data/templates/logout.php");
+                header("Location: ".$logoutpath);
 
                 die('session time expired');
         }
@@ -197,4 +220,9 @@ function getParentDir() {
 
 	return $url;
 }
+function getbasedir(){//this MUST be modified for deployment
+	return "10.5.11.121/judson/eventApp-data"; 
+}
+
+
 ?>
