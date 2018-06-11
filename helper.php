@@ -92,7 +92,7 @@ function json_encode_noescape($a=false)
 }
 function secure(){
 	
-	$timelimit=12;
+	$timelimit=1200;
 	$tempTime=time();
 	//include("templates/check-event-exists.php");
 	include("connection.php");
@@ -149,7 +149,7 @@ function secure(){
 }
 
 function eventSecure(){
-	$timelimit=12;
+	$timelimit=1200;
         $tempTime=time();
          //decide realitive path to logout
 
