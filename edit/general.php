@@ -35,9 +35,10 @@
 			$new_contact_pages_stmt->execute();
 		}
 		
-		$stmt = $db->prepare("UPDATE event SET admin = :admin WHERE internal_ID = :id");
+		$stmt = $db->prepare("UPDATE event SET admin = :admin, theme_dark = :themedark, theme_color = :themecolor WHERE internal_ID = :id");
 		$stmt->bindValue(':admin', $_SESSION["username"]);
-		
+		$stmt->bindValue(':themedark', "#000000");
+                $stmt->bindValue(':themecolor', "#0093FF");
 		$stmt->bindValue(':id',$internalEventID);
 		
 		$stmt->execute();
@@ -160,6 +161,8 @@
 
 			<h1>General</h1>
 
+			<p>This page contains needed settings that determine the look and the use of the event app.</p>
+
 			<form method = "post" enctype="multipart/form-data" id="form">
 
 					<div class="card">
@@ -177,7 +180,7 @@
 
                                                 <div class="input">Event Name:<input type="text" name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
 
-                                                <div class="input">Logo:<input type="file" name="logo" ></div>
+                                                <div class="input">Event Logo:<input type="file" name="logo" ></div>
 						
 						<?php
 							echo "<div class='input'>Time Zone:<select name='timeCatagory'>";
@@ -227,6 +230,8 @@
 
 						<div class="input">Welcome Message:<input type="text" name="welcome" maxlength="100" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
 
+						<p>Nav stands for navigation. The following fields decide what each page is labled in the navigation on the left side off the app much like this page is labled general in the menu on your left.</p>	
+
 						<div class="input">Contact Page Nav:<input type="text" name="contact_nav" maxlength="25" value="<?php echo $get_event_res["contact_nav"] ?>"></div>
 
 						<div class="input">Schedule Page Nav:<input type="text" name="sched_nav" maxlength="25" value="<?php echo $get_event_res["sched_nav"] ?>"></div>
@@ -237,11 +242,13 @@
 
 						<div class="input">Notification Page Nav:<input type="text" name="notif_nav" maxlength="25" value="<?php echo $get_event_res["notif_nav"] ?>"></div>
 
-                                                <div class="input">Allow a user to create a custom timezone:<input autocomplete="off" type="checkbox" name="custom" value="true" <?php echo ($get_event_res["custom_tz"]) ? "checked" : ""; ?>></div>
+                                                <div class="input">Allow a User to Enter a Custom Timezone:<input autocomplete="off" type="checkbox" name="custom" value="true" <?php echo ($get_event_res["custom_tz"]) ? "checked" : ""; ?>></div>
 
-                                                <div class="input">Allow a user to attend remotely:<input autocomplete="off" type="checkbox" name="remote" value="true" <?php echo ($get_event_res["view_remote"]) ? "checked" : ""; ?>></div>
+                                                <div class="input">Allow a User to Attend Remotely:<input autocomplete="off" type="checkbox" name="remote" value="true" <?php echo ($get_event_res["view_remote"]) ? "checked" : ""; ?>></div>
 
-						<div class="input">Visible:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
+						<div class="input">Event is Live:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
+
+						<p>This is the QR code associated with the app. Once the event app is downloaded it immediately lauches into the device camera in order to scan this code. Once this code is scaned the app has the information it needs and the app is set for the rest of the event. It is recommended to email or print this code to get it to the attendees to scan.</p>
 
 						<div><img src=<?php echo "'".getParentDir(2)."qr.php?id=".$_GET['id']. "'";?> alt="Mountain View">
 

@@ -54,6 +54,7 @@ include("../templates/check-event-exists.php");
 		</style>
 		<section id="main">
 			<h1>Schedule</h1>
+			<p>This is where each activity happening in the event is created. The app will take these activities and create a calender.</p>
 			<form id="updateForm" method="post">
 				<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 				<input type = "hidden" name="action">

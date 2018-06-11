@@ -60,6 +60,7 @@
 
 		<section id="main">
 			<h1>Notifications</h1>
+			<p>This page determines what notifications are sent to the user's phone. For instance it could be used to remind users of important activities.</p>
 			<form id="notificationForm"  method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action">
@@ -75,8 +76,8 @@
 					while($get_notification_res = $get_notification_stmt->fetch(PDO::FETCH_ASSOC)) {
 						echo '<div class="card">';
 						echo '<div class="btn" onclick="deleteNotification('.$get_notification_res["sequential_ID"].')">X</div>';
-						echo '<div class="input">Title: <input type="text" name="title['.$get_notification_res["sequential_ID"].']" maxlength="100" value = \''.$get_notification_res["title"].'\'></div>';
-						echo '<div class="input">body: <textarea name="body['. $get_notification_res["sequential_ID"] .']">'.$get_notification_res["body"].'</textarea></div>';
+						echo '<div class="input">Subject: <input type="text" name="title['.$get_notification_res["sequential_ID"].']" maxlength="100" value = \''.$get_notification_res["title"].'\'></div>';
+						echo '<div class="input">Message: <textarea name="body['. $get_notification_res["sequential_ID"] .']">'.$get_notification_res["body"].'</textarea></div>';
 						echo '<div class="input">Date: <input type="date" name="date['.$get_notification_res["sequential_ID"].']" value="'. date("Y-m-d",strtotime($get_notification_res["date"])).'"></div>';
 						echo '<div class="input">Time: <input type="time" name="time['.$get_notification_res["sequential_ID"].']" value="'. date("H:i",strtotime($get_notification_res["date"])).'"></div>';
 						echo '<div class="input">Refresh:<input autocomplete="off" name="refresh['.$get_notification_res["sequential_ID"].']" type="checkbox" name="visible" value="true" ' . (($get_notification_res["refresh"]) ? "checked" : "") .'></div>';

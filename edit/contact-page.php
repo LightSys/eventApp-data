@@ -57,6 +57,7 @@
 ?>
 
 <html>
+        <?php include("../templates/head.php"); ?>
 	
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
@@ -69,6 +70,7 @@
 
 		<section id="main">
 			<h1>Contact Page Sections</h1>
+			<p> This is to create a page which has some contacts (including phone numbers) and explianation on when they can be contacted. A prime example is emergency contacts.</p>
 			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateSection">
@@ -82,7 +84,7 @@
 
 						while($get_sections_res = $get_sections_stmt->fetch(PDO::FETCH_ASSOC)) {
 							echo '<div class="card">'; 
-							echo '<div class="input">Header: <input type="text" name="header['.$get_sections_res["sequential_ID"].']" value="'.$get_sections_res["header"].'"></div>';
+							echo '<div class="input">Page Header: <input type="text" name="header['.$get_sections_res["sequential_ID"].']" value="'.$get_sections_res["header"].'"></div>';
 							echo '<div class="input">Content: <textarea name="content['.$get_sections_res["sequential_ID"].']">'.$get_sections_res["content"].'</textarea></div>';
 							echo '</div>';
 						}
@@ -98,7 +100,7 @@
 						}
 
 						echo '<div class="card">';
-						echo '<div class="input">Header: <input type="text" name="contacts_header" value="'.$get_last_section_res["header"].'"></div>';
+						echo '<div class="input">Contact Header: <input type="text" name="contacts_header" value="'.$get_last_section_res["header"].'"></div>';
 						echo '<div class="input">Contacts: <div id="contact_list">'; 
 
 						foreach($contacts as $contact) {

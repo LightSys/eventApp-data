@@ -59,6 +59,7 @@
 		
 		<section id="main">
 			<h1>Advanced</h1>
+			<p>This page contains advanced settings that are used to determine the "feel" of the app.</p>
 			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action" value = "updateEvent">
@@ -71,13 +72,40 @@
 						$get_contact_res = $get_contact_stmt->fetch(PDO::FETCH_ASSOC);
 						
 						//populate page from database 
-						echo '<div class="input">Refresh: <input type="number" name="refresh" value="'.$get_contact_res['refresh'].'"></div>';
-						echo '<div class="input">Refresh Expire: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
-						echo '<div class = "input">Theme Dark: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeDark" 
+						//echo '<div class="input">Refresh: <input type="number" name="refresh" value="'.$get_contact_res['refresh'].'"></div>';
+
+						echo '<div class="input">Default Notification Refresh Time: <select name="refresh" >';
+							$times = array(
+
+								0 => "1",
+								1 => "5",
+								2 => "15",
+								3 => "30",
+								4 => "60",
+								5 => "never",
+								6 => "auto",
+
+							);
+
+						for($i=0; $i<sizeof($times); $i++) {
+							if ($get_contact_res['refresh'] == $times[$i]) {
+								echo '<option selected>' . $times[$i] . '</option>';
+							} else {
+								echo '<option>' . $times[$i] . '</option>';
+							}
+						}
+						echo '</select>';
+						echo '</div>';
+
+						echo '<div class="input">Refresh Notifications Expiration: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
+						echo '<p>This is used with white text, be sure to set it dark enough.</p>';
+						echo '<div class = "input">Gradient Theme Dark: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeDark" 
 								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_dark']).'"></div>';
-						echo '<div class = "input">Theme Medium: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeMedium" 
+						echo '<p>This color is mainly used as an accent.</p>';
+						echo '<div class = "input">Gradient Theme Medium: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeMedium" 
 								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_medium']).'"></div>';
-						echo '<div class = "input">Theme Color: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeColor" 
+						echo '<p>This color is used the most, and also with white text.</p>';
+						echo '<div class = "input">App Theme Color: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeColor" 
 								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_color']).'"></div>';
 					?>
 

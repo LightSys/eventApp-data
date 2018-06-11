@@ -96,6 +96,7 @@ if( isset($_POST['action'] )) {
 
 		<section id="main">
 			<h1>Housing</h1>
+			<p>On this page you link hosts with attendees and assign a driver in case the attendees do not have transportation. Notice the driver is not a drop down menu so you can put a host or attendee there.</p>
 			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action">

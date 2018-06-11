@@ -214,6 +214,7 @@ include("../templates/check-event-exists.php");
 
 		<section id="main">
 			<h1>Information Pages</h1>
+			<p>Here you can create multiple pages in the app with multiple headers and paragraphs of information. Each time you add an information page it adds a new option to the left side menu for someone to click on. An example is to have a page with fun activities to do in town and a page of rules to obey while attending. Each will get their own tab.</p>
 			<form id="updateForm"  method="post">
 				<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 				<input type = "hidden" name="action">

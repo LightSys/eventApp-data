@@ -57,6 +57,7 @@
 
 		<section id="main">
 			<h1>Attendees</h1>
+			<p>This is where you list the names of attendees that will be selected later as being hosted at different homes, or selected as prayer partners. Their contact information is never needed.</p>
 			<form id="attendeeForm" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action">

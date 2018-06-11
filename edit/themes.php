@@ -58,7 +58,8 @@
 		</style>
 
 		<section id="main">
-			<h1>Themes</h1>
+			<h1>Schedule Themes</h1>
+			<p>This is where you make custom theme colors. They can be selected in the schedule tab for different events. This is how you color code the app calendar.</p>
 			<form id="themeForm" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action">

@@ -62,6 +62,7 @@
 
 		<section id="main">
 			<h1>Contacts</h1>
+			<p>This is where you save the information of people you want your attendees to be able to contact. A few examples are emergency contacts and host homes. In the page for housing and contact page you may select these people.</p>
 			<form id="contactForm" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action">

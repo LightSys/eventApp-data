@@ -66,6 +66,7 @@
 
 		<section id="main">
 			<h1>Prayer Partners</h1>
+			<p>On this page you can create multiple prayer groups and list the people in those groups. Notice how only attendees are put in here so no contact information is given. An example of using this in a unique way is having the navigation for this page in general be 'Small Groups' and then grouping the attendees here into different small groups.</p>
 			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action">
