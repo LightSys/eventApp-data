@@ -193,7 +193,25 @@
 
                                                 <div class="input">Event Logo:<input type="file" name="logo" ></div>
 						
-						<?php
+						<div class="input">Time Zone:
+						<?php $currentTZ = $get_event_res["TZcatagory"] ?>
+						<select name="timeCatagory" onchange="save()">
+							<option value="Africa" <?php if($currentTZ=="Africa") { echo('selected = "selected"');} ?> >Africa</option>
+							<option value="America" <?php if($currentTZ=="America") { echo('selected = "selected"');} ?> >America</option>
+							<option value="Antarctica" <?php if($currentTZ=="Antarctica") { echo('selected = "selected"');} ?> >Antarctica</option>
+							<option value="Arctic" <?php if($currentTZ=="Arctic") { echo('selected = "selected"');} ?> >Arctic</option>
+                                                        <option value="Asia" <?php if($currentTZ=="Asia") { echo('selected = "selected"');} ?> >Asia</option>
+                                                        <option value="Atlantic" <?php if($currentTZ=="Atlantic") { echo('selected = "selected"');} ?> >Atlantic</option>
+                                                        <option value="Australia" <?php if($currentTZ=="Australia") { echo('selected = "selected"');} ?> >Australia</option>
+                                                        <option value="Europe" <?php if($currentTZ=="Europe") { echo('selected = "selected"');} ?> >Europe</option>
+                                                        <option value="Indian" <?php if($currentTZ=="Indian") { echo('selected = "selected"');} ?> >Indian</option>
+                                                        <option value="Pacific" <?php if($currentTZ=="Pacific") { echo('selected = "selected"');} ?> >Pacific</option>
+						</select>
+
+
+						<!-- This code displays the same options shown above with UTC as well, and nothing is hardcoaded so it is adaptible to the timezone list.
+							The option above was chosen inorder to use the on change even so a user didn't have to hit the save button for the other list to change.
+			
 							echo "<div class='input'>Time Zone:<select name='timeCatagory'>";
 							$TZ_Cats=array();
 							$TZNames=DateTimeZone::ListIdentifiers();
@@ -210,9 +228,11 @@
 										echo "<option>" .$tempmatch[0] ."</option>";
 									}
 								}
-							}
+							} -->
+						<?php
 							echo "</select>";
 							echo  "<select name='time_zone'>";
+                                                        $TZNames=DateTimeZone::ListIdentifiers();
 							for ($i=0;$i<sizeof($TZNames);$i++){
 								$tempstring=preg_split('/[\W]+/',$TZNames[$i],2);
 								if ($tempstring[0]==$get_event_res["TZcatagory"]){
@@ -234,8 +254,6 @@
 						
 						<div class='btn' id="savetz" onclick="save()">confirm general area</div>
 						</div>
-						
-
 						
 						
 
