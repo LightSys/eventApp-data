@@ -74,7 +74,25 @@ include("../templates/check-event-exists.php");
 						echo '<div class="input">Start Time: <input type="time" name="starttime[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["start_time"].'"></div>';
 						echo '<div class="input">Length in Minutes: <input type="number" name="length[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["length"].'"></div>';
 						echo '<div class="input">Description: <input type="text" name="description[' . $get_schedule_res["sequential_ID"] . ']" maxlength="150" value="'. $get_schedule_res["description"].'"></div>';
-						echo '<div class="input">Location: <input type="text" name="location[' . $get_schedule_res["sequential_ID"] . ']" maxlength="50" value="'. $get_schedule_res["location"].'"></div>';
+						echo '<div class="input">Location: ';
+
+                                                $get_hosts_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id");
+                                                $get_hosts_stmt->bindValue(":id",$event_id);
+                                                $get_hosts_stmt->execute();
+					
+					        echo '<select name="location[' . $get_schedule_res["sequential_ID"] . ']">';
+
+			
+                                                while($get_hosts_res = $get_hosts_stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                        if ($get_hosts_res['name'] == $get_schedule_res['location']) {
+                                                                echo '<option selected>' . $get_schedule_res['location'] . '</option>';
+                                                        } else {
+                                                                echo '<option>' . $get_hosts_res['name'] . '</option>';
+                                                        }
+                                                }
+
+                                                echo '</select>';
+						echo '</div>';
 
 						echo '<div class="input">Theme: ';
 

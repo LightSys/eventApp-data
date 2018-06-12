@@ -149,6 +149,7 @@ function secure(){
 }
 
 function eventSecure(){
+
 	$timelimit=12000;
         $tempTime=time();
          //decide realitive path to logout
