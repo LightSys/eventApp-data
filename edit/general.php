@@ -73,11 +73,11 @@
 		$logo=null;
 		// If the user specified a logo file
 		
-		if(isset($_FILES["logo"]["name"])) {
+		if(isset($_FILES["logo"]["name"]) && strlen($_FILES['logo']['name']) > 0) {
 			
 
 			
-		//	die( "attempted upload");// we got this far
+			//die( "attempted upload");// we got this far
 			// The directory to save the file to
 
 			$uploaddir = '../temp/';
@@ -88,15 +88,18 @@
 			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
     					die ("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
 			}
+			if($_FILES['logo']['size'] > 300000) {
+				die ("Sorry, only logos below 300KB are allowed.");
+			}
 			else{
 				if(move_uploaded_file($_FILES['logo']['tmp_name'], $uploadfile)) {
 					$logo = base64_encode(file_get_contents($uploadfile));
-				//	die("encoding should be successful"); failed by this point
+					//die("encoding should be successful"); //failed by this point
 					echo "<p>File succesfully uploaded</p>";
 				} else {
 
 
-				//die("   did not move file"); //apparently there is a permission failure
+				die("   did not move file"); //apparently there is a permission failure
 
 					echo "<p>Error uploading file</p>";
 				}
@@ -123,10 +126,10 @@
 		$stmt->bindValue(':custom', $custom);
 		$stmt->bindValue(':remote', $remote);
 		if (!is_null($logo)){
-		$stmt->bindValue(':logo', $logo);
+			$stmt->bindValue(':logo', $logo);
 		}
 		else{
-		$stmt->bindValue(':logo',$get_event_res['logo']);	
+			$stmt->bindValue(':logo',$get_event_res['logo']);	
 		}
 		$stmt->bindValue(":contact_nav", $_POST["contact_nav"]);
 		$stmt->bindValue(":contact_icon", $_POST["contact_icon"]);
@@ -252,7 +255,7 @@
 							
 						?>
 						
-						<div class='btn' id="savetz" onclick="save()">confirm general area</div>
+						<!--<div class='btn' id="savetz" onclick="save()">confirm general area</div>       no longer needed, it automatically saves-->
 						</div>
 						
 						
@@ -303,4 +306,4 @@
 	</script>
 
 
-2</html>
+</html>

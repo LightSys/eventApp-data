@@ -16,9 +16,21 @@
         $color = "#3E52A9";
     }
 
+    #This retrieves the image from the database to display at the top of the navigation.
+    $img_stmt=$db->prepare("SELECT logo FROM event WHERE ID= :id");
+    $img_stmt->bindValue(":id",$id);
+    $img_stmt->execute();
+
+    //store the blob in img
+    $getImage=$img_stmt->fetch(PDO::FETCH_ASSOC);
+    $img=$getImage['logo'];
+#    $img='iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
+    $img='"data:image/png;base64,'.$img.'"';
+
     echo ( 
         '<nav style="background-color: ' . $color . ';">'
         . '<ol>'
+	.     '<img src='.$img.' alt="Logo not set." style="width:120px;height:120px;">'
         .     '<a href="general.php?id=' . $id . '"><li id="general">General</li></a>'
         .     '<a href="advanced.php?id=' . $id . '"><li id="advanced">Advanced</li></a>'
         .     '<a href="contacts.php?id=' . $id . '"><li id="contacts">Contacts</li></a>'
