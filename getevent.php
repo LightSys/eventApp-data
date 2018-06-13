@@ -239,7 +239,7 @@ if($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 		);
 
 		$get_info_section_stmt = $db->prepare("SELECT * FROM info_page_sections where info_page_ID=:id");
-		$get_info_section_stmt->bindValue(":id",$get_info_page_res["sequential_ID"]);
+		$get_info_section_stmt->bindValue(":id",$get_info_page_res["ID"]);
 		$get_info_section_stmt->execute();
 
 		while($get_info_section_res = $get_info_section_stmt->fetch(PDO::FETCH_ASSOC)) {
