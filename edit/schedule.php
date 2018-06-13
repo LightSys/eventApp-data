@@ -84,10 +84,10 @@ include("../templates/check-event-exists.php");
 
 			
                                                 while($get_hosts_res = $get_hosts_stmt->fetch(PDO::FETCH_ASSOC)) {
-                                                        if ($get_hosts_res['name'] == $get_schedule_res['location']) {
-                                                                echo '<option selected>' . $get_schedule_res['location'] . '</option>';
+                                                        if ($get_hosts_res['ID'] == $get_schedule_res['location']) {
+                                                                echo '<option value="'. $get_hosts_res["ID"] . '" selected>' . $get_hosts_res["name"] . '</option>';
                                                         } else {
-                                                                echo '<option>' . $get_hosts_res['name'] . '</option>';
+                                                                echo '<option value="'.$get_hosts_res["ID"] .'">' . $get_hosts_res["name"] . '</option>';
                                                         }
                                                 }
 
