@@ -28,11 +28,13 @@ $output = array(
 	"general" => array(
 		"refresh" => $get_event_res["refresh"],
 		"refresh_expire" => date("m/d/Y",strtotime($get_event_res["refresh_expire"])),
-		"time_zone" => $get_event_res["time_zone"],
+		"time_zone" =>$get_event_res["TZCatagory"]."/".$get_event_res["time_zone"],
 		"welcome_message" => $get_event_res["welcome_message"],
 		"notifications_url" => stripFileName(). "getnotifications.php?id=" . $_GET['id'],
 		"year" => $get_event_res["year"],
-		"logo" => $get_event_res["logo"]
+		"logo" => $get_event_res["logo"],
+		"custom_time_zone"=> $get_event_res["custom_tz"],
+		"remote_viewing"=>$get_event_res["view_remote"]
 	)
 );
 
@@ -232,8 +234,8 @@ if($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$output["information_page"][$page] = array();
 
 		$output["information_page"][$page][] = array(
-			"nav" => $get_event_res["prayer_nav"],
-			"icon" => $get_event_res["prayer_icon"]
+			"nav" => $get_info_page_res["nav"],
+			"icon" => $get_info_page_res["icon"],
 		);
 
 		$get_info_section_stmt = $db->prepare("SELECT * FROM info_page_sections where info_page_ID=:id");
