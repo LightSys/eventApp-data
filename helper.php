@@ -92,7 +92,7 @@ function json_encode_noescape($a=false)
 }
 function secure(){
 	
-	$timelimit=1200;
+	$timelimit=12000;
 	$tempTime=time();
 	//include("templates/check-event-exists.php");
 	include("connection.php");
@@ -149,7 +149,8 @@ function secure(){
 }
 
 function eventSecure(){
-	$timelimit=1200;
+
+	$timelimit=12000;
         $tempTime=time();
          //decide realitive path to logout
 
@@ -221,7 +222,7 @@ function getParentDir() {
 	return $url;
 }
 function getbasedir(){//this MUST be modified for deployment
-	return "10.5.11.121/judson/eventApp-data"; 
+	return "10.5.11.121/jordan/eventApp-data"; 
 }
 
 

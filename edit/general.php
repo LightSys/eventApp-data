@@ -73,11 +73,11 @@
 		$logo=null;
 		// If the user specified a logo file
 		
-		if(isset($_FILES["logo"]["name"])) {
+		if(isset($_FILES["logo"]["name"]) && strlen($_FILES['logo']['name']) > 0) {
 			
 
 			
-		//	die( "attempted upload");// we got this far
+			//die( "attempted upload");// we got this far
 			// The directory to save the file to
 
 			$uploaddir = '../temp/';
@@ -88,15 +88,18 @@
 			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
     					die ("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
 			}
+			if($_FILES['logo']['size'] > 300000) {
+				die ("Sorry, only logos below 300KB are allowed.");
+			}
 			else{
 				if(move_uploaded_file($_FILES['logo']['tmp_name'], $uploadfile)) {
 					$logo = base64_encode(file_get_contents($uploadfile));
-				//	die("encoding should be successful"); failed by this point
+					//die("encoding should be successful"); //failed by this point
 					echo "<p>File succesfully uploaded</p>";
 				} else {
 
 
-				//die("   did not move file"); //apparently there is a permission failure
+				die("   did not move file"); //apparently there is a permission failure
 
 					echo "<p>Error uploading file</p>";
 				}
@@ -123,10 +126,10 @@
 		$stmt->bindValue(':custom', $custom);
 		$stmt->bindValue(':remote', $remote);
 		if (!is_null($logo)){
-		$stmt->bindValue(':logo', $logo);
+			$stmt->bindValue(':logo', $logo);
 		}
 		else{
-		$stmt->bindValue(':logo',$get_event_res['logo']);	
+			$stmt->bindValue(':logo',$get_event_res['logo']);	
 		}
 		$stmt->bindValue(":contact_nav", $_POST["contact_nav"]);
 		$stmt->bindValue(":contact_icon", $_POST["contact_icon"]);
@@ -193,7 +196,25 @@
 
                                                 <div class="input">Event Logo:<input type="file" name="logo" ></div>
 						
-						<?php
+						<div class="input">Time Zone:
+						<?php $currentTZ = $get_event_res["TZcatagory"] ?>
+						<select name="timeCatagory" onchange="save()">
+							<option value="Africa" <?php if($currentTZ=="Africa") { echo('selected = "selected"');} ?> >Africa</option>
+							<option value="America" <?php if($currentTZ=="America") { echo('selected = "selected"');} ?> >America</option>
+							<option value="Antarctica" <?php if($currentTZ=="Antarctica") { echo('selected = "selected"');} ?> >Antarctica</option>
+							<option value="Arctic" <?php if($currentTZ=="Arctic") { echo('selected = "selected"');} ?> >Arctic</option>
+                                                        <option value="Asia" <?php if($currentTZ=="Asia") { echo('selected = "selected"');} ?> >Asia</option>
+                                                        <option value="Atlantic" <?php if($currentTZ=="Atlantic") { echo('selected = "selected"');} ?> >Atlantic</option>
+                                                        <option value="Australia" <?php if($currentTZ=="Australia") { echo('selected = "selected"');} ?> >Australia</option>
+                                                        <option value="Europe" <?php if($currentTZ=="Europe") { echo('selected = "selected"');} ?> >Europe</option>
+                                                        <option value="Indian" <?php if($currentTZ=="Indian") { echo('selected = "selected"');} ?> >Indian</option>
+                                                        <option value="Pacific" <?php if($currentTZ=="Pacific") { echo('selected = "selected"');} ?> >Pacific</option>
+						</select>
+
+
+						<!-- This code displays the same options shown above with UTC as well, and nothing is hardcoaded so it is adaptible to the timezone list.
+							The option above was chosen inorder to use the on change even so a user didn't have to hit the save button for the other list to change.
+			
 							echo "<div class='input'>Time Zone:<select name='timeCatagory'>";
 							$TZ_Cats=array();
 							$TZNames=DateTimeZone::ListIdentifiers();
@@ -210,9 +231,11 @@
 										echo "<option>" .$tempmatch[0] ."</option>";
 									}
 								}
-							}
+							} -->
+						<?php
 							echo "</select>";
 							echo  "<select name='time_zone'>";
+                                                        $TZNames=DateTimeZone::ListIdentifiers();
 							for ($i=0;$i<sizeof($TZNames);$i++){
 								$tempstring=preg_split('/[\W]+/',$TZNames[$i],2);
 								if ($tempstring[0]==$get_event_res["TZcatagory"]){
@@ -232,10 +255,8 @@
 							
 						?>
 						
-						<div class='btn' id="savetz" onclick="save()">confirm general area</div>
+						<!--<div class='btn' id="savetz" onclick="save()">confirm general area</div>       no longer needed, it automatically saves-->
 						</div>
-						
-
 						
 						
 
@@ -285,4 +306,4 @@
 	</script>
 
 
-2</html>
+</html>

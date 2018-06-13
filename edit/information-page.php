@@ -231,9 +231,9 @@ include("../templates/check-event-exists.php");
 					while($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 						echo '<div class="card">';
-						echo '<div class="btn" onclick="deletePage('.$get_info_page_res["sequential_ID"].')">X</div>';
-						echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'up\')">Up</div>';
-							echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'down\')">Down</div>';
+						echo '<div class="btn" onclick="deletePage('.$get_info_page_res["sequential_ID"].')">X</div> ';
+						echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'up\')">Up</div> ';
+							echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'down\')">Down</div> ';
 						echo '<div class="input">Navigation Name: <input type="text" name="name[' . $get_info_page_res["sequential_ID"] . ']" maxlength="25" value="'.$get_info_page_res["nav"].'"></div>';
 						echo '<div class="input">Information Page Icon: <select name="icon[' . $get_info_page_res["sequential_ID"] . ']">';
 						
@@ -270,9 +270,9 @@ include("../templates/check-event-exists.php");
 
 						while($get_section_res = $get_sections_stmt->fetch(PDO::FETCH_ASSOC)) {
 							echo '<div class="section">';
-							echo '<div class="btn" onclick="deleteSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].')">X</div>';
-							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'up\')">Up</div>';
-							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'down\')">Down</div>';
+							echo '<div class="btn" onclick="deleteSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].')">X</div> ';
+							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'up\')">Up</div> ';
+							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'down\')">Down</div> ';
 							echo '<div class="input">Header: <input type="text" name="header['. $get_info_page_res["sequential_ID"] .'][' . $get_section_res["sequential_ID"] . ']" maxlength="100" value="'.$get_section_res["header"].'"></div>';
 							echo '<div class="input">Content: <textarea name="content[' . $get_info_page_res["sequential_ID"] . ']['. $get_section_res["sequential_ID"] .']">'.$get_section_res["content"].'</textarea></div>';
 							echo '</div>';
