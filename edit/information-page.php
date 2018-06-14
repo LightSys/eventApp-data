@@ -31,7 +31,7 @@ if(isset($_POST['action'])){
 	}
 	
 	if($_POST['action'] == "addInfoPage") {
-		$stmt = $db->prepare('INSERT into info_page(event_ID, sequential_ID, nav, icon) values (:id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from info_page where event_ID=:id) as temp), "", "")');
+		$stmt = $db->prepare('INSERT into info_page(event_ID, sequential_ID, nav, icon) values (:id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from info_page where event_ID=:id) as temp), "Information", "")');
 		$stmt->bindValue(":id",$event_id);
 		$stmt->execute();
 
@@ -40,6 +40,7 @@ if(isset($_POST['action'])){
 		$stmt = $db->prepare('INSERT into info_page_sections(info_page_ID, sequential_ID, header, content) values (:id, 1, "", "")');
 		$stmt->bindValue(":id",$info_page_id);
 		$stmt->execute();
+
 	}
 
 	else if($_POST['action'] == "addSection") {

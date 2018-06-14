@@ -12,8 +12,14 @@ if(isset($_POST['action'])) {
 	foreach ($_POST['date'] as $key => $value) {
 		$stmt->bindValue(":sequence",$key);
 		$stmt->bindValue(":date",$value);
-		$stmt->bindValue(":start_time",$_POST['starttime'][$key]);
-		$stmt->bindValue(":length",$_POST['length'][$key]);
+		$sanatizedStartTime = str_replace (":","",$_POST['starttime'][$key]);
+		$stmt->bindValue(":start_time",$sanatizedStartTime);
+		if ($_POST['length'][$key]<2359){
+			$stmt->bindValue(":length",$_POST['length'][$key]);
+		}
+		else {
+			$stmt->bindValue(":length", "0");
+		}	
 		$stmt->bindValue(":description",$_POST['description'][$key]);
 		$stmt->bindValue(":location",$_POST['location'][$key]);
 		$stmt->bindValue(":category",$_POST['category'][$key]);
@@ -71,8 +77,9 @@ include("../templates/check-event-exists.php");
 						echo '<div class="card">'; 
 						echo '<div class="btn" onclick="deleteItem('.$get_schedule_res["sequential_ID"].')">X</div>';
 						echo '<div class="input">Date: <input type="date" name="date[' . $get_schedule_res["sequential_ID"] . ']" value="'. date("Y-m-d",strtotime($get_schedule_res["date"])).'"></div>'; 
-						echo '<div class="input">Start Time: <input type="time" name="starttime[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["start_time"].'"></div>';
-						echo '<div class="input">Length in Minutes: <input type="number" name="length[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["length"].'"></div>';
+						$colonTime = substr_replace ($get_schedule_res["start_time"],":",2,0);
+						echo '<div class="input">Start Time: <input type="time" name="starttime[' . $get_schedule_res["sequential_ID"] . ']" value="'. $colonTime.'"></div>';
+						echo '<div class="input">Length in Minutes: <input type="number" name="length[' . $get_schedule_res["sequential_ID"] . ']" max="2359" value="'. $get_schedule_res["length"].'"></div>';
 						echo '<div class="input">Description: <input type="text" name="description[' . $get_schedule_res["sequential_ID"] . ']" maxlength="150" value="'. $get_schedule_res["description"].'"></div>';
 						echo '<div class="input">Location: ';
 
@@ -100,9 +107,13 @@ include("../templates/check-event-exists.php");
 						$get_themes_stmt->bindValue(":id",$event_id);
 						$get_themes_stmt->execute();
 
-						echo '<select name="category[' . $get_schedule_res["sequential_ID"] . ']" value="'. $get_schedule_res["category"] . '">';
+						echo '<select name="category[' . $get_schedule_res["sequential_ID"] . ']">';
 						while($get_theme_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC)) {
-							echo '<option>' . $get_theme_res['theme_name'] . '</option>';
+							if($get_theme_res['theme_name'] == $get_schedule_res['category']){
+								echo '<option selected>' . $get_theme_res['theme_name'] . '</option>';
+							} else {
+                                                                echo '<option>' . $get_theme_res['theme_name'] . '</option>';
+							}
 						}
 						echo '</select></div>';
 						echo '</div>';
