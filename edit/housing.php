@@ -122,10 +122,10 @@ if( isset($_POST['action'] )) {
 						$get_hosts_stmt->execute();
 
 						while($get_hosts_res = $get_hosts_stmt->fetch(PDO::FETCH_ASSOC)) {
-							if ($get_housing_res['host_name'] == $get_hosts_res['name']) {
-								echo '<option selected>' . $get_hosts_res['name'] . '</option>';
+							if ($get_housing_res['host_name'] == $get_hosts_res['ID']) {
+								echo '<option selected value="'.$get_hosts_res["ID"].'">' . $get_hosts_res["name"] . '</option>';
 							} else {
-								echo '<option>' . $get_hosts_res['name'] . '</option>';
+								echo '<option value="'.$get_hosts_res["ID"].'">' . $get_hosts_res["name"] . '</option>';
 							}
 						}
 

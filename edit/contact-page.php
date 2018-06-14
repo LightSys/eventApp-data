@@ -114,10 +114,10 @@
 							echo '<option value="remove">Remove</option>';
 
 							while($get_contacts_res = $get_contacts_stmt->fetch(PDO::FETCH_ASSOC)) {
-								if($get_contacts_res['name'] == $contact) {
-									echo '<option selected>' . $get_contacts_res['name'] . '</option>';
+								if($get_contacts_res['ID'] == $contact) {
+									echo '<option value="'.$get_contacts_res["ID"] .'" selected>' . $get_contacts_res['name'] . '</option>';
 								} else {
-									echo '<option>' . $get_contacts_res['name'] . '</option>';
+									echo '<option value="'.$get_contacts_res["ID"] .'">' . $get_contacts_res['name'] . '</option>';
 								}
 							}
 
