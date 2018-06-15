@@ -53,7 +53,8 @@
 ?>
 
 <html>
-	
+
+	<?php include("../templates/head.php"); ?>
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
 
@@ -122,7 +123,7 @@
 		</section>
 
 	</body>
-	<?php include("../templates/head.php"); ?>
+
 	<script>
 
 		function addGroup() {

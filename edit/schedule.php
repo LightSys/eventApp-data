@@ -50,6 +50,9 @@ include("../templates/check-event-exists.php");
 ?>
 
 <html>
+
+	<?php include("../templates/head.php"); ?>
+
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
 		<style>
@@ -125,7 +128,7 @@ include("../templates/check-event-exists.php");
 			</form>
 		</section>
 	</body>
-	<?php include("../templates/head.php"); ?>
+
 	<script>
 
 		function addScheduleItem() {

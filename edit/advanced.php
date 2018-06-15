@@ -44,6 +44,9 @@
 ?>
 
 <html>
+
+	<?php include("../templates/head.php"); ?>
+
 	<head>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 		<script type="text/javascript" src="../scripts/jscolor.js"></script>
@@ -120,5 +123,5 @@
 			$("#form").submit();
 		}
 	</script>
-	<?php include("../templates/head.php"); ?>
+
 </html>

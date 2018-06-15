@@ -203,6 +203,9 @@ include("../templates/check-event-exists.php");
 ?>
 
 <html>
+
+	<?php include("../templates/head.php"); ?>
+
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
 
@@ -334,5 +337,4 @@ include("../templates/check-event-exists.php");
 		}
 
 	</script>
-	<?php include("../templates/head.php"); ?>
 </html>

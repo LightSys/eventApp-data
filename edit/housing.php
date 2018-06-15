@@ -83,7 +83,7 @@ if( isset($_POST['action'] )) {
 
 <html>
 	
-	
+	<?php include("../templates/head.php"); ?>	
 	<body>
 		<?php include("../templates/left-nav.php"); ?>
 
@@ -177,7 +177,6 @@ if( isset($_POST['action'] )) {
 
 	</body>
 
-	<?php include("../templates/head.php"); ?>
 	<script>
 		function addHost() {
 			document.forms['form']['action'].value="addHousing";

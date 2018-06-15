@@ -143,7 +143,6 @@
 
 	</body>
 
-	<?php include("../templates/head.php"); ?>
 	<script>
 
 		function addSection() {

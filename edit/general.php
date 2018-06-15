@@ -167,7 +167,7 @@
 
 <html>
 
-	
+	<?php include("../templates/head.php"); ?>	
 
 	<body>
 
@@ -308,7 +308,6 @@
 	</body>
 
 
-	<?php include("../templates/head.php"); ?>
 	<script>
 
 	function save(){
