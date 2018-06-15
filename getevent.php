@@ -77,11 +77,34 @@ if($get_cpages_res = $get_cpages_stmt->fetch(PDO::FETCH_ASSOC)) {
 		"icon" => $get_event_res["contact_icon"]
 	);
 
-	do {
+	do {			$contact;
+				if($get_cpages_res["sequential_ID"] != 1){
+                               		 $names=explode(":",$get_cpages_res["content"]);
+                               		 $tempstring="";
+					 $counter=0;
+                                	foreach ($names as $id){
+                                        	$get_contacts_stmt = $db->prepare("SELECT name FROM contacts where event_ID=:id and ID= :CID");
+	                                        $get_contacts_stmt->bindValue(":id",$get_event_res["internal_ID"]);
+                                        	$get_contacts_stmt->bindValue(":CID",$id);
+                                        	$get_contacts_stmt->execute();
+                                        	$get_contact_res=$get_contacts_stmt->fetch(PDO::FETCH_ASSOC);
+                                       		if (!$counter==0){
+							$tempstring.=":";
+						}
+				        	$tempstring.=$get_contact_res["name"];
+						$counter++;	
+
+                                	}
+					$contact=$tempstring;
+                        	}
+				else{
+					$contact=$get_cpages_res["content"];
+				}
+
 		$output["contact_page"]["section_" . $get_cpages_res["sequential_ID"]] = array(
 			"header" => $get_cpages_res["header"],
-			"content" => $get_cpages_res["content"],
-			"id" => $get_cpages_res["sequential_ID"]-1
+			"content" => $contact,
+			"id" => "".($get_cpages_res["sequential_ID"]-1).""
 		);
 	} while($get_cpages_res = $get_cpages_stmt->fetch(PDO::FETCH_ASSOC));
 }
@@ -122,11 +145,18 @@ if($get_sched_item_res = $get_sched_item_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 	do {
 		$date = date("m/d/Y",strtotime($get_sched_item_res["date"]));
-
+	
+		$get_name =$db->prepare("SELECT name FROM contacts WHERE event_ID = :EID AND ID= :CID");
+		$get_name->bindValue(":EID",$get_event_res["internal_ID"]);
+		$get_name->bindValue(":CID",$get_sched_item_res["location"]);
+		$get_name->execute();
+		
+		$get_name_res=$get_name->fetch(PDO::FETCH_ASSOC);
+		
 		// Create the key $date if necessary, then use the $var[] = ... syntax to push a dictionary onto the array of items on that date.
 		$output["schedule"][$date][] = array(
-			"start_time" => $get_sched_item_res["start_time"],
-			"length" => $get_sched_item_res["length"],
+			"start_time" => $get_sched_item_res["start_time"]+1-1,
+			"length" => $get_sched_item_res["length"]+1-1,
 			"description" => $get_sched_item_res["description"],
 			"location" => $get_sched_item_res["location"],
 			"category" => $get_sched_item_res["category"],
@@ -160,15 +190,21 @@ if($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$first = true;
 		while($get_guest_res = $get_guest_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if(!$first) {
-				$str .= "\n";
+				$str =$str . "\n";
 			}
 			else {
 				$first = false;
 			}
-			$str .= $get_guest_res["name"];
+			$str =$str. $get_guest_res["name"];
 		}
+		$get_name =$db->prepare("SELECT name FROM contacts WHERE event_ID = :EID AND ID= :CID");
+                $get_name->bindValue(":EID",$get_event_res["internal_ID"]);
+                $get_name->bindValue(":CID",$get_housing_res["host_id"]);
+                $get_name->execute();
+
+		$get_name_res=$get_name->fetch(PDO::FETCH_ASSOC);
 		
-		$output["housing"][$get_housing_res["host_name"]] = array(
+		$output["housing"][$get_name_res["name"]] = array(
 			"driver" => $get_housing_res["driver"],
 			"students" => $str,
 		);
