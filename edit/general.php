@@ -34,9 +34,20 @@
 			$new_contact_pages_stmt->bindValue('internalEventID',$internalEventID);
 			$new_contact_pages_stmt->execute();
 		}
-		
-		$stmt = $db->prepare("UPDATE event SET admin = :admin, theme_dark = :themedark, theme_color = :themecolor WHERE internal_ID = :id");
+
+		//Hard coded initial values.		
+		$stmt = $db->prepare("UPDATE event SET admin = :admin, theme_dark = :themedark, theme_color = :themecolor, contact_nav = :contact_nav, sched_nav = :sched_nav, housing_nav = :housing_nav, prayer_nav = :prayer_nav, notif_nav = :notif_nav, contact_icon = :contact_icon, sched_icon = :sched_icon, housing_icon = :housing_icon, prayer_icon = :prayer_icon, notif_icon = :notif_icon WHERE internal_ID = :id");
 		$stmt->bindValue(':admin', $_SESSION["username"]);
+                $stmt->bindValue(':contact_nav', "Contacts");
+                $stmt->bindValue(':sched_nav', "Schedule");
+                $stmt->bindValue(':housing_nav', "Housing");
+                $stmt->bindValue(':prayer_nav', "Prayer Partners");
+                $stmt->bindValue(':notif_nav', "Notifications");
+                $stmt->bindValue(':contact_icon', "ic_contact");
+                $stmt->bindValue(':sched_icon', "ic_schedule");
+                $stmt->bindValue(':housing_icon', "ic_house");
+                $stmt->bindValue(':prayer_icon', "ic_group");
+                $stmt->bindValue(':notif_icon', "ic_bell");
 		$stmt->bindValue(':themedark', "#000000");
                 $stmt->bindValue(':themecolor', "#0093FF");
 		$stmt->bindValue(':id',$internalEventID);
@@ -156,7 +167,7 @@
 
 <html>
 
-	
+	<?php include("../templates/head.php"); ?>	
 
 	<body>
 
@@ -297,7 +308,6 @@
 	</body>
 
 
-	<?php include("../templates/head.php"); ?>
 	<script>
 
 	function save(){

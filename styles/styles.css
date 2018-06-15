@@ -22,7 +22,7 @@ nav > ol {
 }
 
 nav > ol > a {
-    color: white;
+    /*color: white;*/
     text-decoration: none;
 }
 
@@ -43,8 +43,8 @@ nav > ol > a > li {
     padding-left: 20px;
     padding-right: 20px;
     padding: 10px;
-    /* background-color: #3E52A9; */
-    color: white;
+    /* background-color: #3E52A9; 
+    color: white;*/
     border-radius: 5px;
     border: none;
     cursor: pointer;
