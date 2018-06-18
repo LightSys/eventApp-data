@@ -38,9 +38,11 @@ if( isset($_POST['action'] )) {
                 $update_stmt = $db->prepare("UPDATE attendees set house_ID = :housing_ID where event_ID=:event_id and sequential_ID=:sequence");
 
                 while($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
+
                         $update_stmt->bindValue(':housing_ID', $get_housing_res["ID"]);
                         $reset_stmt->bindValue(':housing_ID', $get_housing_res["ID"]);
                         $reset_stmt->execute();
+
 
                         foreach($_POST['guest'][$get_housing_res["sequential_ID"]] as $key => $sequence) {
                                 if($sequence == "remove") {
@@ -132,7 +134,8 @@ if( isset($_POST['action'] )) {
 
 						echo '</select>';
 						echo '</div>';
-						echo '<div class="input">Driver: <input type="text" name="driver[' . $get_housing_res['sequential_ID'] . ']" maxlength="100" value = ' .$get_housing_res['driver'].'></div>';
+
+						echo '<div class="input">Driver: <input type="text" title="This could be a host or guest, it is left for you to decide." name="driver[' . $get_housing_res['sequential_ID'] . ']" maxlength="100" value = "' .$get_housing_res['driver']. '"></div>';
 						echo '<div class="input">Guests: ';
 						echo '<div id="guests[' . $get_housing_res['sequential_ID'] . ']">';
 
@@ -163,7 +166,7 @@ if( isset($_POST['action'] )) {
 						}
 
 						echo '</div>';
-						echo '<div class="btn" onclick="addGuest(' . $get_housing_res['sequential_ID'] . ')">Add Guest</div>';
+						echo '<div class="btn" title="This button will not save the information on the page" onclick="addGuest(' . $get_housing_res['sequential_ID'] . ')">Add Guest</div>';
 						echo '</div></div>';
 					}
 
@@ -172,13 +175,18 @@ if( isset($_POST['action'] )) {
 
 				<br>
 				<div class="btn" onclick="addHost()">Add Host</div>
-				<div class="btn" id="save">Save</div>
+				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
 
 	</body>
 
 	<script>
+		function save(){
+			document.forms['form']['action'].value="save";
+			$("#form").submit();
+		}
+
 		function addHost() {
 			document.forms['form']['action'].value="addHousing";
                         document.forms['form']['sequence'].value="";

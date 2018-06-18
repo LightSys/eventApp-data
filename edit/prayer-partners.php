@@ -70,7 +70,7 @@
 			<p>On this page you can create multiple prayer groups and list the people in those groups. Notice how only attendees are put in here so no contact information is given. An example of using this in a unique way is having the navigation for this page in general be 'Small Groups' and then grouping the attendees here into different small groups.</p>
 			<form id="form" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
-				<input type="hidden" name="action">
+				<input type="hidden" name="action" value = "save">
 				<input type="hidden" name="sequence">
 				<div id="sectionCards">
 					<?php			
@@ -110,7 +110,7 @@
 
 								echo '</select>';
 							}		
-							echo '<div class="btn" onclick="addPartner(' . $get_prayer_group_res['sequential_ID'] . ')">Add Partner</div>';
+							echo '<div class="btn" title="This button does not save what is on the page." onclick="addPartner(' . $get_prayer_group_res['sequential_ID'] . ')">Add Partner</div>';
 							echo '</div>';
 							echo '</div>';
 							echo '</div>';
@@ -118,13 +118,18 @@
 					?>
 				</div>
 				<div class="btn" onclick="addGroup()">Add Group</div>
-				<div class="btn" id="save">Save</div>
+				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
 
 	</body>
 
 	<script>
+
+		function save(){
+			document.forms['form']['action'].value="save";
+			$("#form").submit();
+		}
 
 		function addGroup() {
 			document.forms['form']['action'].value="addGroup";
@@ -144,8 +149,7 @@
 				$get_attendees_stmt->bindValue(":id", $event_id);
 				$get_attendees_stmt->execute();
 
-				echo '<option value="remove">Remove</option>';
-
+				echo '<option value="remove" selected>Remove</option>';
 				while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
 					echo '<option value="'.$get_attendees_res["sequential_ID"].'">' . $get_attendees_res['name'] . '</option>';
 				}

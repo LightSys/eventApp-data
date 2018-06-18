@@ -253,13 +253,15 @@ include("../templates/check-event-exists.php");
 
 						for($i=0; $i<sizeof($availible_icons); $i++) {
 
+							$iconName = substr ($availible_icons[$i],3);
+
 							if ($get_info_page_res['icon'] == $availible_icons[$i]) {
 
-								echo '<option selected>' . $availible_icons[$i] . '</option>';
+								echo '<option selected value = ' . $availible_icons[$i] . '> ' . $iconName . '</option>';
 
 							} else {
 
-								echo '<option>' . $availible_icons[$i] . '</option>';
+								echo '<option value = ' . $availible_icons[$i] . '> ' . $iconName . '</option>';
 
 							}
 

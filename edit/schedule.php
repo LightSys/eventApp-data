@@ -14,11 +14,11 @@ if(isset($_POST['action'])) {
 		$stmt->bindValue(":date",$value);
 		$sanatizedStartTime = str_replace (":","",$_POST['starttime'][$key]);
 		$stmt->bindValue(":start_time",$sanatizedStartTime);
-		if ($_POST['length'][$key]<2359){
+		if ($_POST['length'][$key]>0){
 			$stmt->bindValue(":length",$_POST['length'][$key]);
 		}
 		else {
-			$stmt->bindValue(":length", "0");
+			$stmt->bindValue(":length", "1");
 		}	
 		$stmt->bindValue(":description",$_POST['description'][$key]);
 		$stmt->bindValue(":location",$_POST['location'][$key]);
@@ -82,7 +82,7 @@ include("../templates/check-event-exists.php");
 						echo '<div class="input">Date: <input type="date" name="date[' . $get_schedule_res["sequential_ID"] . ']" value="'. date("Y-m-d",strtotime($get_schedule_res["date"])).'"></div>'; 
 						$colonTime = substr_replace ($get_schedule_res["start_time"],":",2,0);
 						echo '<div class="input">Start Time: <input type="time" name="starttime[' . $get_schedule_res["sequential_ID"] . ']" value="'. $colonTime.'"></div>';
-						echo '<div class="input">Length in Minutes: <input type="number" name="length[' . $get_schedule_res["sequential_ID"] . ']" max="2359" value="'. $get_schedule_res["length"].'"></div>';
+						echo '<div class="input">Length in Minutes: <input type="number" title="This must be below 2400" name="length[' . $get_schedule_res["sequential_ID"] . ']" max="2359" value="'. $get_schedule_res["length"].'"></div>';
 						echo '<div class="input">Description: <input type="text" name="description[' . $get_schedule_res["sequential_ID"] . ']" maxlength="150" value="'. $get_schedule_res["description"].'"></div>';
 						echo '<div class="input">Location: ';
 
@@ -113,9 +113,9 @@ include("../templates/check-event-exists.php");
 						echo '<select name="category[' . $get_schedule_res["sequential_ID"] . ']">';
 						while($get_theme_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC)) {
 							if($get_theme_res['theme_name'] == $get_schedule_res['category']){
-								echo '<option selected>' . $get_theme_res['theme_name'] . '</option>';
+								echo '<option selected value = ' . $get_theme_res["ID"] . '>' . $get_theme_res['theme_name'] . '</option>';
 							} else {
-                                                                echo '<option>' . $get_theme_res['theme_name'] . '</option>';
+                                                                echo '<option value = ' . $get_theme_res["ID"] . '>' . $get_theme_res['theme_name'] . '</option>';
 							}
 						}
 						echo '</select></div>';
