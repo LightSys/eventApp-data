@@ -14,7 +14,7 @@ if(isset($_POST['action'])) {
 		$stmt->bindValue(":date",$value);
 		$sanatizedStartTime = str_replace (":","",$_POST['starttime'][$key]);
 		$stmt->bindValue(":start_time",$sanatizedStartTime);
-		if ($_POST['length'][$key]<2359){
+		if ($_POST['length'][$key]<2400){
 			$stmt->bindValue(":length",$_POST['length'][$key]);
 		}
 		else {
@@ -82,7 +82,7 @@ include("../templates/check-event-exists.php");
 						echo '<div class="input">Date: <input type="date" name="date[' . $get_schedule_res["sequential_ID"] . ']" value="'. date("Y-m-d",strtotime($get_schedule_res["date"])).'"></div>'; 
 						$colonTime = substr_replace ($get_schedule_res["start_time"],":",2,0);
 						echo '<div class="input">Start Time: <input type="time" name="starttime[' . $get_schedule_res["sequential_ID"] . ']" value="'. $colonTime.'"></div>';
-						echo '<div class="input">Length in Minutes: <input type="number" name="length[' . $get_schedule_res["sequential_ID"] . ']" max="2359" value="'. $get_schedule_res["length"].'"></div>';
+						echo '<div class="input">Length in Minutes: <input type="number" title="This must be below 2400" name="length[' . $get_schedule_res["sequential_ID"] . ']" max="2359" value="'. $get_schedule_res["length"].'"></div>';
 						echo '<div class="input">Description: <input type="text" name="description[' . $get_schedule_res["sequential_ID"] . ']" maxlength="150" value="'. $get_schedule_res["description"].'"></div>';
 						echo '<div class="input">Location: ';
 

@@ -1,4 +1,4 @@
-<?php
+<?php  //testing, can I modify?
 	session_start();
 	
 	include("../helper.php");
@@ -203,11 +203,11 @@
 
 						<input type="hidden" name="notif_icon" maxlength="100" value="ic_bell">
 
-                                                <div class="input">Event Name:<input type="text" name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
+                                                <div class="input" title="This is only for internal reference when you are selecting which event you wish to edit.">Event Name:<input type="text" title = "This is only for internal reference when you are selecting which event you wish to edit." name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
 
-                                                <div class="input">Event Logo:<input type="file" name="logo" ></div>
+                                                <div class="input" title="This logo will be use in the app just above the navigation it will apear here just above general in the same way.">Event Logo:<input title="Keep logos below 300KB, png files are prefered." type="file" name="logo" ></div>
 						
-						<div class="input">Time Zone:
+						<div class="input" title="Select the general area the event will be in, then a city that you know is in the same time zone.">Time Zone:
 						<?php $currentTZ = $get_event_res["TZcatagory"] ?>
 						<select name="timeCatagory" onchange="save()">
 							<option value="Africa" <?php if($currentTZ=="Africa") { echo('selected = "selected"');} ?> >Africa</option>
@@ -271,7 +271,7 @@
 						
 						
 
-						<div class="input">Welcome Message:<input type="text" name="welcome" maxlength="100" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
+						<div class="input" title="This message is the first thing a user sees whenever they enter the app. The notificaitons are displayed immeadiatly below it.">Welcome Message:<input type="text" title="This message is the first thing a user sees whenever they enter the app. The notificaitons are displayed immeadiatly below it." name="welcome" maxlength="100" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
 
 						<p>Nav stands for navigation. The following fields decide what each page is labled in the navigation on the left side off the app much like this page is labled general in the menu on your left.</p>	
 
@@ -285,11 +285,11 @@
 
 						<div class="input">Notification Page Nav:<input type="text" name="notif_nav" maxlength="25" value="<?php echo $get_event_res["notif_nav"] ?>"></div>
 
-                                                <div class="input">Allow a User to Enter a Custom Timezone:<input autocomplete="off" type="checkbox" name="custom" value="true" <?php echo ($get_event_res["custom_tz"]) ? "checked" : ""; ?>></div>
+                                                <div class="input" title="This option allows a user to enter what timezone they are in on the app so the schedule is displayed with those times.">Allow a User to Enter a Custom Timezone:<input autocomplete="off" type="checkbox" name="custom" value="true" <?php echo ($get_event_res["custom_tz"]) ? "checked" : ""; ?>></div>
 
-                                                <div class="input">Allow a User to Attend Remotely:<input autocomplete="off" type="checkbox" name="remote" value="true" <?php echo ($get_event_res["view_remote"]) ? "checked" : ""; ?>></div>
+                                                <div class="input" title="This option allows the app to display the schedule in the same timezone that the users divice reports.">Allow a User to Attend Remotely:<input autocomplete="off" type="checkbox" name="remote" value="true" <?php echo ($get_event_res["view_remote"]) ? "checked" : ""; ?>></div>
 
-						<div class="input">Event is Live:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
+						<div class="input" title="When this option is checked the app can scan the qr code to get the event data.">Event is Live:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
 
 						<p>This is the QR code associated with the app. Once the event app is downloaded it immediately lauches into the device camera in order to scan this code. Once this code is scaned the app has the information it needs and the app is set for the rest of the event. It is recommended to email or print this code to get it to the attendees to scan.</p>
 

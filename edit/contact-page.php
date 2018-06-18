@@ -131,7 +131,7 @@
 				</div>
 				<!-- This is disabled for now. Once the app supports multiple sections, this should be added. -->
 				<!-- <div class="btn" onclick="addSection()">+ Add Contact Page Section</div> -->
-				<div class="btn" id="save">Save</div>
+				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 
 			<form id = "addSection"  method="post">	
@@ -149,6 +149,11 @@
 		
 		}
 
+		function save() {
+			document.forms["form"]["action"].value="updateSection";
+			$("#form").submit();
+		}
+
 		function addContact() {
 			var html = '<select name="contact[]" autocomplete="off"><?php
 					
@@ -156,12 +161,16 @@
 					$get_contacts_stmt->bindValue(":id", $event_id);
 					$get_contacts_stmt->execute();
 
-					echo '<option value="remove">Remove</option>';
 					while($get_contacts_res = $get_contacts_stmt->fetch(PDO::FETCH_ASSOC)) {
-						echo '<option value="'. $get_contacts_res['name'] .'">' . $get_contacts_res['name'] . '</option>';
+						echo '<option value="'. $get_contacts_res['ID'] .'" selected>' . $get_contacts_res['name'] . '</option>';
 					}
+					echo '<option value="remove">Remove</option>';
+
 					?></select>';
 			addFields(html, "contact_list");
+                        document.forms["form"]["action"].value="updateSection";
+                        $("#form").submit();
+
 		}
 	</script>
 </html>

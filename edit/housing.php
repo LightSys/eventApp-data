@@ -171,13 +171,18 @@ if( isset($_POST['action'] )) {
 
 				<br>
 				<div class="btn" onclick="addHost()">Add Host</div>
-				<div class="btn" id="save">Save</div>
+				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>
 		</section>
 
 	</body>
 
 	<script>
+		function save(){
+			document.forms['form']['action'].value="save";
+			$("#form").submit();
+		}
+
 		function addHost() {
 			document.forms['form']['action'].value="addHousing";
                         document.forms['form']['sequence'].value="";

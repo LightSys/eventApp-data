@@ -77,7 +77,7 @@
 						//populate page from database 
 						//echo '<div class="input">Refresh: <input type="number" name="refresh" value="'.$get_contact_res['refresh'].'"></div>';
 
-						echo '<div class="input">Default Notification Refresh Time: <select name="refresh" >';
+						echo '<div class="input" title="This is how often the app checks to see if new notifications were created.">Default Notification Refresh Time: <select name="refresh" >';
 							$times = array(
 
 								0 => "1",
@@ -100,7 +100,7 @@
 						echo '</select>';
 						echo '</div>';
 
-						echo '<div class="input">Refresh Notifications Expiration: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
+						echo '<div class="input" title="This is what date the app should stop checking to see if there are new notifications. Should be set to the end of the event.">Refresh Notifications Expiration: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
 						echo '<p>This is used with white text, be sure to set it dark enough.</p>';
 						echo '<div class = "input">Gradient Theme Dark: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeDark" 
 								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_dark']).'"></div>';

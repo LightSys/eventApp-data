@@ -62,7 +62,7 @@
 
 		<section id="main">
 			<h1>Contacts</h1>
-			<p>This is where you save the information of people you want your attendees to be able to contact. A few examples are emergency contacts and host homes. In the page for housing and contact page you may select these people.</p>
+			<p>This is where you save the information of people or places you want your attendees to be able to contact. A few examples are host homes, activity locations, and emergency contacts. In the pages for housing, schedual, and contact page you may select these contacts.</p>
 			<form id="contactForm" method="post">
 				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
 				<input type="hidden" name="action">
@@ -82,7 +82,7 @@
 							maxlength="100" value = \''.$get_contact_res["name"].'\'></div>';
 						echo '<div class="input">Address: <input type="text" name="address['.$get_contact_res["sequential_ID"].']" 
 							maxlength="100" value = \''.$get_contact_res["address"].'\'></div>';
-						echo '<div class="input">Phone: <input type="tel" name="phone['.$get_contact_res["sequential_ID"].']" 
+						echo '<div class="input">Phone Number: <input type="text" title="This will display in the same way you type it in. It is reccomended to use (000)000-0000." name="phone['.$get_contact_res["sequential_ID"].']" 
 							maxlength="17" value = \''.$get_contact_res["phone"].'\'></div></div>';
 					}
 				?>
