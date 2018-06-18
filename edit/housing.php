@@ -112,6 +112,7 @@ if( isset($_POST['action'] )) {
 					// look through query
 
 					while($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) { 
+						
 						echo '<div class="card">';
 						echo '<div class="btn" onclick="deleteHousing('.$get_housing_res["sequential_ID"].')">X</div>';
 						echo '<div class="input">Host: ';
