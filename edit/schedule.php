@@ -14,11 +14,11 @@ if(isset($_POST['action'])) {
 		$stmt->bindValue(":date",$value);
 		$sanatizedStartTime = str_replace (":","",$_POST['starttime'][$key]);
 		$stmt->bindValue(":start_time",$sanatizedStartTime);
-		if ($_POST['length'][$key]<2400){
+		if ($_POST['length'][$key]>0){
 			$stmt->bindValue(":length",$_POST['length'][$key]);
 		}
 		else {
-			$stmt->bindValue(":length", "0");
+			$stmt->bindValue(":length", "1");
 		}	
 		$stmt->bindValue(":description",$_POST['description'][$key]);
 		$stmt->bindValue(":location",$_POST['location'][$key]);
@@ -113,9 +113,9 @@ include("../templates/check-event-exists.php");
 						echo '<select name="category[' . $get_schedule_res["sequential_ID"] . ']">';
 						while($get_theme_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC)) {
 							if($get_theme_res['theme_name'] == $get_schedule_res['category']){
-								echo '<option selected>' . $get_theme_res['theme_name'] . '</option>';
+								echo '<option selected value = ' . $get_theme_res["ID"] . '>' . $get_theme_res['theme_name'] . '</option>';
 							} else {
-                                                                echo '<option>' . $get_theme_res['theme_name'] . '</option>';
+                                                                echo '<option value = ' . $get_theme_res["ID"] . '>' . $get_theme_res['theme_name'] . '</option>';
 							}
 						}
 						echo '</select></div>';

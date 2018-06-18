@@ -110,7 +110,7 @@
 
 								echo '</select>';
 							}		
-							echo '<div class="btn" onclick="addPartner(' . $get_prayer_group_res['sequential_ID'] . ')">Add Partner</div>';
+							echo '<div class="btn" title="This button does not save what is on the page." onclick="addPartner(' . $get_prayer_group_res['sequential_ID'] . ')">Add Partner</div>';
 							echo '</div>';
 							echo '</div>';
 							echo '</div>';
