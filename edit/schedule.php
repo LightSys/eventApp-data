@@ -14,7 +14,7 @@ if(isset($_POST['action'])) {
 		$stmt->bindValue(":date",$value);
 		$sanatizedStartTime = str_replace (":","",$_POST['starttime'][$key]);
 		$stmt->bindValue(":start_time",$sanatizedStartTime);
-		if ($_POST['length'][$key]>0){
+		if ($_POST['length'][$key]>0 && $_POST['length'][$key]<=1440){
 			$stmt->bindValue(":length",$_POST['length'][$key]);
 		}
 		else {
