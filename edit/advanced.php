@@ -3,9 +3,17 @@
 	include("../helper.php");
 	$event_id = getEventId();	
 	secure();	
+
+        $id = $_GET["id"];
+        $get_contact_stmt = $db->prepare("SELECT * FROM event where ID=:id");
+        $get_contact_stmt->bindValue(":id",$id);
+        $get_contact_stmt->execute();
+        $get_contact_res = $get_contact_stmt->fetch(PDO::FETCH_ASSOC);
+
+
 	if( isset($_POST['action']) )
 	{      
-	 
+
 		if($_POST['action'] == 'updateEvent') {
 	 
 			//update event record
@@ -17,7 +25,13 @@
 			$themeColor = $_POST['themeColor'];
 			$themeMedium = $_POST['themeMedium'];
 			
-			$stmt->bindValue(':refresh', $refresh);
+
+			if ($refresh=="5"||$refresh=="15"||$refresh=="30"||$refresh=="60"||$refresh=="auto"||$refresh=="never"){
+				$stmt->bindValue(':refresh', $refresh);
+			} else {
+                                $stmt->bindValue(':refresh', $get_contact_res['refresh']);
+			}
+
 			$stmt->bindValue(':refreshExpire', $refreshExpire);
 			$stmt->bindValue(':themeDark', "#".$themeDark);
 			$stmt->bindValue(':themeMedium', "#".$themeMedium);
@@ -77,16 +91,15 @@
 						//populate page from database 
 						//echo '<div class="input">Refresh: <input type="number" name="refresh" value="'.$get_contact_res['refresh'].'"></div>';
 
-						echo '<div class="input" title="This is how often the app checks to see if new notifications were created.">Default Notification Refresh Time: <select name="refresh" >';
+						echo '<div class="input" title="This is how often the app checks to see if new notifications were created. If you are haveing trouble saving this try switching to a different browser.">Default Notification Refresh Time: <select name="refresh" >';
 							$times = array(
 
-								0 => "1",
-								1 => "5",
-								2 => "15",
-								3 => "30",
-								4 => "60",
-								5 => "never",
-								6 => "auto",
+								0 => "5",
+								1 => "15",
+								2 => "30",
+								3 => "60",
+								4 => "never",
+								5 => "auto",
 
 							);
 
