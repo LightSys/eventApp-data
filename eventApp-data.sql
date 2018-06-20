@@ -43,6 +43,9 @@ create table event (
     theme_color         varchar(7),
     visible             boolean,
     admin		varchar(30),
+    TZcatagory		varchar(30),
+    custom_tz           boolean,
+    view_remote         boolean,
     primary key (internal_ID)
 ) ENGINE = INNODB;
 
@@ -111,6 +114,7 @@ create table housing (
     sequential_ID       int,
     host_name           varchar(100),
     driver              varchar(100),
+    host_id 		int,   
 
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
