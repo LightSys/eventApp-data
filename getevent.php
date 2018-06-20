@@ -152,14 +152,23 @@ if($get_sched_item_res = $get_sched_item_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$get_name->execute();
 		
 		$get_name_res=$get_name->fetch(PDO::FETCH_ASSOC);
+
+		$themeID = $get_sched_item_res["category"];
 		
+		$get_theme = $db->prepare("SELECT theme_name FROM themes WHERE ID=:id");
+		$get_theme -> bindValue(":id",$themeID);
+		$get_theme -> execute();
+		$theme_name_res = $get_theme->fetch(PDO::FETCH_ASSOC);
+
+		$themeName = $theme_name_res["theme_name"];
+
 		// Create the key $date if necessary, then use the $var[] = ... syntax to push a dictionary onto the array of items on that date.
 		$output["schedule"][$date][] = array(
 			"start_time" => $get_sched_item_res["start_time"]+1-1,
 			"length" => $get_sched_item_res["length"]+1-1,
 			"description" => $get_sched_item_res["description"],
-			"location" => $get_sched_item_res["location"],
-			"category" => $get_sched_item_res["category"],
+			"location" => $get_name_res["name"],
+			"category" => $themeName,
 		);
 		
 	} while($get_sched_item_res = $get_sched_item_stmt->fetch(PDO::FETCH_ASSOC));
