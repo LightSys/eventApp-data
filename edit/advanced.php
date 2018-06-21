@@ -2,6 +2,7 @@
 	include("../connection.php");
 	include("../helper.php");
 	$event_id = getEventId();	
+
 	secure();	
 
         $id = $_GET["id"];
@@ -11,14 +12,13 @@
         $get_contact_res = $get_contact_stmt->fetch(PDO::FETCH_ASSOC);
 
 
-	if( isset($_POST['action']) )
+if( isset($_POST['action']) )
 	{      
 
 		if($_POST['action'] == 'updateEvent') {
 	 
 			//update event record
-			$stmt = $db->prepare("UPDATE event set refresh = :refresh, refresh_expire = :refreshExpire, 
-			theme_dark = :themeDark, theme_medium = :themeMedium, theme_color = :themeColor where ID=:event_id");		
+			$stmt = $db->prepare("UPDATE event set refresh = :refresh, refresh_expire = :refreshExpire, theme_dark = :themeDark, theme_medium = :themeMedium, theme_color = :themeColor where ID=:event_id");		
 			$refresh = $_POST['refresh'];
 			$refreshExpire = $_POST['refreshExpire'];
 			$themeDark = $_POST['themeDark'];
@@ -94,6 +94,7 @@
 						echo '<div class="input" title="This is how often the app checks to see if new notifications were created. If you are haveing trouble saving this try switching to a different browser.">Default Notification Refresh Time: <select name="refresh" >';
 							$times = array(
 
+
 								0 => "5",
 								1 => "15",
 								2 => "30",
@@ -102,7 +103,8 @@
 								5 => "auto",
 
 							);
-
+						 var_dump($times);
+						
 						for($i=0; $i<sizeof($times); $i++) {
 							if ($get_contact_res['refresh'] == $times[$i]) {
 								echo '<option selected>' . $times[$i] . '</option>';
@@ -111,8 +113,9 @@
 							}
 						}
 						echo '</select>';
+						
 						echo '</div>';
-
+						var_dump($_POST['refresh']);
 						echo '<div class="input" title="This is what date the app should stop checking to see if there are new notifications. Should be set to the end of the event.">Refresh Notifications Expiration: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
 						echo '<p>This is used with white text, be sure to set it dark enough.</p>';
 						echo '<div class = "input">Gradient Theme Dark: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeDark" 

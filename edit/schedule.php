@@ -1,4 +1,4 @@
-<?php session_start(); 
+[A<?php session_start(); 
 include("../connection.php");
 include("../helper.php");
 secure();
@@ -63,7 +63,7 @@ include("../templates/check-event-exists.php");
 		</style>
 		<section id="main">
 			<h1>Schedule</h1>
-			<p>This is where each activity happening in the event is created. The app will take these activities and create a calender.</p>
+			<p>This is where each activity happening in the event is created. The app will take these activities and create a calendar.</p>
 			<form id="updateForm" method="post">
 				<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
 				<input type = "hidden" name="action">
