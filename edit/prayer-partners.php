@@ -143,7 +143,7 @@
 		}
 
 		function addPartner(num) {
-			var html = '<select name="partner['+num+'][]"><?php
+			var html = '<select name="partner[' + num + '][]" autocomplete="off"><?php
 					
 				$get_attendees_stmt = $db->prepare("SELECT * FROM attendees where event_ID=:id");
 				$get_attendees_stmt->bindValue(":id", $event_id);
@@ -151,7 +151,7 @@
 
 				echo '<option value="remove" selected>Remove</option>';
 				while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
-					echo '<option value="'.$get_attendees_res["sequential_ID"].'">' . $get_attendees_res['name'] . '</option>';
+					echo '<option value='.$get_attendees_res['sequential_ID'].'>' . $get_attendees_res['name'] . '</option>';
 				}
 				?></select>';
 

@@ -136,7 +136,10 @@
 		$stmt->bindValue(':visible', $visible);
 		$stmt->bindValue(':custom', $custom);
 		$stmt->bindValue(':remote', $remote);
-		if (!is_null($logo)){
+		if ($_POST["saveLogo"] == "delete"){
+			$stmt->bindValue(':logo',  base64_encode(""));
+		}
+		elseif (!is_null($logo)){
 			$stmt->bindValue(':logo', $logo);
 		}
 		else{
@@ -191,13 +194,15 @@
 			<form method = "post" enctype="multipart/form-data" id="form">
 
 					<div class="card">
+						<input type="hidden" name="id" value="<?php echo($_GET['id'])?>">
+
+						<input type="hidden" name="saveLogo">
+
 						<input type="hidden" name="sched_icon" maxlength="100" value="ic_schedule">
 					
 						<input type="hidden" name="housing_icon" maxlength="100" value="ic_house">
 					
-						<input type="hidden" name="prayer_icon" maxlength="100" value="ic_group">
-						
-						<input type="hidden" name="id" value="<?php echo($_GET['id'])?>">
+						<input type="hidden" name="prayer_icon" maxlength="100" value="ic_group">						
 
 						<input type="hidden" name="contact_icon" maxlength="100" value="ic_contact">
 
@@ -205,9 +210,12 @@
 
                                                 <div class="input" title="This is only for internal reference when you are selecting which event you wish to edit.">Event Name:<input type="text" title = "This is only for internal reference when you are selecting which event you wish to edit." name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
 
-                                                <div class="input" title="This logo will be use in the app just above the navigation it will apear here just above general in the same way.">Event Logo:<input title="Keep logos below 300KB, png files are prefered." type="file" name="logo" ></div>
+                                                <div class="input" title="This logo will be use in the app just above the navigation it will apear here just above general in the same way.">
+							Event Logo:<input title="Keep logos below 300KB, png files are prefered." type="file" name="logo" >
+							<div class='btn' id="delete" onclick="deleteLogo()">Delete Logo</div>
+						</div>
 						
-						<div class="input" title="Select the general area the event will be in, then a city that you know is in the same time zone.">Time Zone:
+						<!--<div class="input" title="Select the general area the event will be in, then a city that you know is in the same time zone.">Time Zone:
 						<?php $currentTZ = $get_event_res["TZcatagory"] ?>
 						<select name="timeCatagory" onchange="save()">
 							<option value="Africa" <?php if($currentTZ=="Africa") { echo('selected = "selected"');} ?> >Africa</option>
@@ -220,13 +228,14 @@
                                                         <option value="Europe" <?php if($currentTZ=="Europe") { echo('selected = "selected"');} ?> >Europe</option>
                                                         <option value="Indian" <?php if($currentTZ=="Indian") { echo('selected = "selected"');} ?> >Indian</option>
                                                         <option value="Pacific" <?php if($currentTZ=="Pacific") { echo('selected = "selected"');} ?> >Pacific</option>
-						</select>
+						</select>-->
 
 
-						<!-- This code displays the same options shown above with UTC as well, and nothing is hardcoaded so it is adaptible to the timezone list.
-							The option above was chosen inorder to use the on change even so a user didn't have to hit the save button for the other list to change.
+						<!--This code displays the same options shown above with UTC as well, and nothing is hardcoaded so it is adaptible to the timezone list.
+							The option above was chosen inorder to use the on change even so a user didn't have to hit the save button for the other list to change.-->
 			
-							echo "<div class='input'>Time Zone:<select name='timeCatagory'>";
+						<?php
+							echo "<div class='input'>Time Zone:<select name='timeCatagory' onchange='save()'>";
 							$TZ_Cats=array();
 							$TZNames=DateTimeZone::ListIdentifiers();
 							$tempmatch;
@@ -242,8 +251,7 @@
 										echo "<option>" .$tempmatch[0] ."</option>";
 									}
 								}
-							} -->
-						<?php
+							}
 							echo "</select>";
 							echo  "<select name='time_zone'>";
                                                         $TZNames=DateTimeZone::ListIdentifiers();
@@ -311,8 +319,15 @@
 	<script>
 
 	function save(){
-		$("#form").submit();	
+		document.forms['form']['saveLogo'].value = "save";
+		$("#form").submit();
 	}
+
+	function deleteLogo(){
+		document.forms['form']['saveLogo'].value = "delete";
+		$("#form").submit();
+	}
+
 	</script>
 
 

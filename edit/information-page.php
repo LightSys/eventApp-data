@@ -51,12 +51,13 @@ if(isset($_POST['action'])){
 
 		if(!$get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 			echo "Error: Tried to add an information page section to a non-existent info page." . $event_id . " " . $_POST['sequence'];
-			die();
-		}
+
+		} else {
 
 		$stmt = $db->prepare('INSERT into info_page_sections(info_page_ID, sequential_ID, header, content) values (:id, (SELECT MAX(temp.sequential_ID)+1 from (select sequential_ID from info_page_sections where info_page_ID=:id) as temp), "", "")');
 		$stmt->bindValue(":id",$get_info_page_res["ID"]);
 		$stmt->execute();
+		}
 	}
 	else if($_POST['action'] == "removeInfoPage") {
 		$stmt = $db->prepare("DELETE from info_page where event_ID=:id and sequential_ID=:sequence");
@@ -72,13 +73,14 @@ if(isset($_POST['action'])){
 
 		if(!$get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 			echo "Error: Tried to remove an information page section to a non-existent info page.";
-			die();
-		}
+			
+		} else {
 
 		$stmt = $db->prepare("DELETE from info_page_sections where info_page_ID=:id and sequential_ID=:sequence and (SELECT COUNT(*) FROM (select ID from info_page_sections where info_page_ID=:id) as temp) > 1");
 		$stmt->bindValue(":id",$get_info_page_res["ID"]);
 		$stmt->bindValue(":sequence", $_POST['section_sequence']);
 		$stmt->execute();
+		}
 	}
 	else if($_POST['action'] == "movePage") {
 		if($_POST['direction'] == "down") {
@@ -89,16 +91,16 @@ if(isset($_POST['action'])){
 
 			if(!$get_next_highest_res = $get_next_highest_stmt->fetch(PDO::FETCH_ASSOC)) {
 				echo "Error: Tried to move lower than possible.";
-				die();
-			}
+			} else {
 
 			$update_stmt = $db->prepare("UPDATE info_page as a inner join info_page as b on a.ID <> b.ID set a.sequential_ID = b.sequential_ID where a.event_ID = :id and b.event_ID=:id and a.sequential_ID in (:sequence,:sequence_next) and b.sequential_ID in (:sequence,:sequence_next)");
 			$update_stmt->bindValue(":id",$event_id);
 			$update_stmt->bindValue(":sequence",$_POST['sequence']);
 			$update_stmt->bindValue(":sequence_next",$get_next_highest_res["sequential_ID"]);
 			$update_stmt->execute();
-		}
-		else {
+			}
+
+		} else {
 			$get_next_highest_stmt = $db->prepare("SELECT (sequential_ID) FROM info_page where event_ID=:id and sequential_ID<:sequence order by sequential_ID desc limit 1");
 			$get_next_highest_stmt->bindValue(":id",$event_id);
 			$get_next_highest_stmt->bindValue(":sequence",$_POST['sequence']);
@@ -106,14 +108,14 @@ if(isset($_POST['action'])){
 
 			if(!$get_next_highest_res = $get_next_highest_stmt->fetch(PDO::FETCH_ASSOC)) {
 				echo "Error: Tried to move higher than possible.";
-				die();
-			}
+			} else {
 
 			$update_stmt = $db->prepare("UPDATE info_page as a inner join info_page as b on a.ID <> b.ID set a.sequential_ID = b.sequential_ID where a.event_ID = :id and b.event_ID=:id and a.sequential_ID in (:sequence,:sequence_next) and b.sequential_ID in (:sequence,:sequence_next)");
 			$update_stmt->bindValue(":id",$event_id);
 			$update_stmt->bindValue(":sequence",$_POST['sequence']);
 			$update_stmt->bindValue(":sequence_next",$get_next_highest_res["sequential_ID"]);
 			$update_stmt->execute();
+			}
 		}
 	}
 	else if($_POST['action'] == "moveSection") {
@@ -124,10 +126,10 @@ if(isset($_POST['action'])){
 
 		if(!$get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 			echo "Error: Tried to move an information page section of a non-existent info page.";
-			die();
+			
 		}
 
-		if($_POST['direction'] == "down") {
+		elseif ($_POST['direction'] == "down") {
 			$get_next_highest_stmt = $db->prepare("SELECT (sequential_ID) FROM info_page_sections where info_page_ID=:id and sequential_ID>:sequence order by sequential_ID asc limit 1");
 			$get_next_highest_stmt->bindValue(":id",$get_info_page_res["ID"]);
 			$get_next_highest_stmt->bindValue(":sequence",$_POST['section_sequence']);
@@ -135,16 +137,16 @@ if(isset($_POST['action'])){
 
 			if(!$get_next_highest_res = $get_next_highest_stmt->fetch(PDO::FETCH_ASSOC)) {
 				echo "Error: Tried to move lower than possible.";
-				die();
-			}
+		
+			} else {
 
 			$update_stmt = $db->prepare("UPDATE info_page_sections as a inner join info_page_sections as b on a.ID <> b.ID set a.sequential_ID = b.sequential_ID where a.info_page_ID = :id and b.info_page_ID=:id and a.sequential_ID in (:sequence,:sequence_next) and b.sequential_ID in (:sequence,:sequence_next)");
 			$update_stmt->bindValue(":id",$get_info_page_res["ID"]);
 			$update_stmt->bindValue(":sequence",$_POST['section_sequence']);
 			$update_stmt->bindValue(":sequence_next",$get_next_highest_res["sequential_ID"]);
 			$update_stmt->execute();
-		}
-		else {
+			}
+		} else {
 			$get_next_highest_stmt = $db->prepare("SELECT (sequential_ID) FROM info_page_sections where info_page_ID=:id and sequential_ID<:sequence order by sequential_ID desc limit 1");
 			$get_next_highest_stmt->bindValue(":id",$get_info_page_res["ID"]);
 			$get_next_highest_stmt->bindValue(":sequence",$_POST['section_sequence']);
@@ -152,14 +154,15 @@ if(isset($_POST['action'])){
 
 			if(!$get_next_highest_res = $get_next_highest_stmt->fetch(PDO::FETCH_ASSOC)) {
 				echo "Error: Tried to move higher than possible.";
-				die();
-			}
+			
+			} else {
 
 			$update_stmt = $db->prepare("UPDATE info_page_sections as a inner join info_page_sections as b on a.ID <> b.ID set a.sequential_ID = b.sequential_ID where a.info_page_ID = :id and b.info_page_ID=:id and a.sequential_ID in (:sequence,:sequence_next) and b.sequential_ID in (:sequence,:sequence_next)");
 			$update_stmt->bindValue(":id",$get_info_page_res["ID"]);
 			$update_stmt->bindValue(":sequence",$_POST['section_sequence']);
 			$update_stmt->bindValue(":sequence_next",$get_next_highest_res["sequential_ID"]);
 			$update_stmt->execute();
+			}
 		}
 	}
 
@@ -236,8 +239,8 @@ include("../templates/check-event-exists.php");
 
 						echo '<div class="card">';
 						echo '<div class="btn" onclick="deletePage('.$get_info_page_res["sequential_ID"].')">X</div> ';
-						echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'up\')">Up</div> ';
-							echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'down\')">Down</div> ';
+						echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'up\')">Page Up</div> ';
+							echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'down\')">Page Down</div> ';
 						echo '<div class="input">Navigation Name: <input type="text" name="name[' . $get_info_page_res["sequential_ID"] . ']" maxlength="25" value="'.$get_info_page_res["nav"].'"></div>';
 						echo '<div class="input">Information Page Icon: <select name="icon[' . $get_info_page_res["sequential_ID"] . ']">';
 						
@@ -277,8 +280,8 @@ include("../templates/check-event-exists.php");
 						while($get_section_res = $get_sections_stmt->fetch(PDO::FETCH_ASSOC)) {
 							echo '<div class="section">';
 							echo '<div class="btn" onclick="deleteSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].')">X</div> ';
-							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'up\')">Up</div> ';
-							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'down\')">Down</div> ';
+							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'up\')">Section Up</div> ';
+							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'down\')">Section Down</div> ';
 							echo '<div class="input">Header: <input type="text" name="header['. $get_info_page_res["sequential_ID"] .'][' . $get_section_res["sequential_ID"] . ']" maxlength="100" value="'.$get_section_res["header"].'"></div>';
 							echo '<div class="input">Content: <textarea name="content[' . $get_info_page_res["sequential_ID"] . ']['. $get_section_res["sequential_ID"] .']">'.$get_section_res["content"].'</textarea></div>';
 							echo '</div>';
