@@ -54,6 +54,9 @@ $output["theme"] = array(
 	),
 	array(
 		"themeDark" => $get_event_res["theme_dark"]
+	),
+	array(
+		"schedule_blank" => "#d6d4d4"
 	)
 );
 
@@ -153,6 +156,12 @@ if($get_sched_item_res = $get_sched_item_stmt->fetch(PDO::FETCH_ASSOC)) {
 		
 		$get_name_res=$get_name->fetch(PDO::FETCH_ASSOC);
 
+		if ($get_sched_item_res["location"] == ""){
+			$locationName = "null";
+		} else {
+			$locationName = $get_name_res["name"]; 
+		}
+
 		$themeID = $get_sched_item_res["category"];
 		
 		$get_theme = $db->prepare("SELECT theme_name FROM themes WHERE ID=:id");
@@ -160,14 +169,18 @@ if($get_sched_item_res = $get_sched_item_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$get_theme -> execute();
 		$theme_name_res = $get_theme->fetch(PDO::FETCH_ASSOC);
 
-		$themeName = $theme_name_res["theme_name"];
+		if ($themeID == ""){
+			$themeName = "schedule_blank";
+		} else {
+			$themeName = $theme_name_res["theme_name"];
+		}
 
 		// Create the key $date if necessary, then use the $var[] = ... syntax to push a dictionary onto the array of items on that date.
 		$output["schedule"][$date][] = array(
 			"start_time" => $get_sched_item_res["start_time"]+1-1,
 			"length" => $get_sched_item_res["length"]+1-1,
 			"description" => $get_sched_item_res["description"],
-			"location" => $get_name_res["name"],
+			"location" => $locationName,
 			"category" => $themeName,
 		);
 		
@@ -208,7 +221,7 @@ if($get_housing_res = $get_housing_stmt->fetch(PDO::FETCH_ASSOC)) {
 		}
 		$get_name =$db->prepare("SELECT name FROM contacts WHERE event_ID = :EID AND ID= :CID");
                 $get_name->bindValue(":EID",$get_event_res["internal_ID"]);
-                $get_name->bindValue(":CID",$get_housing_res["host_id"]);
+                $get_name->bindValue(":CID",$get_housing_res["host_name"]);
                 $get_name->execute();
 
 		$get_name_res=$get_name->fetch(PDO::FETCH_ASSOC);
