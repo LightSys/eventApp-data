@@ -20,7 +20,7 @@
     $green = hexdec($color[3].$color[4]);
     $blue = hexdec($color[5].$color[6]);
 
-    if((max($red,$green,$blue) + min($red,$green,$blue))/510 > .7) {
+    if((max($red,$green,$blue) + min($red,$green,$blue))/510 > .6) {
 	$textColor = "black";
     } else {
         $textColor = "white";
