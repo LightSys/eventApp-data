@@ -273,7 +273,7 @@
 
 						<div class="input" title="This message is the first thing a user sees whenever they enter the app. The notificaitons are displayed immeadiatly below it.">Welcome Message:<input type="text" title="This message is the first thing a user sees whenever they enter the app. The notificaitons are displayed immeadiatly below it." name="welcome" maxlength="100" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
 
-						<p>Nav stands for navigation. The following fields decide what each page is labled in the navigation on the left side off the app much like this page is labled general in the menu on your left.</p>	
+						<p>"Nav" stands for navigation. The following fields decide what each page is labled in the navigation on the left side off the app much like this page is labled general in the menu on your left.</p>	
 
 						<div class="input">Contact Page Nav:<input type="text" name="contact_nav" maxlength="25" value="<?php echo $get_event_res["contact_nav"] ?>"></div>
 
@@ -291,7 +291,7 @@
 
 						<div class="input" title="When this option is checked the app can scan the qr code to get the event data.">Event is Live:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
 
-						<p>This is the QR code associated with the app. Once the event app is downloaded it immediately lauches into the device camera in order to scan this code. Once this code is scaned the app has the information it needs and the app is set for the rest of the event. It is recommended to email or print this code to get it to the attendees to scan.</p>
+						<p>This is the QR code associated with the app. Once the event app is downloaded it immediately lauches into the device camera in order to scan this code. Once this code is scaned the app has the information it needs and the app is set for the rest of the event. It is recommended to email or print this code for the attendees to scan.</p>
 
 						<div><img src=<?php echo "'".getParentDir(2)."qr.php?id=".$_GET['id']. "'";?> alt="Mountain View">
 
