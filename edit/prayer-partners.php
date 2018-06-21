@@ -105,13 +105,13 @@
 									}
 									else {
 										echo '<option value="'.$get_attendees_res["sequential_ID"].'" >' . $get_attendees_res['name'] . '</option>';
-									}
+									}						
 								}
 
 								echo '</select>';
-							}		
+							}
+							echo '</div>';		
 							echo '<div class="btn" title="This button does not save what is on the page." onclick="addPartner(' . $get_prayer_group_res['sequential_ID'] . ')">Add Partner</div>';
-							echo '</div>';
 							echo '</div>';
 							echo '</div>';
 						}
