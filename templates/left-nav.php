@@ -53,9 +53,10 @@
         .     '<a style="color:' . $textColor . ';" href="notifications.php?id=' . $id . '"><li id="notifications">Notifications</li></a>'
         .     '<a style="color:' . $textColor . ';" href="../events.php"><li>Select Another Event</li></a>'
         .     '<a style="color:' . $textColor . ';" href="../templates/logout.php"><li id="Logout">Logout</li></a>'
+	.     '<p style="color:' . $textColor . ';"> copyright 2018 of Lightsys and licensed contributers </p>'
 	.'</ol>'
         . '</nav>');
-
+   
     
 
     echo (
