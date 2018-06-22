@@ -103,7 +103,6 @@ if( isset($_POST['action']) )
 								5 => "auto",
 
 							);
-						 var_dump($times);
 						
 						for($i=0; $i<sizeof($times); $i++) {
 							if ($get_contact_res['refresh'] == $times[$i]) {
@@ -115,7 +114,6 @@ if( isset($_POST['action']) )
 						echo '</select>';
 						
 						echo '</div>';
-						var_dump($_POST['refresh']);
 						echo '<div class="input" title="This is what date the app should stop checking to see if there are new notifications. Should be set to the end of the event.">Refresh Notifications Expiration: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
 						echo '<div class = "input">Gradient Theme Dark: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeDark" 
 								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_dark']).'"></div>';
