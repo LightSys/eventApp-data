@@ -174,6 +174,8 @@ if( isset($_POST['action'] )) {
 				</div>
 
 				<br>
+
+                                <p>Please save before navigating to a new page.</p>
 				<div class="btn" onclick="addHost()">Add Host</div>
 				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>

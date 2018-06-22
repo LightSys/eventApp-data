@@ -87,6 +87,8 @@
 					}
 				?>
 				</div>
+
+                                <p>Please save before navigating to a new page.</p>
 				<div class="btn" onclick="addNotification()">+ Add Notifications</div>
 				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>

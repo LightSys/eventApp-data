@@ -127,6 +127,8 @@ include("../templates/check-event-exists.php");
 					}
 					?>	
 				</div>
+
+                                <p>Please save before navigating to a new page.</p>
 				<div class="btn" onclick="addScheduleItem()">+ Add Schedule </div>
 				<div class="btn" id="save" onclick="save()">Save</div>
 			</form>

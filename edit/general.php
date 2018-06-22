@@ -303,12 +303,14 @@
 
 						<div><img src=<?php echo "'".getParentDir(2)."qr.php?id=".$_GET['id']. "'";?> alt="Mountain View">
 
-						<div><a href="https://play.google.com/store/apps/details?id=org.lightsys.eventApp">This is a link to the event app in the android store.</a>
+						<div><a href="https://play.google.com/store/apps/details?id=org.lightsys.eventApp"><img src="google-play-badge.png" alt="This is a link to the event app in the android store." style="height:62.5;width:161.5;"></a>
 
 					</div>
 
 					<br>
 
+					<p>Please save before navigating to a new page.</p>
+			
 					<div class="btn" id="save" onclick="save()">Save</div>
 
 				</form>
