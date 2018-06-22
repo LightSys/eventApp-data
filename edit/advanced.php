@@ -117,13 +117,10 @@ if( isset($_POST['action']) )
 						echo '</div>';
 						var_dump($_POST['refresh']);
 						echo '<div class="input" title="This is what date the app should stop checking to see if there are new notifications. Should be set to the end of the event.">Refresh Notifications Expiration: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
-						echo '<p>This is used with white text, be sure to set it dark enough.</p>';
 						echo '<div class = "input">Gradient Theme Dark: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeDark" 
 								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_dark']).'"></div>';
-						echo '<p>This color is mainly used as an accent.</p>';
 						echo '<div class = "input">Gradient Theme Medium: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeMedium" 
 								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_medium']).'"></div>';
-						echo '<p>This color is used the most, and also with white text.</p>';
 						echo '<div class = "input">App Theme Color: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeColor" 
 								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_color']).'"></div>';
 					?>
