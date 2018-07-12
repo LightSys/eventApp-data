@@ -12,6 +12,7 @@ $get_event_stmt = $db->prepare("SELECT * FROM event where ID=:id");
 $get_event_stmt->bindParam(":id",$_GET['id']);
 $get_event_stmt->execute();
 
+
 $get_event_res = $get_event_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if(count($get_event_res) != 1) {
@@ -34,7 +35,8 @@ $output = array(
 		"year" => $get_event_res["year"],
 		"logo" => $get_event_res["logo"],
 		"custom_time_zone"=> $get_event_res["custom_tz"],
-		"remote_viewing"=>$get_event_res["view_remote"]
+		"remote_viewing"=>$get_event_res["view_remote"],
+		"event_name"=>$get_event_res["name"]
 	)
 );
 
