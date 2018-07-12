@@ -9,7 +9,7 @@
 		
 
                 //update all notification records in the event
-                $stmt = $db->prepare("UPDATE notifications set title = :title, body = :body, date=TIMESTAMP(:date, :time), refresh = :refresh where event_ID=:event_id and sequential_ID=:sequence");
+                $stmt = $db->prepare("UPDATE notifications set title = :title, body = :body, date=TIMESTAMP(:date, :time), where event_ID=:event_id and sequential_ID=:sequence");
                 $stmt->bindValue(':event_id', $event_id);
                 foreach($_POST['title'] as $key => $value) {
                         $stmt->bindValue(":sequence",$key);
@@ -18,16 +18,14 @@
                         $stmt->bindValue(':date', $_POST['date'][$key]);
                         $stmt->bindValue(':time', $_POST['time'][$key]);
 
-                        // echo isset($_POST['refresh'][$key]);
                         // die();
 
-                        $stmt->bindValue(':refresh', isset($_POST['refresh'][$key]));
                         $stmt->execute();
                 }
 
 		if($_POST['action'] == 'addNotification') {
 			//add a blank notification record
-			$stmt = $db->prepare('INSERT into notifications(event_ID, sequential_ID,title,body,date,refresh) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from notifications where event_ID=:event_id) as temp), "","", :datetime, 0)');
+			$stmt = $db->prepare('INSERT into notifications(event_ID, sequential_ID,title,body,date) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from notifications where event_ID=:event_id) as temp), "","", :datetime, 0)');
 			$stmt->bindValue(':datetime', date("Y-m-d H:i:s"));
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
@@ -84,7 +82,6 @@
 						echo '<div class="input">Message: <textarea name="body['. $get_notification_res["sequential_ID"] .']">'.$get_notification_res["body"].'</textarea></div>';
 						echo '<div class="input">Date: <input type="date" name="date['.$get_notification_res["sequential_ID"].']" value="'. date("Y-m-d",strtotime($get_notification_res["date"])).'"></div>';
 						echo '<div class="input">Time: <input type="time" name="time['.$get_notification_res["sequential_ID"].']" value="'. date("H:i",strtotime($get_notification_res["date"])).'"></div>';
-						echo '<div name="refresh['.$get_notification_res["sequential_ID"].']" type="hidden" name="visible" value="true" ' . (($get_notification_res["refresh"]) ? "checked" : "") .'></div>';
 						echo '</div>';
 					}
 				?>

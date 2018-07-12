@@ -20,19 +20,14 @@ if( isset($_POST['action']) )
 		if($_POST['action'] == 'updateEvent') {
 	 
 			//update event record
-			$stmt = $db->prepare("UPDATE event set refresh = :refresh, refresh_expire = :refreshExpire, theme_dark = :themeDark, theme_medium = :themeMedium, theme_color = :themeColor where ID=:event_id");		
-			$refresh = $_POST['refresh'];
+			$stmt = $db->prepare("UPDATE event set refresh_expire = :refreshExpire, theme_dark = :themeDark, theme_medium = :themeMedium, theme_color = :themeColor where ID=:event_id");		
 			$refreshExpire = $_POST['refreshExpire'];
 			$themeDark = $_POST['themeDark'];
 			$themeColor = $_POST['themeColor'];
 			$themeMedium = $_POST['themeMedium'];
 			
 
-			if ($refresh=="5"||$refresh=="15"||$refresh=="30"||$refresh=="60"||$refresh=="auto"||$refresh=="never"){
-				$stmt->bindValue(':refresh', $refresh);
-			} else {
-                                $stmt->bindValue(':refresh', $get_contact_res['refresh']);
-			}
+		
 
 			$stmt->bindValue(':refreshExpire', $refreshExpire);
 			$stmt->bindValue(':themeDark', "#".$themeDark);
@@ -91,31 +86,7 @@ if( isset($_POST['action']) )
 						$get_contact_res = $get_contact_stmt->fetch(PDO::FETCH_ASSOC);
 						
 						//populate page from database 
-						//echo '<div class="input">Refresh: <input type="number" name="refresh" value="'.$get_contact_res['refresh'].'"></div>';
-
-						echo '<div class="input" title="This is how often the app checks to see if new notifications were created. If you are haveing trouble saving this try switching to a different browser.">Default Notification Refresh Time: <select name="refresh" >';
-							$times = array(
-
-
-								0 => "5",
-								1 => "15",
-								2 => "30",
-								3 => "60",
-								4 => "never",
-								5 => "auto",
-
-							);
 						
-						for($i=0; $i<sizeof($times); $i++) {
-							if ($get_contact_res['refresh'] == $times[$i]) {
-								echo '<option selected>' . $times[$i] . '</option>';
-							} else {
-								echo '<option>' . $times[$i] . '</option>';
-							}
-						}
-						echo '</select>';
-						
-						echo '</div>';
 						echo '<div class="input" title="This is what date the app should stop checking to see if there are new notifications. Should be set to the end of the event.">Refresh Notifications Expiration: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
 						echo '<div class = "input">Gradient Theme Dark: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeDark" 
 								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_dark']).'"></div>';

@@ -37,8 +37,7 @@ while($get_notif_res = $get_notif_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$output["notifications"][$get_notif_res["ID"]] = array(
 		"title" => $get_notif_res["title"],
 		"body" => $get_notif_res["body"],
-		"date" => date("m/d/Y H:i:s",strtotime($get_notif_res["date"])),
-		"refresh" => ($get_notif_res["refresh"] == 0) ? false : true
+		"date" => date("m/d/Y H:i:s",strtotime($get_notif_res["date"]))
 	);
 } 
 
