@@ -5,18 +5,21 @@
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
-			//update all theme records in the event 
-                        $stmt = $db->prepare("UPDATE themes set theme_name = :themeName, theme_color = :themeColor
-                                where event_ID=:event_id and sequential_ID=:sequence");
-                        foreach($_POST['themeName'] as $key => $name) {
-                                $themeColor = $_POST['themeColor'][$key];
+		inc_config_ver();
 
-                                $stmt->bindValue(":sequence", $key);
-                                $stmt->bindValue(":themeColor", "#".$themeColor);
-                                $stmt->bindValue(":themeName", $name);
-                                $stmt->bindValue(':event_id', $event_id);
-                                $stmt->execute();
-                        }
+
+		//update all theme records in the event 
+                $stmt = $db->prepare("UPDATE themes set theme_name = :themeName, theme_color = :themeColor
+                        where event_ID=:event_id and sequential_ID=:sequence");
+                foreach($_POST['themeName'] as $key => $name) {
+                        $themeColor = $_POST['themeColor'][$key];
+
+                        $stmt->bindValue(":sequence", $key);
+                        $stmt->bindValue(":themeColor", "#".$themeColor);
+                        $stmt->bindValue(":themeName", $name);
+                        $stmt->bindValue(':event_id', $event_id);
+                        $stmt->execute();
+                }
 
 		if($_POST['action'] == 'addTheme') {
 			//add a blank theme record

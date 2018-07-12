@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 include("connection.php");
 include("helper.php");
 
-$get_event_stmt = $db->prepare("SELECT internal_ID,notif_nav,notif_icon FROM event where ID=:id");
+$get_event_stmt = $db->prepare("SELECT internal_ID,notif_nav,notif_icon,config_version,notif_version FROM event where ID=:id");
 
 $get_event_stmt->bindParam(":id",$_GET['id']);
 
@@ -20,6 +20,7 @@ $get_event_res = $get_event_res[0];
 
 $output = array(
 	"notifications" => array(
+		"version_num"=>$get_event_res["config_version"].",".$get_event_res["notif_version"],
 		"nav" => $get_event_res["notif_nav"],
 		"icon" => $get_event_res["notif_icon"]
 	)

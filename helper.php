@@ -181,6 +181,46 @@ function eventSecure(){
 
 }
 
+function inc_config_ver(){
+	//called whenever the database is fed data affecting anything other then the notifications table. causes an increse in version number that the moblie app uses to check if its up to date. 
+	include("connection.php");
+	$config_stmt=$db->prepare("SELECT config_version FROM event WHERE internal_ID= :id");	
+	$config_stmt->bindValue(":id",getEventId());
+	$config_stmt->execute();
+	
+	$old_config_ver=$config_stmt->fetchAll(PDO::FETCH_ASSOC);
+	++$old_config_ver[0]["config_version"];
+	//die(var_dump($old_config_ver[0]["config_version"]));
+
+	$new_config_ver=$old_config_ver[0]["config_version"];
+
+	//die(var_dump($new_config_ver));
+	$upd_statment=$db->prepare("UPDATE event SET config_version = :newversion WHERE internal_ID= :id");
+	$upd_statment->bindValue(":newversion",$new_config_ver);
+	$upd_statment->bindValue(":id",getEventId());
+	$upd_statment->execute();
+
+}
+
+function inc_notif_ver(){
+ include("connection.php");
+        $notif_stmt=$db->prepare("SELECT notif_version FROM event WHERE internal_ID= :id");
+        $notif_stmt->bindValue(":id",getEventId());
+        $notif_stmt->execute();
+
+        $old_notif_ver=$notif_stmt->fetchAll(PDO::FETCH_ASSOC);
+        ++$old_notif_ver[0]["notif_version"];
+       
+
+        $new_notif_ver=$old_notif_ver[0]["notif_version"];
+
+        
+        $upd_statment=$db->prepare("UPDATE event SET notif_version = :newversion WHERE internal_ID= :id");
+        $upd_statment->bindValue(":newversion",$new_notif_ver);
+        $upd_statment->bindValue(":id",getEventId());
+        $upd_statment->execute();	
+}
+
 function getEventId() {
 	global $db;
 	if (!($get_event_stmt = $db->prepare("SELECT internal_ID FROM event where ID=:id"))) {

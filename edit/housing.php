@@ -10,6 +10,9 @@ secure();
 $event_id = getEventID();
 
 if( isset($_POST['action'] )) {
+
+		inc_config_ver();
+
                
 		//Saves all the housing selections whenever a action is done
 		// statement to update the values

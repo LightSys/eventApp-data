@@ -6,6 +6,9 @@
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
+		inc_config_ver();
+
+
 		$get_prayer_group_stmt = $db->prepare("SELECT * FROM prayer_partners where event_ID=:id order by sequential_ID asc");
 		$get_prayer_group_stmt->bindValue(":id",$event_id);
 		$get_prayer_group_stmt->execute();

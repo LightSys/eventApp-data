@@ -13,6 +13,7 @@
 		$new_event_stmt->execute();
 		// get the id of that event
 		$new_event_id_stmt = $db->prepare("SELECT * from event where internal_ID = (select MAX(internal_ID) from event)");
+
 		$new_event_id_stmt->execute();
 		$id;
 		while($new_event_id = $new_event_id_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -36,7 +37,7 @@
 		}
 
 		//Hard coded initial values.		
-		$stmt = $db->prepare("UPDATE event SET admin = :admin, theme_dark = :themedark, theme_color = :themecolor, contact_nav = :contact_nav, sched_nav = :sched_nav, housing_nav = :housing_nav, prayer_nav = :prayer_nav, notif_nav = :notif_nav, contact_icon = :contact_icon, sched_icon = :sched_icon, housing_icon = :housing_icon, prayer_icon = :prayer_icon, notif_icon = :notif_icon WHERE internal_ID = :id");
+		$stmt = $db->prepare("UPDATE event SET admin = :admin, theme_dark = :themedark, theme_color = :themecolor, contact_nav = :contact_nav, sched_nav = :sched_nav, housing_nav = :housing_nav, prayer_nav = :prayer_nav, notif_nav = :notif_nav, contact_icon = :contact_icon, sched_icon = :sched_icon, housing_icon = :housing_icon, prayer_icon = :prayer_icon, notif_icon = :notif_icon, config_version = :config_ver, notif_version = :notif_ver WHERE internal_ID = :id");
 		$stmt->bindValue(':admin', $_SESSION["username"]);
                 $stmt->bindValue(':contact_nav', "Contacts");
                 $stmt->bindValue(':sched_nav', "Schedule");
@@ -51,6 +52,8 @@
 		$stmt->bindValue(':themedark', "#000000");
                 $stmt->bindValue(':themecolor', "#0093FF");
 		$stmt->bindValue(':id',$internalEventID);
+		$stmt->bindValue(':config_ver',1);
+		$stmt->bindValue(':notif_ver',1);
 		
 		$stmt->execute();
 		
@@ -72,6 +75,9 @@
         $get_event_res = $get_event_res[0];
         
     if(isset($_POST['name'])) {
+
+		inc_config_ver();
+
 		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone,custom_tz= :custom, view_remote=:remote, TZcatagory=:TZ_catagory, welcome_message = :welcome_message, visible = :visible, logo = :logo, contact_nav= :contact_nav,contact_icon= :contact_icon,sched_nav= :sched_nav,sched_icon= :sched_icon,housing_nav= :housing_nav,housing_icon= :housing_icon,prayer_nav= :prayer_nav,prayer_icon= :prayer_icon,notif_nav= :notif_nav,notif_icon= :notif_icon WHERE id = :id");
 		$name = $_POST['name'];
 		$timeZone = $_POST['time_zone'];
@@ -208,7 +214,7 @@
 
 						<input type="hidden" name="notif_icon" maxlength="100" value="ic_bell">
 
-                                                <div class="input" title="This is only for internal reference when you are selecting which event you wish to edit.">Event Name:<input type="text" title = "This is only for internal reference when you are selecting which event you wish to edit." name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
+                                                <div class="input" title="This distiguishes this event in a list of many events.">Event Name:<input type="text" title = "This distiguishes this event in a list of many events." name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
 
                                                 <div class="input" title="This logo will be use in the app just above the navigation it will apear here just above general in the same way.">
 							Event Logo:<input title="Keep logos below 300KB, png files are prefered." type="file" name="logo" >

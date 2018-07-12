@@ -5,6 +5,8 @@
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
+		inc_notif_ver();
+		
 
                 //update all notification records in the event
                 $stmt = $db->prepare("UPDATE notifications set title = :title, body = :body, date=TIMESTAMP(:date, :time), refresh = :refresh where event_ID=:event_id and sequential_ID=:sequence");

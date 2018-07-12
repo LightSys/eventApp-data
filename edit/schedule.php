@@ -6,6 +6,9 @@ $event_id = getEventId();
 
 if(isset($_POST['action'])) {
 
+	inc_config_ver();
+
+
 	$stmt = $db->prepare("UPDATE schedule_items set date=:date, start_time=:start_time, length=:length, description=:description, location=:location, category=:category where event_ID=:id and sequential_ID=:sequence");
 	$stmt->bindValue(":id",$event_id);
 

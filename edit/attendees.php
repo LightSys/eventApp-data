@@ -7,6 +7,9 @@
 	
     if( isset($_POST['action']) )
 	{
+
+		inc_config_ver();
+		
 		//update all attendee records in the event 
                 $stmt = $db->prepare("UPDATE attendees set name = :name
                         where event_ID=:event_id and sequential_ID=:sequence");

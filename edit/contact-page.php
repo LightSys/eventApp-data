@@ -6,6 +6,8 @@
 
 	$event_id = getEventId();
 	if( isset($_POST['action'])) {
+
+		inc_config_ver();
 		
 		if($_POST['action'] =="insertSection") {
 		}

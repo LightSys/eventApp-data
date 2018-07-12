@@ -27,6 +27,7 @@ if(!$get_event_res["visible"]) {
 
 $output = array(
 	"general" => array(
+		"version_num"=>$get_event_res["config_version"].",".$get_event_res["notif_version"],
 		"refresh" => $get_event_res["refresh"],
 		"refresh_expire" => date("m/d/Y",strtotime($get_event_res["refresh_expire"])),
 		"time_zone" =>$get_event_res["TZCatagory"]."/".$get_event_res["time_zone"],

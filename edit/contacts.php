@@ -8,6 +8,9 @@
 	$event_id = getEventId();
     if( isset($_POST['action']) )
 	{
+
+		inc_config_ver();
+
                 //update all contact records in the event
                 $stmt = $db->prepare("UPDATE contacts set name = :name, address = :address, phone = :phone where event_ID=:event_id and sequential_ID=:sequence");
                 foreach($_POST['name'] as $key => $name) {
