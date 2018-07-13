@@ -37,7 +37,7 @@
 		}
 
 		//Hard coded initial values.		
-		$stmt = $db->prepare("UPDATE event SET admin = :admin, theme_dark = :themedark, theme_color = :themecolor, contact_nav = :contact_nav, sched_nav = :sched_nav, housing_nav = :housing_nav, prayer_nav = :prayer_nav, notif_nav = :notif_nav, contact_icon = :contact_icon, sched_icon = :sched_icon, housing_icon = :housing_icon, prayer_icon = :prayer_icon, notif_icon = :notif_icon, config_version = :config_ver, notif_version = :notif_ver WHERE internal_ID = :id");
+		$stmt = $db->prepare("UPDATE event SET refresh_rate = :refresh, admin = :admin, theme_dark = :themedark, theme_color = :themecolor, contact_nav = :contact_nav, sched_nav = :sched_nav, housing_nav = :housing_nav, prayer_nav = :prayer_nav, notif_nav = :notif_nav, contact_icon = :contact_icon, sched_icon = :sched_icon, housing_icon = :housing_icon, prayer_icon = :prayer_icon, notif_icon = :notif_icon, config_version = :config_ver, notif_version = :notif_ver WHERE internal_ID = :id");
 		$stmt->bindValue(':admin', $_SESSION["username"]);
                 $stmt->bindValue(':contact_nav', "Contacts");
                 $stmt->bindValue(':sched_nav', "Schedule");
@@ -54,6 +54,7 @@
 		$stmt->bindValue(':id',$internalEventID);
 		$stmt->bindValue(':config_ver',1);
 		$stmt->bindValue(':notif_ver',1);
+		$stmt->bindValue(':refresh',"auto");
 		
 		$stmt->execute();
 		

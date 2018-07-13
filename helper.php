@@ -109,9 +109,12 @@ function secure(){
 	$get_event_stmt = $db->prepare("SELECT admin FROM event WHERE ID =:id");
 
 	$tempid= $_GET["id"];	
+
+	//Makes sure there are no malicious charactors in the url.
 	if(!whitelistChars(1,$tempid)){
 		
 		header("Location: http:// ".$logoutpath);
+		die();
 	}
 		
         $get_event_stmt->bindValue(":id",$tempid);
@@ -131,6 +134,7 @@ function secure(){
 
         }
 
+	//Logs a user out if it has been too long since an action was done.
 	if($tempTime- $_SESSION['timestamp']>$timelimit){
 		
 		header("Location: http://".$logoutpath);
@@ -139,6 +143,8 @@ function secure(){
 	}
 
         $get_event_res = $get_event_res[0];
+
+	//Checks to be sure that the user is the admin of the event that is being edited.
         if(!is_null($get_event_res['admin']) && (!isset($_SESSION["username"])||$get_event_res['admin']!=$_SESSION['username'])){
                 
 		header("Location: http://".$logoutpath);
