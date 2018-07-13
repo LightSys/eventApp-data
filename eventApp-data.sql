@@ -46,7 +46,8 @@ create table event (
     custom_tz           boolean,
     view_remote         boolean,
     config_version      int,
-    notif_version       int,    
+    notif_version       int,
+    refresh_rate        varchar(10),
 
     primary key (internal_ID)
 ) ENGINE = INNODB;
