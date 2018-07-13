@@ -9,7 +9,7 @@
 		
 
                 //update all notification records in the event
-                $stmt = $db->prepare("UPDATE notifications set title = :title, body = :body, date=TIMESTAMP(:date, :time), where event_ID=:event_id and sequential_ID=:sequence");
+                $stmt = $db->prepare("UPDATE notifications set title = :title, body = :body, date=TIMESTAMP(:date, :time) where event_ID=:event_id and sequential_ID=:sequence");
                 $stmt->bindValue(':event_id', $event_id);
                 foreach($_POST['title'] as $key => $value) {
                         $stmt->bindValue(":sequence",$key);
@@ -25,7 +25,7 @@
 
 		if($_POST['action'] == 'addNotification') {
 			//add a blank notification record
-			$stmt = $db->prepare('INSERT into notifications(event_ID, sequential_ID,title,body,date) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from notifications where event_ID=:event_id) as temp), "","", :datetime, 0)');
+			$stmt = $db->prepare('INSERT into notifications(event_ID, sequential_ID,title,body,date) values(:event_id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from notifications where event_ID=:event_id) as temp), "","", :datetime)');
 			$stmt->bindValue(':datetime', date("Y-m-d H:i:s"));
 			$stmt->bindValue(':event_id', $event_id);
 			$stmt->execute();
