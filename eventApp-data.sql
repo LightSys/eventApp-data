@@ -23,7 +23,6 @@ create table event (
     internal_ID         int AUTO_INCREMENT, 
     name                varchar(100),
     year                numeric(4,0),
-    refresh             int,
     refresh_expire      date,
     time_zone           varchar(9),
     welcome_message     varchar(100),
@@ -43,9 +42,12 @@ create table event (
     theme_color         varchar(7),
     visible             boolean,
     admin		varchar(30),
-    TZcatagory		varchar(30),
+    TZcatagory		varchar(100),
     custom_tz           boolean,
     view_remote         boolean,
+    config_version      int,
+    notif_version       int,    
+
     primary key (internal_ID)
 ) ENGINE = INNODB;
 
@@ -158,7 +160,6 @@ create table notifications (
     title               varchar(100),
     body                text,
     date                datetime,
-    refresh             boolean,
 
     primary key (ID),
     foreign key (event_ID) references event(internal_ID)
