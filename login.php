@@ -1,4 +1,7 @@
 <?php 
+
+include('config/config.php');
+
 session_start();
 
 $_SESSION['timestamp']=time();
@@ -61,6 +64,13 @@ function hash_equals($knownString, $userInput) {
     return 0 === $result;
 }
 
+function spit_out_password($pass) {
+    $randsalt = md5('' . openssl_random_pseudo_bytes(12) . ':' . time());
+    $salt =  pack("H*", $randsalt);
+    $res = pbkdf2('sha256', $pass, $salt, 64000, 512);
+    echo '<!--' . htmlstr($res . '$' . $randsalt) . '--><br>\n';
+}
+
 include("connection.php");
 include("helper.php");
 
@@ -104,7 +114,7 @@ if(isset($_POST["username"])) {
 		die();
 	}
 	else {
-		echo "Error: Username and/or password is incorrect";
+		echo "Error: Username and/or password is incorrect<br>\n";
 		die();
 	}
 }
@@ -140,7 +150,7 @@ if(isset($_POST["username"])) {
         <input type="hidden" name="create" value="false">
         Username:<input name="username" type="text"><br>
         Password:&nbsp;<input name="password" type="password"><br>
-        <input type="submit">
+        <input type="submit" value="Login"/>
        <!-- <a onclick="createUser()">Create</a> -->
     </form>
 </body>

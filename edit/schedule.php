@@ -1,6 +1,7 @@
-[A<?php session_start(); 
-include("../connection.php");
-include("../helper.php");
+<?php
+
+session_start(); 
+include("../global.php");
 secure();
 $event_id = getEventId();
 
@@ -42,7 +43,7 @@ if(isset($_POST['action'])) {
 		$stmt->execute();
 	}
 
-	header("Location: schedule.php?id=".$_POST['id']);
+	header("Location: schedule.php?id=" . sanitize_id($_POST['id']));
 	die();
 }
 
@@ -68,7 +69,7 @@ include("../templates/check-event-exists.php");
 			<h1>Schedule</h1>
 			<p>This is where each activity happening in the event is created. The app will take these activities and create a calendar.</p>
 			<form id="updateForm" method="post">
-				<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
+				<input type = "hidden" name="id" value="<?php echo sanitize_id($_GET['id']); ?>">
 				<input type = "hidden" name="action">
 				<input type = "hidden" name="sequence">
 				<div id="scheduleDiv">
@@ -77,31 +78,42 @@ include("../templates/check-event-exists.php");
 					$get_schedule_stmt->bindValue(":id",$event_id);
 					$get_schedule_stmt->execute();
 
-
+					$open_item = $get_schedule_stmt->rowCount() - 1;
+					$cur_item = 0;
 
 					while($get_schedule_res = $get_schedule_stmt->fetch(PDO::FETCH_ASSOC)) {
+
 						echo '<div class="card">'; 
-						echo '<div class="btn" onclick="deleteItem('.$get_schedule_res["sequential_ID"].')">X</div>';
-						echo '<div class="input">Date: <input type="date" name="date[' . $get_schedule_res["sequential_ID"] . ']" value="'. date("Y-m-d",strtotime($get_schedule_res["date"])).'"></div>'; 
-						$colonTime = substr_replace ($get_schedule_res["start_time"],":",2,0);
-						echo '<div class="input">Start Time: <input type="time" name="starttime[' . $get_schedule_res["sequential_ID"] . ']" value="'. $colonTime.'"></div>';
-						echo '<div class="input">Length in Minutes: <input type="number" title="This must be below 2400" name="length[' . $get_schedule_res["sequential_ID"] . ']" max="2359" value="'. $get_schedule_res["length"].'"></div>';
-						echo '<div class="input">Description: <input type="text" name="description[' . $get_schedule_res["sequential_ID"] . ']" maxlength="150" value="'. $get_schedule_res["description"].'"></div>';
+						$colonTime = substr_replace ($get_schedule_res["start_time"],":",strlen($get_schedule_res["start_time"]) - 2,0);
+						if (strlen($colonTime) == 4)
+						    $colonTime = '0' . $colonTime;
+
+						// Header/title
+						echo '<div class="btn" onclick="deleteItem('.attrstr($get_schedule_res["sequential_ID"]).')">X</div>';
+						echo ' <div class="btn" onclick="expandCollapse(this);">' . (($cur_item == $open_item)?'V':'>') . '</div>';
+						echo '<span class="title">' . htmlstr(date("D M jS",strtotime($get_schedule_res["date"]))) . ' ' . htmlstr($colonTime) . ': ' . htmlstr($get_schedule_res["description"]) . ' (' . htmlstr($get_schedule_res["length"]) . ' min)</span>';
+
+						// Detail
+						echo '<div class="detail" style="display:' . (($cur_item == $open_item)?'block':'none') . ';">';
+						echo '<div class="input">Date: <input type="date" name="date[' . attrstr($get_schedule_res["sequential_ID"]) . ']" value="'. attrstr(date("Y-m-d",strtotime($get_schedule_res["date"]))).'"></div>'; 
+						echo '<div class="input">Start Time: <input type="time" name="starttime[' . attrstr($get_schedule_res["sequential_ID"]) . ']" value="'. attrstr($colonTime).'"></div>';
+						echo '<div class="input">Length in Minutes: <input type="number" title="This must be below 2400" name="length[' . attrstr($get_schedule_res["sequential_ID"]) . ']" max="2359" value="'. attrstr($get_schedule_res["length"]).'"></div>';
+						echo '<div class="input">Description: <input type="text" name="description[' . attrstr($get_schedule_res["sequential_ID"]) . ']" maxlength="150" value="'. attrstr($get_schedule_res["description"]).'"></div>';
 						echo '<div class="input">Location: ';
 
                                                 $get_hosts_stmt = $db->prepare("SELECT * FROM contacts where event_ID=:id");
                                                 $get_hosts_stmt->bindValue(":id",$event_id);
                                                 $get_hosts_stmt->execute();
 					
-					        echo '<select name="location[' . $get_schedule_res["sequential_ID"] . ']">';
+					        echo '<select name="location[' . attrstr($get_schedule_res["sequential_ID"]) . ']">';
 						
 						echo '<option value="">'."No Location".'</option>';
 			
                                                 while($get_hosts_res = $get_hosts_stmt->fetch(PDO::FETCH_ASSOC)) {
                                                         if ($get_hosts_res['ID'] == $get_schedule_res['location']) {
-                                                                echo '<option value="'. $get_hosts_res["ID"] . '" selected>' . $get_hosts_res["name"] . '</option>';
+                                                                echo '<option value="'. attrstr($get_hosts_res["ID"]) . '" selected>' . htmlstr($get_hosts_res["name"]) . '</option>';
                                                         } else {
-                                                                echo '<option value="'.$get_hosts_res["ID"] .'">' . $get_hosts_res["name"] . '</option>';
+                                                                echo '<option value="'. attrstr($get_hosts_res["ID"]) .'">' . htmlstr($get_hosts_res["name"]) . '</option>';
                                                         }
                                                 }
 
@@ -114,19 +126,22 @@ include("../templates/check-event-exists.php");
 						$get_themes_stmt->bindValue(":id",$event_id);
 						$get_themes_stmt->execute();
 
-						echo '<select name="category[' . $get_schedule_res["sequential_ID"] . ']">';
+						echo '<select name="category[' . attrstr($get_schedule_res["sequential_ID"]) . ']">';
 						
 						echo '<option value="">'."No Theme".'</option>';
 
 						while($get_theme_res = $get_themes_stmt->fetch(PDO::FETCH_ASSOC)) {
 							if($get_theme_res['ID'] == $get_schedule_res['category']){
-								echo '<option selected value = ' . $get_theme_res["ID"] . '>' . $get_theme_res['theme_name'] . '</option>';
+								echo '<option selected value = ' . attrstr($get_theme_res["ID"]) . '>' . htmlstr($get_theme_res['theme_name']) . '</option>';
 							} else {
-                                                                echo '<option value = ' . $get_theme_res["ID"] . '>' . $get_theme_res['theme_name'] . '</option>';
+                                                                echo '<option value = ' . attrstr($get_theme_res["ID"]) . '>' . htmlstr($get_theme_res['theme_name']) . '</option>';
 							}
 						}
 						echo '</select></div>';
-						echo '</div>';
+						echo '</div>'; // detail
+						echo '</div>'; // card
+
+						$cur_item++;
 					}
 					?>	
 				</div>
@@ -154,6 +169,16 @@ include("../templates/check-event-exists.php");
 			document.forms['updateForm']['action'].value = "deleteItem";
 			document.forms['updateForm']['sequence'].value = sequential_id;
 			$("#updateForm").submit();
+		}
+
+		function expandCollapse(div) {
+			if (div.nextSibling.nextSibling.style.display == 'block') {
+				div.nextSibling.nextSibling.style.display = 'none';
+				div.innerHTML = '>';
+			} else {
+				div.nextSibling.nextSibling.style.display = 'block';
+				div.innerHTML = 'V';
+			}
 		}
 	</script>
 </html>

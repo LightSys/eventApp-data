@@ -1,9 +1,11 @@
 <?php 
-    $id = $_GET['id'];
 
-    // include the database connection
-    include("../connection.php");
+    include("../global.php");
+
+    secure();
     
+    $id = sanitize_id($_GET['id']);
+
     $stmt = $db->prepare('SELECT theme_color FROM event where ID = :id');
     $stmt->bindValue(":id", $id);
     $stmt->execute();
@@ -34,10 +36,10 @@
     //store the blob in img
     $getImage=$img_stmt->fetch(PDO::FETCH_ASSOC);
     $img=$getImage['logo'];
-    $img='"data:image/png;base64,'.$img.'"';
+    $img='"data:image/png;base64,' . attrstr($img) . '"';
 
     echo ( 
-        '<nav style="background-color:' . $color . ';">'
+        '<nav style="background-color:' . attrstr($color) . ';">'
         . '<ol>'
 	.     '<img src='.$img.' alt="Logo not set." style="width:120px;height:120px;">'
         .     '<a style="color:' . $textColor . ';" href="general.php?id=' . $id . '"><li id="general">General</li></a>'
@@ -62,12 +64,12 @@
     echo (
         '<style>
             .btn {
-                background-color: ' . $color . ';
+                background-color: ' . attrstr($color) . ';
 		color: ' . $textColor . ';
             }
 
             .btn:hover {
-                border: 1px solid ' . $color . ';
+                border: 1px solid ' . attrstr($color) . ';
                 color: ' . $textColor . ';
             }
             

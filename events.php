@@ -1,7 +1,8 @@
 <?php
 	session_start();
-	 include("connection.php");
-	include("helper.php");
+
+	include("global.php");
+
 	eventSecure();
  ?>
 
@@ -28,7 +29,7 @@
 								$get_events_stmt->execute();
 
 								while($get_events_res = $get_events_stmt->fetch(PDO::FETCH_ASSOC)) {
-									echo '<option value="' . $get_events_res['ID'] . '">' . $get_events_res['name'] . '</option>';
+									echo '<option value="' . attrstr($get_events_res['ID']) . '">' . htmlstr($get_events_res['name']) . '</option>';
 								}
 							
 							?>

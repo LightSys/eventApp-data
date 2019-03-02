@@ -1,8 +1,9 @@
-<?php   session_start();
-	include("../helper.php");
-	include("../connection.php");
-        secure();
+<?php   
+	session_start();
 
+	include("../global.php");
+
+        secure();
 
 	$event_id = getEventId();
 	if( isset($_POST['action'])) {
@@ -49,7 +50,7 @@
 			$stmt->execute();
 		}
 
-		header("Location: contact-page.php?id=".$_POST['id']);
+		header("Location: contact-page.php?id=" . sanitize_id($_POST['id']));
 		die();
 	}
 
@@ -74,20 +75,20 @@
 			<h1>Contact Page Sections</h1>
 			<p> This is to create a page which has some contacts (including phone numbers) and explianation on when they can be contacted. A prime example is emergency contacts.</p>
 			<form id="form" method="post">
-				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
+				<input type="hidden" name="id" value = "<?php echo sanitize_id($_GET["id"]); ?>">
 				<input type="hidden" name="action" value = "updateSection">
 
 				<div id="contactCards">
 					<?php			
-						$id = $_GET["id"];
+						$id = sanitize_id($_GET["id"]);
 						$get_sections_stmt = $db->prepare("SELECT * FROM contact_page_sections where event_ID=:id and ID != (SELECT MAX(ID) FROM contact_page_sections where event_ID=:id) order by sequential_ID asc");
 						$get_sections_stmt->bindValue(":id",$event_id);
 						$get_sections_stmt->execute();
 
 						while($get_sections_res = $get_sections_stmt->fetch(PDO::FETCH_ASSOC)) {
 							echo '<div class="card">'; 
-							echo '<div class="input">Page Header: <input type="text" name="header['.$get_sections_res["sequential_ID"].']" value="'.$get_sections_res["header"].'"></div>';
-							echo '<div class="input">Content: <textarea name="content['.$get_sections_res["sequential_ID"].']">'.$get_sections_res["content"].'</textarea></div>';
+							echo '<div class="input">Page Header: <input type="text" name="header[' . attrstr($get_sections_res["sequential_ID"]) . ']" value="' . attrstr($get_sections_res["header"]) . '"></div>';
+							echo '<div class="input">Content: <textarea name="content[' . attrstr($get_sections_res["sequential_ID"]) . ']">' . htmlstr($get_sections_res["content"]) . '</textarea></div>';
 							echo '</div>';
 						}
 
@@ -102,7 +103,7 @@
 						}
 
 						echo '<div class="card">';
-						echo '<div class="input">Contact Header: <input type="text" name="contacts_header" value="'.$get_last_section_res["header"].'"></div>';
+						echo '<div class="input">Contact Header: <input type="text" name="contacts_header" value="' . attrstr($get_last_section_res["header"]) . '"></div>';
 						echo '<div class="input">Contacts: <div id="contact_list">'; 
 
 						foreach($contacts as $contact) {
@@ -117,9 +118,9 @@
 
 							while($get_contacts_res = $get_contacts_stmt->fetch(PDO::FETCH_ASSOC)) {
 								if($get_contacts_res['ID'] == $contact) {
-									echo '<option value="'.$get_contacts_res["ID"] .'" selected>' . $get_contacts_res['name'] . '</option>';
+									echo '<option value="' . attrstr($get_contacts_res["ID"]) .'" selected>' . htmlstr($get_contacts_res['name']) . '</option>';
 								} else {
-									echo '<option value="'.$get_contacts_res["ID"] .'">' . $get_contacts_res['name'] . '</option>';
+									echo '<option value="' . attrstr($get_contacts_res["ID"]) .'">' . htmlstr($get_contacts_res['name']) . '</option>';
 								}
 							}
 
@@ -140,7 +141,7 @@
 			</form>
 
 			<form id = "addSection"  method="post">	
-				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
+				<input type="hidden" name="id" value = "<?php echo sanitize_id($_GET["id"]); ?>">
 				<input type="hidden" name="action" value = "addSection">
 			</form>
 
@@ -167,7 +168,7 @@
 					$get_contacts_stmt->execute();
 
 					while($get_contacts_res = $get_contacts_stmt->fetch(PDO::FETCH_ASSOC)) {
-						echo '<option value="'. $get_contacts_res['ID'] .'" selected>' . $get_contacts_res['name'] . '</option>';
+						echo '<option value="'. attrstr($get_contacts_res['ID']) .'" selected>' . htmlstr($get_contacts_res['name']) . '</option>';
 					}
 					echo '<option value="remove">Remove</option>';
 

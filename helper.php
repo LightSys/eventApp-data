@@ -1,4 +1,17 @@
 <?php 
+
+function htmlstr($str) {
+	return htmlspecialchars($str, ENT_NOQUOTES, 'UTF-8');
+}
+
+function attrstr($str) {
+	return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+}
+
+function sanitize_id($id) {
+	return preg_replace('/[^a-z0-9-]/', '', $id);
+}
+
 // Retrieved from https://stackoverflow.com/questions/6768793/get-the-full-url-in-php
 function url_origin( $s, $use_forwarded_host = false ) {
 	$ssl      = ( ! empty( $s['HTTPS'] ) && $s['HTTPS'] == 'on' );
@@ -91,29 +104,33 @@ function json_encode_noescape($a=false)
 	}
 }
 function secure(){
+
+	global $config;
+	global $db;
 	
 	$timelimit=1800;
 	$tempTime=time();
 	//include("templates/check-event-exists.php");
-	include("connection.php");
+	//include("config/config.php");
+	//include("connection.php");
 
 	//decide realitive path to logout
 	
 	if(getParentDir()=="edit"){
-		$logoutpath=getbasedir()."/templates/logout.php";
+		$logoutpath = $config['basedir'] . "/templates/logout.php";
 	}
 	else{
-		$logoutpath=getbasedir()."/templates/logout.php";
+		$logoutpath = $config['basedir'] . "/templates/logout.php";
 	}
 
 	$get_event_stmt = $db->prepare("SELECT admin FROM event WHERE ID =:id");
 
-	$tempid= $_GET["id"];	
+	$tempid= sanitize_id($_GET["id"]);	
 
 	//Makes sure there are no malicious charactors in the url.
 	if(!whitelistChars(1,$tempid)){
 		
-		header("Location: http:// ".$logoutpath);
+		header("Location: " . $logoutpath);
 		die();
 	}
 		
@@ -137,7 +154,7 @@ function secure(){
 	//Logs a user out if it has been too long since an action was done.
 	if($tempTime- $_SESSION['timestamp']>$timelimit){
 		
-		header("Location: http://".$logoutpath);
+		header("Location: " . $logoutpath);
 		
 		die("session time expired");
 	}
@@ -145,9 +162,9 @@ function secure(){
         $get_event_res = $get_event_res[0];
 
 	//Checks to be sure that the user is the admin of the event that is being edited.
-        if(!is_null($get_event_res['admin']) && (!isset($_SESSION["username"])||$get_event_res['admin']!=$_SESSION['username'])){
+        if (is_null($get_event_res['admin']) || !isset($_SESSION["username"]) || $get_event_res['admin'] != $_SESSION['username']) {
                 
-		header("Location: http://".$logoutpath);
+		header("Location: " . $logoutpath);
                 die();
         }
 
@@ -160,12 +177,13 @@ function eventSecure(){
         $tempTime=time();
          //decide realitive path to logout
 
+	include("config/config.php");
         
           if(getParentDir()=="edit"){
-                $logoutpath=getbasedir()."/templates/logout.php";
+                $logoutpath = $config['basedir'] . "/templates/logout.php";
         }
         else{
-                $logoutpath=getbasedir()."/templates/logout.php";
+                $logoutpath = $config['basedir'] . "/templates/logout.php";
         }
         
 
@@ -173,12 +191,12 @@ function eventSecure(){
         include("connection.php");
 	 if(!isset($_SESSION['username'])){
                  header_remove();
-		 header("Location: http://".$logoutpath);
+		 header("Location: " . $logoutpath);
                  die();
 
           }
 	if($tempTime- $_SESSION['timestamp']>$timelimit){
-                header("Location: ".$logoutpath);
+                header("Location: " . $logoutpath);
 
                 die('session time expired');
         }
@@ -189,6 +207,7 @@ function eventSecure(){
 
 function inc_config_ver(){
 	//called whenever the database is fed data affecting anything other then the notifications table. causes an increse in version number that the moblie app uses to check if its up to date. 
+	include("config/config.php");
 	include("connection.php");
 	$config_stmt=$db->prepare("SELECT config_version FROM event WHERE internal_ID= :id");	
 	$config_stmt->bindValue(":id",getEventId());
@@ -209,6 +228,7 @@ function inc_config_ver(){
 }
 
 function inc_notif_ver(){
+ include("config/config.php");
  include("connection.php");
         $notif_stmt=$db->prepare("SELECT notif_version FROM event WHERE internal_ID= :id");
         $notif_stmt->bindValue(":id",getEventId());
@@ -233,7 +253,7 @@ function getEventId() {
 		die("error in get event stmt");
 	}
 
-	if(!$get_event_stmt->bindParam(":id",$_REQUEST['id'])) {
+	if(!$get_event_stmt->bindParam(":id", sanitize_id($_REQUEST['id']))) {
 		die("error in bind param");
 	}
 
@@ -267,9 +287,5 @@ function getParentDir() {
 
 	return $url;
 }
-function getbasedir(){//this MUST be modified for deployment
-	return "10.5.11.121/jordan/eventApp-data"; 
-}
-
 
 ?>

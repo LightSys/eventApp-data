@@ -1,11 +1,13 @@
-<?php   session_start();
-	include("../connection.php");
-	include("../helper.php");
+<?php   
+	session_start();
+
+	include("../global.php");
+
 	$event_id = getEventId();	
 
 	secure();	
 
-        $id = $_GET["id"];
+        $id = sanitize_id($_GET["id"]);
         $get_contact_stmt = $db->prepare("SELECT * FROM event where ID=:id");
         $get_contact_stmt->bindValue(":id",$id);
         $get_contact_stmt->execute();
@@ -38,7 +40,7 @@ if( isset($_POST['action']) )
 			$stmt->bindValue(':themeDark', "#".$themeDark);
 			$stmt->bindValue(':themeMedium', "#".$themeMedium);
 			$stmt->bindValue(':themeColor', "#".$themeColor);
-			$stmt->bindValue(':event_id', $_POST["id"]);
+			$stmt->bindValue(':event_id', sanitize_id($_POST["id"]));
 			$stmt->execute();
 				
 	
@@ -47,7 +49,7 @@ if( isset($_POST['action']) )
 		
 		// Redirect to the original address with parameters intact since they are dropped on form submit.
 		// The records just added or updated will be added to the page
-		header("Location: advanced.php?id=".$_POST['id']);
+		header("Location: advanced.php?id=" . sanitize_id($_POST['id']));
 		die();
 	}
 	include("../templates/check-event-exists.php");
@@ -80,11 +82,11 @@ if( isset($_POST['action']) )
 			<h1>Advanced</h1>
 			<p>This page contains advanced settings that are used to determine the "feel" of the app.</p>
 			<form id="form" method="post">
-				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
+				<input type="hidden" name="id" value = "<?php echo sanitize_id($_GET["id"]); ?>">
 				<input type="hidden" name="action" value = "updateEvent">
 				<div class="card">
 					<?php			
-						$id = $_GET["id"];
+						$id = sanitize_id($_GET["id"]);
 						$get_contact_stmt = $db->prepare("SELECT * FROM event where ID=:id");
 						$get_contact_stmt->bindValue(":id",$id);
 						$get_contact_stmt->execute();
@@ -115,13 +117,13 @@ if( isset($_POST['action']) )
 						echo '</select>'; 
 						echo '</div>'; 
 						
-						echo '<div class="input" title="This is what date the app should stop checking to see if there are new notifications. Should be set to the end of the event.">Refresh Notifications Expiration: <input type="date" name="refreshExpire" value="'.$get_contact_res['refresh_expire'].'"></div>';
+						echo '<div class="input" title="This is what date the app should stop checking to see if there are new notifications. Should be set to the end of the event.">Refresh Notifications Expiration: <input type="date" name="refreshExpire" value="'. attrstr($get_contact_res['refresh_expire']) . '"></div>';
 						echo '<div class = "input">Gradient Theme Dark: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeDark" 
-								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_dark']).'"></div>';
+								maxlength="7" value="' . attrstr(str_replace("#", "", $get_contact_res['theme_dark'])) . '"></div>';
 						echo '<div class = "input">Gradient Theme Medium: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeMedium" 
-								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_medium']).'"></div>';
+								maxlength="7" value="' . attrstr(str_replace("#", "", $get_contact_res['theme_medium'])) . '"></div>';
 						echo '<div class = "input">App Theme Color: <input class="jscolor {closable:true,closeText:"Close"}" name = "themeColor" 
-								maxlength="7" value="'.str_replace("#", "", $get_contact_res['theme_color']).'"></div>';
+								maxlength="7" value="' . attrstr(str_replace("#", "", $get_contact_res['theme_color'])) . '"></div>';
 					?>
 
 				</div>

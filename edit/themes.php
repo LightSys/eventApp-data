@@ -1,8 +1,10 @@
-<?php	session_start();
-	include("../connection.php");
-	include("../helper.php");
-        secure();
-	$event_id = getEventId();
+<?php	
+
+    session_start();
+    include("../global.php");
+    secure();
+    $event_id = getEventId();
+
     if( isset($_POST['action']) )
 	{
 		inc_config_ver();
@@ -38,7 +40,7 @@
 		
 		// Redirect to the original address with parameters intact since they are dropped on form submit.
 		// The records just added or updated will be added to the page
-		header("Location: themes.php?id=".$_POST['id']);
+		header("Location: themes.php?id=" . sanitize_id($_POST['id']));
 		die();
 	}
   
@@ -64,12 +66,12 @@
 			<h1>Schedule Themes</h1>
 			<p>This is where you make custom theme colors. They can be selected in the schedule tab for different events. This is how you color code the app calendar.</p>
 			<form id="themeForm" method="post">
-				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
+				<input type="hidden" name="id" value = "<?php echo sanitize_id($_GET["id"]); ?>">
 				<input type="hidden" name="action">
 				<input type="hidden" name="sequence">
 				<div id="themeCards">
 				<?php			
-					$id = $_GET["id"];
+					$id = sanitize_id($_GET["id"]);
 					$get_theme_stmt = $db->prepare("SELECT * FROM themes where event_ID=:id order by sequential_ID asc");
 					$get_theme_stmt->bindValue(":id",$event_id);
 					$get_theme_stmt->execute();
@@ -77,12 +79,12 @@
 					//populate the form with the event themes 
 					while($get_theme_res = $get_theme_stmt->fetch(PDO::FETCH_ASSOC)) {
 						echo '<div class="card">';
-						echo '<div class="btn" onclick="deleteTheme('.$get_theme_res["sequential_ID"].')">X</div>';
-						echo '<div class="input">Theme Name: <input type="text" name="themeName['.$get_theme_res["sequential_ID"].']" 
-								maxlength="50" value="'.$get_theme_res['theme_name'].'"></div>';
+						echo '<div class="btn" onclick="deleteTheme('.attrstr($get_theme_res["sequential_ID"]).')">X</div>';
+						echo '<div class="input">Theme Name: <input type="text" name="themeName['.attrstr($get_theme_res["sequential_ID"]).']" 
+								maxlength="50" value="'.attrstr($get_theme_res['theme_name']).'"></div>';
 						echo '<div class = "input">Theme Color: <input class="jscolor {closable:true,closeText:"Close"}" 
-								name="themeColor['.$get_theme_res["sequential_ID"].']" 
-								maxlength="7" value="'.str_replace("#", "", $get_theme_res['theme_color']).'"></div></div>';
+								name="themeColor['.attrstr($get_theme_res["sequential_ID"]).']" 
+								maxlength="7" value="'.attrstr(str_replace("#", "", $get_theme_res['theme_color'])).'"></div></div>';
 					}
 				?>
 				</div>

@@ -1,9 +1,10 @@
-<?php   session_start();
-	include("../connection.php");
-	include("../helper.php");
-	secure();
+<?php   
 
-	$event_id = getEventId();
+    session_start();
+    include("../global.php");
+    secure();
+
+    $event_id = getEventId();
     if( isset($_POST['action']) )
 	{
 		inc_config_ver();
@@ -44,7 +45,7 @@
 			$stmt->execute();
 		}
 
-		header("Location: prayer-partners.php?id=".$_POST['id']);
+		header("Location: prayer-partners.php?id=" . sanitize_id($_POST['id']));
 		die();
 	}
 	include("../templates/check-event-exists.php");
@@ -72,21 +73,21 @@
 			<h1>Prayer Partners</h1>
 			<p>On this page you can create multiple prayer groups and list the people in those groups. Notice how only attendees are put in here so no contact information is given. An example of using this in a unique way is having the navigation for this page in general be 'Small Groups' and then grouping the attendees here into different small groups.</p>
 			<form id="form" method="post">
-				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
+				<input type="hidden" name="id" value = "<?php echo sanitize_id($_GET["id"]); ?>">
 				<input type="hidden" name="action" value = "save">
 				<input type="hidden" name="sequence">
 				<div id="sectionCards">
 					<?php			
-						$id = $_GET["id"];
+						$id = sanitize_id($_GET["id"]);
 						$get_prayer_group_stmt = $db->prepare("SELECT * FROM prayer_partners where event_ID=:id order by sequential_ID asc");
 						$get_prayer_group_stmt->bindValue(":id",$event_id);
 						$get_prayer_group_stmt->execute();
 
 						while($get_prayer_group_res = $get_prayer_group_stmt->fetch(PDO::FETCH_ASSOC)) {
 							echo '<div class="card">';
-							echo '<div class="btn" onclick="deleteGroup('.$get_prayer_group_res["sequential_ID"].')">X</div>';
+							echo '<div class="btn" onclick="deleteGroup('.attrstr($get_prayer_group_res["sequential_ID"]).')">X</div>';
 							echo '<div class="input">Partners:';
-							echo '<div id="partners[' . $get_prayer_group_res['sequential_ID'] . ']">';
+							echo '<div id="partners[' . attrstr($get_prayer_group_res['sequential_ID']) . ']">';
 
 							$get_info_prayer_res = $db->prepare("SELECT * FROM attendees where event_ID=:id and prayer_group_ID = :prayer_ID");
 							$get_info_prayer_res->bindValue(":id", $event_id);
@@ -94,7 +95,7 @@
 							$get_info_prayer_res->execute();
 
 							while($get_attendees_house_res = $get_info_prayer_res->fetch(PDO::FETCH_ASSOC)) {
-								echo '<select name="partner[' . $get_prayer_group_res['sequential_ID'] . '][]" autocomplete="off">';
+								echo '<select name="partner[' . attrstr($get_prayer_group_res['sequential_ID']) . '][]" autocomplete="off">';
 								
 								$get_attendees_stmt = $db->prepare("SELECT * FROM attendees where event_ID=:id");
 								$get_attendees_stmt->bindValue(":id", $event_id);
@@ -104,17 +105,17 @@
 
 								while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
 									if($get_attendees_res["sequential_ID"] == $get_attendees_house_res['sequential_ID']) {
-										echo '<option value="'.$get_attendees_res["sequential_ID"].'" selected="selected">' . $get_attendees_res['name'] . '</option>';
+										echo '<option value="'.attrstr($get_attendees_res["sequential_ID"]).'" selected="selected">' . htmlstr($get_attendees_res['name']) . '</option>';
 									}
 									else {
-										echo '<option value="'.$get_attendees_res["sequential_ID"].'" >' . $get_attendees_res['name'] . '</option>';
+										echo '<option value="'.attrstr($get_attendees_res["sequential_ID"]).'" >' . htmlstr($get_attendees_res['name']) . '</option>';
 									}						
 								}
 
 								echo '</select>';
 							}
 							echo '</div>';		
-							echo '<div class="btn" title="This button does not save what is on the page." onclick="addPartner(' . $get_prayer_group_res['sequential_ID'] . ')">Add Partner</div>';
+							echo '<div class="btn" title="This button does not save what is on the page." onclick="addPartner(' . attrstr($get_prayer_group_res['sequential_ID']) . ')">Add Partner</div>';
 							echo '</div>';
 							echo '</div>';
 						}
@@ -156,7 +157,7 @@
 
 				echo '<option value="remove" selected>Remove</option>';
 				while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
-					echo '<option value='.$get_attendees_res['sequential_ID'].'>' . $get_attendees_res['name'] . '</option>';
+					echo '<option value='.attrstr($get_attendees_res['sequential_ID']).'>' . htmlstr($get_attendees_res['name']) . '</option>';
 				}
 				?></select>';
 

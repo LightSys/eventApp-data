@@ -1,8 +1,10 @@
-<?php	session_start();
-	include("../connection.php");
-	include("../helper.php");
-	secure();
-	$event_id = getEventId();
+<?php	
+
+    session_start();
+    include("../global.php");
+    secure();
+    $event_id = getEventId();
+
     if( isset($_POST['action']) )
 	{
 		inc_notif_ver();
@@ -42,7 +44,7 @@
 		
 		// Redirect to the original address with parameters intact since they are dropped on form submit.
 		// The records just added or updated will be added to the page
-		header("Location: notifications.php?id=".$_POST['id']);
+		header("Location: notifications.php?id=" . sanitize_id($_POST['id']));
 		die();
 	}
 	
@@ -64,12 +66,12 @@
 			<h1>Notifications</h1>
 			<p>This page determines what notifications are sent to the user's phone. For instance it could be used to remind users of important activities.</p>
 			<form id="notificationForm"  method="post">
-				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
+				<input type="hidden" name="id" value = "<?php echo sanitize_id($_GET["id"]); ?>">
 				<input type="hidden" name="action">
 				<input type="hidden" name="sequence">
 				<div id="notificationCards">
 				<?php			
-					$id = $_GET["id"];
+					$id = sanitize_id($_GET["id"]);
 					$get_notification_stmt = $db->prepare("SELECT * FROM notifications where event_ID=:id order by date asc");
 					$get_notification_stmt->bindValue(":id",$event_id);
 					$get_notification_stmt->execute();
@@ -77,11 +79,11 @@
 					//populate the form with the event notifications 
 					while($get_notification_res = $get_notification_stmt->fetch(PDO::FETCH_ASSOC)) {
 						echo '<div class="card">';
-						echo '<div class="btn" onclick="deleteNotification('.$get_notification_res["sequential_ID"].')">X</div>';
-						echo '<div class="input">Subject: <input type="text" name="title['.$get_notification_res["sequential_ID"].']" maxlength="100" value = \''.$get_notification_res["title"].'\'></div>';
-						echo '<div class="input">Message: <textarea name="body['. $get_notification_res["sequential_ID"] .']">'.$get_notification_res["body"].'</textarea></div>';
-						echo '<div class="input">Date: <input type="date" name="date['.$get_notification_res["sequential_ID"].']" value="'. date("Y-m-d",strtotime($get_notification_res["date"])).'"></div>';
-						echo '<div class="input">Time: <input type="time" name="time['.$get_notification_res["sequential_ID"].']" value="'. date("H:i",strtotime($get_notification_res["date"])).'"></div>';
+						echo '<div class="btn" onclick="deleteNotification('.attrstr($get_notification_res["sequential_ID"]).')">X</div>';
+						echo '<div class="input">Subject: <input type="text" name="title['.attrstr($get_notification_res["sequential_ID"]).']" maxlength="100" value="'.attrstr($get_notification_res["title"]) .'"></div>';
+						echo '<div class="input">Message: <textarea name="body['. attrstr($get_notification_res["sequential_ID"]) .']">'.htmlstr($get_notification_res["body"]).'</textarea></div>';
+						echo '<div class="input">Date: <input type="date" name="date['. attrstr($get_notification_res["sequential_ID"]).']" value="'. attrstr(date("Y-m-d",strtotime($get_notification_res["date"]))).'"></div>';
+						echo '<div class="input">Time: <input type="time" name="time['. attrstr($get_notification_res["sequential_ID"]).']" value="'. attrstr(date("H:i",strtotime($get_notification_res["date"]))).'"></div>';
 						echo '</div>';
 					}
 				?>

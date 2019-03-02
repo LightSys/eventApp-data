@@ -1,9 +1,7 @@
-<?php  //testing, can I modify?
+<?php  
 	session_start();
-	
-	include("../helper.php");
-	
-	include("../connection.php");
+
+	include("../global.php");
 	
 	eventSecure();
 	// If we are coming from the events page to create a new event
@@ -36,7 +34,7 @@
 			$new_contact_pages_stmt->execute();
 		}
 
-		//Hard coded initial values.		
+		// Hard coded initial values.		
 		$stmt = $db->prepare("UPDATE event SET refresh_rate = :refresh, admin = :admin, theme_dark = :themedark, theme_color = :themecolor, contact_nav = :contact_nav, sched_nav = :sched_nav, housing_nav = :housing_nav, prayer_nav = :prayer_nav, notif_nav = :notif_nav, contact_icon = :contact_icon, sched_icon = :sched_icon, housing_icon = :housing_icon, prayer_icon = :prayer_icon, notif_icon = :notif_icon, config_version = :config_ver, notif_version = :notif_ver WHERE internal_ID = :id");
 		$stmt->bindValue(':admin', $_SESSION["username"]);
                 $stmt->bindValue(':contact_nav', "Contacts");
@@ -59,14 +57,14 @@
 		$stmt->execute();
 		
 		// reroute to this page with the new event id
-		header("Location: ".full_url($_SERVER)."?id=".$id);
+		header("Location: ".full_url($_SERVER)."?id=".sanitize_id($id));
 		die();
 	}
 	secure(full_url($_SERVER));
 
         $get_event_stmt = $db->prepare("SELECT custom_tz,view_remote,logo,name,time_zone,TZcatagory,welcome_message, visible,contact_nav,contact_icon,sched_nav,sched_icon,housing_nav,housing_icon,prayer_nav,prayer_icon,notif_nav,notif_icon FROM event WHERE ID =:id");
 	
-        $get_event_stmt->bindValue(":id", $_GET["id"]);
+        $get_event_stmt->bindValue(":id", sanitize_id($_GET["id"]));
 	
 	$get_event_stmt->execute();
         $get_event_res = $get_event_stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -103,8 +101,8 @@
 			$uploadfile = $uploaddir . basename($_FILES['logo']['name']);
 			// Try to upload the file
 			$imageFileType = strtolower(pathinfo($uploadfile,PATHINFO_EXTENSION));
-			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-    					die ("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" && $imageFileType != "svg") {
+    					die ("Sorry, only SVG, JPG, JPEG, PNG, and GIF files are allowed.");
 			}
 			if($_FILES['logo']['size'] > 300000) {
 				die ("Sorry, only logos below 300KB are allowed.");
@@ -165,7 +163,7 @@
 		$stmt->bindValue(":TZ_catagory", $_POST["timeCatagory"]);
 		$stmt->execute();
 		// reroute to this page with the new event id
-		header("Location: general.php?id=".$_POST['id']);
+		header("Location: general.php?id=" . sanitize_id($_POST['id']));
 		die();
 	}
 	
@@ -201,7 +199,7 @@
 			<form method = "post" enctype="multipart/form-data" id="form">
 
 					<div class="card">
-						<input type="hidden" name="id" value="<?php echo($_GET['id'])?>">
+						<input type="hidden" name="id" value="<?php echo sanitize_id($_GET['id']); ?>">
 
 						<input type="hidden" name="saveLogo">
 
@@ -215,7 +213,7 @@
 
 						<input type="hidden" name="notif_icon" maxlength="100" value="ic_bell">
 
-                                                <div class="input" title="This distiguishes this event in a list of many events.">Event Name:<input type="text" title = "This distiguishes this event in a list of many events." name="name" maxlength="100" value="<?php echo $get_event_res["name"] ?>"></div>
+                                                <div class="input" title="This distiguishes this event in a list of many events.">Event Name:<input type="text" title = "This distiguishes this event in a list of many events." name="name" maxlength="100" value="<?php echo attrstr($get_event_res["name"]); ?>"></div>
 
                                                 <div class="input" title="This logo will be use in the app just above the navigation it will apear here just above general in the same way.">
 							Event Logo:<input title="Keep logos below 300KB, png files are prefered." type="file" name="logo" >
@@ -250,12 +248,12 @@
 								$tempmatch=preg_split('/[\W]+/',$TZNames[$i]);
 								if(!in_array($tempmatch[0],$TZ_Cats)){
 									if($tempmatch[0]==$get_event_res["TZcatagory"]){
-										echo "<option selected>" .$tempmatch[0] ."</option>";
+										echo "<option selected>" . htmlstr($tempmatch[0]) ."</option>";
 										array_push($TZ_Cats, $tempmatch[0]);
 									} 
 									else{
 										array_push($TZ_Cats,$tempmatch[0]);
-										echo "<option>" .$tempmatch[0] ."</option>";
+										echo "<option>" . htmlstr($tempmatch[0]) ."</option>";
 									}
 								}
 							}
@@ -266,12 +264,12 @@
 								$tempstring=preg_split('/[\W]+/',$TZNames[$i],2);
 								if ($tempstring[0]==$get_event_res["TZcatagory"]){
 								        if($tempstring[1]==$get_event_res["time_zone"]){
-                                                                                echo "<option selected>" .$tempstring[1] ."</option>";
+                                                                                echo "<option selected>" . htmlstr($tempstring[1]) ."</option>";
                                                                                 
                                                                         }
                                                                         else{
                                                                                 
-                                                                                echo "<option>" .$tempstring[1] ."</option>";
+                                                                                echo "<option>" . htmlstr($tempstring[1]) ."</option>";
                                                                         }
                                                                 }
                                                         }
@@ -286,19 +284,19 @@
 						
 						
 
-						<div class="input" title="This message is the first thing a user sees whenever they enter the app. The notificaitons are displayed immeadiatly below it.">Welcome Message:<input type="text" title="This message is the first thing a user sees whenever they enter the app. The notificaitons are displayed immeadiatly below it." name="welcome" maxlength="100" value="<?php echo $get_event_res["welcome_message"] ?>"></div>
+						<div class="input" title="This message is the first thing a user sees whenever they enter the app. The notificaitons are displayed immeadiatly below it.">Welcome Message:<input type="text" title="This message is the first thing a user sees whenever they enter the app. The notificaitons are displayed immeadiatly below it." name="welcome" maxlength="100" value="<?php echo attrstr($get_event_res["welcome_message"]); ?>"></div>
 
 						<p>"Nav" stands for navigation. The following fields decide what each page is labled in the navigation on the left side off the app much like this page is labled general in the menu on your left.</p>	
 
-						<div class="input">Contact Page Nav:<input type="text" name="contact_nav" maxlength="25" value="<?php echo $get_event_res["contact_nav"] ?>"></div>
+						<div class="input">Contact Page Nav:<input type="text" name="contact_nav" maxlength="25" value="<?php echo attrstr($get_event_res["contact_nav"]); ?>"></div>
 
-						<div class="input">Schedule Page Nav:<input type="text" name="sched_nav" maxlength="25" value="<?php echo $get_event_res["sched_nav"] ?>"></div>
+						<div class="input">Schedule Page Nav:<input type="text" name="sched_nav" maxlength="25" value="<?php echo attrstr($get_event_res["sched_nav"]); ?>"></div>
 
-						<div class="input">Housing Page Nav:<input type="text" name="housing_nav" maxlength="25" value="<?php echo $get_event_res["housing_nav"] ?>"></div>
+						<div class="input">Housing Page Nav:<input type="text" name="housing_nav" maxlength="25" value="<?php echo attrstr($get_event_res["housing_nav"]); ?>"></div>
 
-						<div class="input">Prayer Partners Page Nav:<input type="text" name="prayer_nav" maxlength="25" value="<?php echo $get_event_res["prayer_nav"] ?>"></div>
+						<div class="input">Prayer Partners Page Nav:<input type="text" name="prayer_nav" maxlength="25" value="<?php echo attrstr($get_event_res["prayer_nav"]); ?>"></div>
 
-						<div class="input">Notification Page Nav:<input type="text" name="notif_nav" maxlength="25" value="<?php echo $get_event_res["notif_nav"] ?>"></div>
+						<div class="input">Notification Page Nav:<input type="text" name="notif_nav" maxlength="25" value="<?php echo attrstr($get_event_res["notif_nav"]); ?>"></div>
 
                                                 <div class="input" title="This option allows a user to enter what timezone they are in on the app so the schedule is displayed with those times.">Allow a User to Enter a Custom Timezone:<input autocomplete="off" type="checkbox" name="custom" value="true" <?php echo ($get_event_res["custom_tz"]) ? "checked" : ""; ?>></div>
 
@@ -308,7 +306,7 @@
 
 						<p>This is the QR code associated with the app. Once the event app is downloaded it immediately lauches into the device camera in order to scan this code. Once this code is scaned the app has the information it needs and the app is set for the rest of the event. It is recommended to email or print this code for the attendees to scan.</p>
 
-						<div><img src=<?php echo "'".getParentDir(2)."qr.php?id=".$_GET['id']. "'";?> alt="Mountain View">
+						<div><img src=<?php echo "'".getParentDir(2)."qr.php?id=" . sanitize_id($_GET['id']) . "'";?> alt="Mountain View">
 
 						<div><a href="https://play.google.com/store/apps/details?id=org.lightsys.eventApp"><img src="google-play-badge.png" alt="This is a link to the event app in the android store." style="height:62.5;width:161.5;"></a>
 

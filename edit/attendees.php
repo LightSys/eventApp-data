@@ -1,6 +1,8 @@
-<?php session_start();	
-    include("../connection.php");
-    include("../helper.php");
+<?php
+
+    session_start();	
+
+    include("../global.php");
     
     secure($_GET["id"]);
     $event_id=getEventId();	
@@ -39,7 +41,7 @@
 		
 		// Redirect to the original address with parameters intact since they are dropped on form submit.
 		// The records just added or updated will be added to the page
-		header("Location: attendees.php?id=".$_POST['id']);
+		header("Location: attendees.php?id=" . sanitize_id($_POST['id']));
 		die();
 	}
 	
@@ -62,12 +64,12 @@
 			<h1>Attendees</h1>
 			<p>This is where you list the names of attendees that will be selected later as being hosted at different homes, or selected as prayer partners. Their contact information is never needed.</p>
 			<form id="attendeeForm" method="post">
-				<input type="hidden" name="id" value = "<?php echo $_GET["id"]?>">
+				<input type="hidden" name="id" value = "<?php echo sanitize_id($_GET["id"]); ?>">
 				<input type="hidden" name="action">
 				<input type="hidden" name="sequence">
 				<div id="attendeeCards">
 				<?php			
-					$id = $_GET["id"];
+					$id = sanitize_id($_GET["id"]);
 					$get_info_page_stmt = $db->prepare("SELECT * FROM attendees where event_ID=:id order by sequential_ID asc");
 					$get_info_page_stmt->bindValue(":id",$event_id);
 					$get_info_page_stmt->execute();
@@ -75,9 +77,9 @@
 					//populate the form with the event attendees
 					while($get_contact_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 						echo '<div class="card">';
-						echo '<div class="btn" onclick="deleteAttendee('.$get_contact_page_res["sequential_ID"].')">X</div>';
-						echo '<div class="input">Name: <input type="text" name="name['.$get_contact_page_res["sequential_ID"].']" 
-							maxlength="30" value = \''.$get_contact_page_res["name"].'\'></div></div>';
+						echo '<div class="btn" onclick="deleteAttendee('. attrstr($get_contact_page_res["sequential_ID"]) . ')">X</div>';
+						echo '<div class="input">Name: <input type="text" name="name[' . attrstr($get_contact_page_res["sequential_ID"]) . ']" 
+							maxlength="30" value = "' . attrstr($get_contact_page_res["name"]) . '"></div></div>';
 					}
 				?>
 				</div>

@@ -1,6 +1,6 @@
 <?php session_start();
-include("../connection.php");
-include("../helper.php");
+
+include("../global.php");
 
 secure();
 
@@ -53,7 +53,7 @@ if(isset($_POST['action'])){
 		$get_info_page_stmt->execute();
 
 		if(!$get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
-			echo "Error: Tried to add an information page section to a non-existent info page." . $event_id . " " . $_POST['sequence'];
+			echo "Error: Tried to add an information page section to a non-existent info page." . htmlstr($event_id) . " " . htmlstr($_POST['sequence']);
 
 		} else {
 
@@ -169,7 +169,7 @@ if(isset($_POST['action'])){
 		}
 	}
 
-	header("Location: information-page.php?id=".$_POST['id']);
+	header("Location: information-page.php?id=" . sanitize_id($_POST['id']));
 	die();
 
 	 
@@ -226,7 +226,7 @@ include("../templates/check-event-exists.php");
 			<h1>Information Pages</h1>
 			<p>Here you can create multiple pages in the app with multiple headers and paragraphs of information. Each time you add an information page it adds a new option to the left side menu for someone to click on. An example is to have a page with fun activities to do in town and a page of rules to obey while attending. Each will get their own tab.</p>
 			<form id="updateForm"  method="post">
-				<input type = "hidden" name="id" value="<?php echo $_GET['id']; ?>">
+				<input type = "hidden" name="id" value="<?php echo sanitize_id($_GET['id']); ?>">
 				<input type = "hidden" name="action">
 				<input type = "hidden" name="sequence">
 				<input type = "hidden" name="page_sequence">
@@ -241,11 +241,11 @@ include("../templates/check-event-exists.php");
 					while($get_info_page_res = $get_info_page_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 						echo '<div class="card">';
-						echo '<div class="btn" onclick="deletePage('.$get_info_page_res["sequential_ID"].')">X</div> ';
-						echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'up\')">Page Up</div> ';
-							echo '<div class="btn" onclick="movePage('.$get_info_page_res["sequential_ID"].',\'down\')">Page Down</div> ';
-						echo '<div class="input">Navigation Name: <input type="text" name="name[' . $get_info_page_res["sequential_ID"] . ']" maxlength="25" value="'.$get_info_page_res["nav"].'"></div>';
-						echo '<div class="input">Information Page Icon: <select name="icon[' . $get_info_page_res["sequential_ID"] . ']">';
+						echo '<div class="btn" onclick="deletePage('. attrstr($get_info_page_res["sequential_ID"]).')">X</div> ';
+						echo '<div class="btn" onclick="movePage('. attrstr($get_info_page_res["sequential_ID"]).',\'up\')">Page Up</div> ';
+							echo '<div class="btn" onclick="movePage('. attrstr($get_info_page_res["sequential_ID"]).',\'down\')">Page Down</div> ';
+						echo '<div class="input">Navigation Name: <input type="text" name="name[' . attrstr($get_info_page_res["sequential_ID"]) . ']" maxlength="25" value="'.attrstr($get_info_page_res["nav"]).'"></div>';
+						echo '<div class="input">Information Page Icon: <select name="icon[' . attrstr($get_info_page_res["sequential_ID"]) . ']">';
 						
 						//When this code was written only two icons were unused in the app. They are in the array below and a user may choose beteen them.
 						//If or when more icons are added to the app through android studio xml vectors simply add their names to the array so a user may choose them.
@@ -263,11 +263,11 @@ include("../templates/check-event-exists.php");
 
 							if ($get_info_page_res['icon'] == $availible_icons[$i]) {
 
-								echo '<option selected value = ' . $availible_icons[$i] . '> ' . $iconName . '</option>';
+								echo '<option selected value="' . attrstr($availible_icons[$i]) . '"> ' . htmlstr($iconName) . '</option>';
 
 							} else {
 
-								echo '<option value = ' . $availible_icons[$i] . '> ' . $iconName . '</option>';
+								echo '<option value="' . attrstr($availible_icons[$i]) . '"> ' . htmlstr($iconName) . '</option>';
 
 							}
 
@@ -282,15 +282,15 @@ include("../templates/check-event-exists.php");
 
 						while($get_section_res = $get_sections_stmt->fetch(PDO::FETCH_ASSOC)) {
 							echo '<div class="section">';
-							echo '<div class="btn" onclick="deleteSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].')">X</div> ';
-							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'up\')">Section Up</div> ';
-							echo '<div class="btn" onclick="moveSection('.$get_info_page_res["sequential_ID"].', '.$get_section_res["sequential_ID"].',\'down\')">Section Down</div> ';
-							echo '<div class="input">Header: <input type="text" name="header['. $get_info_page_res["sequential_ID"] .'][' . $get_section_res["sequential_ID"] . ']" maxlength="100" value="'.$get_section_res["header"].'"></div>';
-							echo '<div class="input">Content: <textarea name="content[' . $get_info_page_res["sequential_ID"] . ']['. $get_section_res["sequential_ID"] .']">'.$get_section_res["content"].'</textarea></div>';
+							echo '<div class="btn" onclick="deleteSection('.attrstr($get_info_page_res["sequential_ID"]).', '.attrstr($get_section_res["sequential_ID"]).')">X</div> ';
+							echo '<div class="btn" onclick="moveSection('.attrstr($get_info_page_res["sequential_ID"]).', '.attrstr($get_section_res["sequential_ID"]).',\'up\')">Section Up</div> ';
+							echo '<div class="btn" onclick="moveSection('.attrstr($get_info_page_res["sequential_ID"]).', '.attrstr($get_section_res["sequential_ID"]).',\'down\')">Section Down</div> ';
+							echo '<div class="input">Header: <input type="text" name="header['. attrstr($get_info_page_res["sequential_ID"]) .'][' . attrstr($get_section_res["sequential_ID"]) . ']" maxlength="100" value="'.attrstr($get_section_res["header"]).'"></div>';
+							echo '<div class="input">Content: <textarea name="content[' . attrstr($get_info_page_res["sequential_ID"]) . ']['. attrstr($get_section_res["sequential_ID"]) .']">'. htmlstr($get_section_res["content"]) .'</textarea></div>';
 							echo '</div>';
 						}
 
-						echo '<div class="btn" onclick="addSection('.$get_info_page_res["sequential_ID"].')">+ Add Section</div>';
+						echo '<div class="btn" onclick="addSection('.attrstr($get_info_page_res["sequential_ID"]).')">+ Add Section</div>';
 						echo '</div>';
 					}
 					?>

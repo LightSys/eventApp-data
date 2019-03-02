@@ -66,7 +66,7 @@ nav > ol > a > li {
     /* border: 1px solid #3E52A9;
     color: #3E52A9; */
     border-radius: 5px;
-    background-color: transparent;
+    background-color: #e0e0e0;
 
     /* Buttons are not selectable */
     -webkit-touch-callout: none;
@@ -115,4 +115,10 @@ select {
     font-family: sans-serif;
     font-size: 12pt;
     display: inline-block;
+}
+
+span.title {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-left: 8px;
 }
