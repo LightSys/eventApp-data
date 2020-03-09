@@ -43,7 +43,7 @@ function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output =
         return bin2hex(substr($output, 0, $key_length));
 }
 
-function hash_equals($knownString, $userInput) {
+function my_hash_equals($knownString, $userInput) {
     if (!is_string($knownString)) {
         trigger_error('Expected known_string to be a string, '.gettype($knownString).' given', E_USER_WARNING);
         return false;
@@ -108,7 +108,7 @@ if(isset($_POST["username"])) {
 
 	$res = pbkdf2('sha256', $_POST["password"], $salt, 64000, 512);
 
-	if(hash_equals($password, $res)) {
+	if(my_hash_equals($password, $res)) {
 		$_SESSION["username"] = $_POST["username"];
 		header("Location: ". stripFileName() . "/events.php");
 		die();

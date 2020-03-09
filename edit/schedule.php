@@ -31,7 +31,7 @@ if(isset($_POST['action'])) {
 	}
 
 	if($_POST['action'] == "addItem") {
-		$stmt = $db->prepare('INSERT into schedule_items(event_ID, sequential_ID, date,start_time,length,description,location,category) values (:id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from schedule_items where event_ID=:id) as temp), CURDATE(), "0000", "", "","", "#000000")');
+		$stmt = $db->prepare('INSERT into schedule_items(event_ID, sequential_ID, date,start_time,length,description,location,category) values (:id, (SELECT IFNULL(MAX(temp.sequential_ID),0)+1 from (select sequential_ID from schedule_items where event_ID=:id) as temp), CURDATE(), "0000", "1", "","", "#000000")');
 		$stmt->bindValue(":id",$event_id);
 		$stmt->execute();
 	}

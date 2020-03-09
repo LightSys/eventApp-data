@@ -81,9 +81,9 @@
 		$name = $_POST['name'];
 		$timeZone = $_POST['time_zone'];
 		$welcomeMessage = $_POST['welcome'];
-		$visible = isset($_POST['visible']);
-		$custom = isset($_POST['custom']);
-		$remote = isset($_POST['remote']);
+		$visible = isset($_POST['visible'])?1:0;
+		$custom = isset($_POST['custom'])?1:0;
+		$remote = isset($_POST['remote'])?1:0;
 		$id = $_POST["id"];
 
 		$logo=null;

@@ -157,7 +157,7 @@
 
 				echo '<option value="remove" selected>Remove</option>';
 				while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
-					echo '<option value='.attrstr($get_attendees_res['sequential_ID']).'>' . htmlstr($get_attendees_res['name']) . '</option>';
+					echo '<option value='.attrstr($get_attendees_res['sequential_ID']).'>' . attrstr(htmlstr($get_attendees_res['name'])) . '</option>';
 				}
 				?></select>';
 

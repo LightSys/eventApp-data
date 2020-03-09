@@ -184,6 +184,7 @@ if( isset($_POST['action'] )) {
 
 	</body>
 
+
 	<script>
 		function save(){
 			document.forms['form']['action'].value="save";
@@ -192,13 +193,13 @@ if( isset($_POST['action'] )) {
 
 		function addHost() {
 			document.forms['form']['action'].value="addHousing";
-                        document.forms['form']['sequence'].value="";
+			document.forms['form']['sequence'].value="";
 			$("#form").submit();
 		}
 
 		function deleteHousing(sequential_id) {
-                        document.forms['form']['action'].value="deleteHousing";
-                        document.forms['form']['sequence'].value=sequential_id;
+			document.forms['form']['action'].value="deleteHousing";
+			document.forms['form']['sequence'].value=sequential_id;
 			$("#form").submit();
 		}
 
@@ -211,13 +212,12 @@ if( isset($_POST['action'] )) {
 
 					echo '<option value="remove">Remove</option>';
 					while($get_attendees_res = $get_attendees_stmt->fetch(PDO::FETCH_ASSOC)) {
-						echo '<option value="'. attrstr($get_attendees_res['sequential_ID']) .'">' . htmlstr($get_attendees_res['name']) . '</option>';
+						echo '<option value="'. attrstr($get_attendees_res['sequential_ID']) .'">' . attrstr(htmlstr($get_attendees_res['name'])) . '</option>';
 					}
 					?></select>';
 
 			addFields(html, 'guests\\[' + num + '\\]');
 		}
 	</script>
-
 	
 </html>

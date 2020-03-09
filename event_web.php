@@ -22,7 +22,7 @@
 			min-height: 100%; 
 			margin: 0px;
 			padding: 0px; 
-			background: linear-gradient(180deg,'.$col_med.' 11%, '.$col_drk.' 100%);
+			background: linear-gradient(180deg,'. attrstr($col_med) .' 11%, '. attrstr($col_drk) .' 100%);
 		}
 		.nav-tabs > li > a {
 			color: '.$col_thm.'; 
@@ -80,12 +80,12 @@
 
 		$ID = $time['ID']; 
 		if($count == 0){
-				$tab_menu .= '<li role = "presentation" class = "active"><a href="#'. htmlstr($ID) . '" data-toggle="tab">' . $date . '</a></li>'; 
-				$tab_content .= '<div role = "tabpanel" id = "'.$ID.'" class = "tab-pane active">'; 
+				$tab_menu .= '<li role = "presentation" class = "active"><a href="#'. htmlstr($ID) . '" data-toggle="tab">' . htmlstr($date) . '</a></li>'; 
+				$tab_content .= '<div role = "tabpanel" id = "'.attrstr($ID).'" class = "tab-pane active">'; 
 		}
 		else{
-				$tab_menu .= '<li role ="presentation"><a href="#'.$ID. '" data-toggle="tab">' . $date . '</a></li>'; 
-				$tab_content .= '<div role = "tabpanel"  id = "'.$ID.'" class = "tab-pane">';  
+				$tab_menu .= '<li role ="presentation"><a href="#'.attrstr($ID). '" data-toggle="tab">' . htmlstr($date) . '</a></li>'; 
+				$tab_content .= '<div role = "tabpanel"  id = "'.attrstr($ID).'" class = "tab-pane">';  
 		}
 		$time_array = array_shift($time); 
 
@@ -96,7 +96,7 @@
 							<th scope = "col"> Start </th>
 							<th scope = "col"> Event </th> 
 							<th scope = "col"> Length </th> 
-							<th scope = "col"> Room </th> 
+							<th scope = "col"> Where </th> 
 						</tr> 
 					</thead> 
 				<tbody id = "myTable">	
@@ -111,10 +111,10 @@
 				
  
 					<tr>
-						<td> '.$index.'  </td> 
-						<td>'.$desc.'</td> 
-						<td>'.$leng.' m </td> 
-						<td>'.$loc.' </td>
+						<td> '.htmlstr($index).'  </td> 
+						<td>'.htmlstr($desc).'</td> 
+						<td>'.htmlstr($leng).' m </td> 
+						<td>'.htmlstr($loc).' </td>
 					</tr>
 
 
