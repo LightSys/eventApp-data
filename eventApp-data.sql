@@ -1,19 +1,19 @@
 -- Recreates database with event data
 
 SET FOREIGN_KEY_CHECKS = 0;
-drop table event;
-drop table contact_page_sections;
-drop table contacts;
-drop table schedule_items;
-drop table info_page;
-drop table info_page_sections;
-drop table housing;
-drop table prayer_partners;
-drop table attendees;
-drop table notifications;
-drop table themes;
-drop table users;
-drop table event_users;
+drop table if exists event;
+drop table if exists contact_page_sections;
+drop table if exists contacts;
+drop table if exists schedule_items;
+drop table if exists info_page;
+drop table if exists info_page_sections;
+drop table if exists housing;
+drop table if exists prayer_partners;
+drop table if exists attendees;
+drop table if exists notifications;
+drop table if exists themes;
+drop table if exists users;
+drop table if exists event_users;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Contains general information about events and data needed
