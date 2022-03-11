@@ -1,5 +1,4 @@
 <?php	
-
     session_start();
     include("../global.php");
     secure();
@@ -78,12 +77,16 @@
 					
 					//populate the form with the event notifications 
 					while($get_notification_res = $get_notification_stmt->fetch(PDO::FETCH_ASSOC)) {
+						
 						echo '<div class="card">';
 						echo '<div class="btn" onclick="deleteNotification('.attrstr($get_notification_res["sequential_ID"]).')">X</div>';
-						echo '<div class="input">Subject: <input type="text" name="title['.attrstr($get_notification_res["sequential_ID"]).']" maxlength="100" value="'.attrstr($get_notification_res["title"]) .'"></div>';
-						echo '<div class="input">Message: <textarea name="body['. attrstr($get_notification_res["sequential_ID"]) .']">'.htmlstr($get_notification_res["body"]).'</textarea></div>';
+						echo '<div class="input">Subject: <input type="text" id="title['.attrstr($get_notification_res["sequential_ID"]).']" name="title['.attrstr($get_notification_res["sequential_ID"]).']" maxlength="100" value="'.attrstr($get_notification_res["title"]) .'"></div>';
+						echo '<div class="input">Message: <textarea id="body['. attrstr($get_notification_res["sequential_ID"]) .']" name="body['. attrstr($get_notification_res["sequential_ID"]) .']">'.htmlstr($get_notification_res["body"]).'</textarea></div>';
 						echo '<div class="input">Date: <input type="date" name="date['. attrstr($get_notification_res["sequential_ID"]).']" value="'. attrstr(date("Y-m-d",strtotime($get_notification_res["date"]))).'"></div>';
 						echo '<div class="input">Time: <input type="time" name="time['. attrstr($get_notification_res["sequential_ID"]).']" value="'. attrstr(date("H:i",strtotime($get_notification_res["date"]))).'"></div>';
+						$title = attrstr($get_notification_res["title"]);
+						$body = htmlstr($get_notification_res["body"]);
+						echo '<div class="btn" onclick=\'SendNotification('.attrstr($get_notification_res["sequential_ID"]).', '.$event_id.')\'>Send IOS Notification</div>';
 						echo '</div>';
 					}
 				?>
@@ -95,21 +98,43 @@
 			</form>
 		</section>
 	</body>
+	<!--<p hidden> <?php //echo $response ?> </p>-->
 
+	
 	<script>		
 		function addNotification() {
 			document.forms['notificationForm']['action'].value = "addNotification";
 			$("#notificationForm").submit();
 		}
-
 		function deleteNotification(sequential_id) {
-                        document.forms['notificationForm']['action'].value = "deleteNotification";
-                        document.forms['notificationForm']['sequence'].value = sequential_id;
+            document.forms['notificationForm']['action'].value = "deleteNotification";
+            document.forms['notificationForm']['sequence'].value = sequential_id;
 			$("#notificationForm").submit();
 		}
 		function save(){
-                        document.forms['notificationForm']['action'].value = "save";
+            document.forms['notificationForm']['action'].value = "save";
 			$("#notificationForm").submit();
+		}
+
+		function SendNotification(sequential_ID, event_id){	
+
+			$.ajax({
+
+				url : './post.php',
+				type : 'POST',
+				data:{
+					title: document.getElementById(`title[${sequential_ID}]`).value,
+					body: document.getElementById(`body[${sequential_ID}]`).value,
+					id: event_id,
+				},
+				success : function (result) {
+				console.log (result); // Here, you need to use response by PHP file.
+				},
+				error : function () {
+				console.log ('error');
+				}
+
+			});
 		}
 	</script>
 </html>

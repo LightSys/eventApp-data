@@ -1,2 +1,4 @@
 temp/*
 config/config.php
+edit/apn-2022.crt
+edit/apn-2022.key

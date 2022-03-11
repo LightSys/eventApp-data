@@ -11,6 +11,7 @@ drop table if exists housing;
 drop table if exists prayer_partners;
 drop table if exists attendees;
 drop table if exists notifications;
+drop table if exists device_tokens;
 drop table if exists themes;
 drop table if exists users;
 drop table if exists event_users;
@@ -166,6 +167,19 @@ create table notifications (
     foreign key (event_ID) references event(internal_ID)
         on delete cascade
 ) ENGINE = INNODB;
+
+--Stores the device tokens for the event
+create table device_tokens (
+    ID                  int AUTO_INCREMENT,
+    event_ID            varchar(36) ,
+    token               varchar(512),
+
+    primary key (ID),
+    foreign key (event_ID) references event(ID)
+        on delete cascade
+
+) ENGINE = INNODB;
+
 
 -- Defines a link on the nav bar for a user-defined page
 create table info_page (
