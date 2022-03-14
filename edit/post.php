@@ -28,7 +28,15 @@
        curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.push.apple.com/3/device/'. $token);
        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
        curl_setopt($ch, CURLOPT_POST, 1);
-       curl_setopt($ch, CURLOPT_POSTFIELDS, "{\n\"aps\": {\n  \"alert\": {\n      \"title\": \"  " . $_POST["title"] .  "  \",\n   \"body\": \" " .  $_POST["body"] . " \"\n   }\n},\n\"aditional-info\": \"Test\",\n\"attachment-url\": \"https://google.com\"\n}");
+       curl_setopt($ch, CURLOPT_POSTFIELDS, "{
+                                                \"aps\": {
+                                                    \"alert\": {
+                                                              \"title\": \"".$_POST["title"]."\",
+                                                              \"body\": \"".$_POST["body"]."\"
+                                                            },
+                                                    \"sound\": \"bingbong.aiff\"
+                                                }
+                                            }");
        curl_setopt($ch, CURLOPT_SSLCERT, "apn-2022.crt");
        curl_setopt($ch, CURLOPT_SSLKEY, "apn-2022.key");
        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2);
