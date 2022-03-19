@@ -13,8 +13,8 @@
                 //update all contact records in the event
                 $stmt = $db->prepare("UPDATE contacts set name = :name, address = :address, phone = :phone where event_ID=:event_id and sequential_ID=:sequence");
                 foreach($_POST['name'] as $key => $name) {
-                        $address = $_POST['address'][$key];
-                        $phone = $_POST['phone'][$key];
+                        //$address = $_POST['address'][$key];
+                        //$phone = $_POST['phone'][$key];
                         $stmt->bindValue(":sequence",$key);
                         $stmt->bindValue(':name', $name);
                         $stmt->bindValue(':address', $address);
