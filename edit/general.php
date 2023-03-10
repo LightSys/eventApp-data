@@ -62,7 +62,7 @@
 	}
 	secure(full_url($_SERVER));
 
-        $get_event_stmt = $db->prepare("SELECT custom_tz,view_remote,logo,name,time_zone,TZcatagory,welcome_message, visible,contact_nav,contact_icon,sched_nav,sched_icon,housing_nav,housing_icon,prayer_nav,prayer_icon,notif_nav,notif_icon FROM event WHERE ID =:id");
+        $get_event_stmt = $db->prepare("SELECT custom_tz,view_remote,allow_qr_share,logo,name,time_zone,TZcatagory,welcome_message, visible,contact_nav,contact_icon,sched_nav,sched_icon,housing_nav,housing_icon,prayer_nav,prayer_icon,notif_nav,notif_icon FROM event WHERE ID =:id");
 	
         $get_event_stmt->bindValue(":id", sanitize_id($_GET["id"]));
 	
@@ -77,13 +77,14 @@
 
 		inc_config_ver();
 
-		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone,custom_tz= :custom, view_remote=:remote, TZcatagory=:TZ_catagory, welcome_message = :welcome_message, visible = :visible, logo = :logo, contact_nav= :contact_nav,contact_icon= :contact_icon,sched_nav= :sched_nav,sched_icon= :sched_icon,housing_nav= :housing_nav,housing_icon= :housing_icon,prayer_nav= :prayer_nav,prayer_icon= :prayer_icon,notif_nav= :notif_nav,notif_icon= :notif_icon WHERE id = :id");
+		$stmt = $db->prepare("UPDATE event SET name = :name, time_zone = :time_zone,custom_tz= :custom, view_remote=:remote, allow_qr_share=:allow_qr_share, TZcatagory=:TZ_catagory, welcome_message = :welcome_message, visible = :visible, logo = :logo, contact_nav= :contact_nav,contact_icon= :contact_icon,sched_nav= :sched_nav,sched_icon= :sched_icon,housing_nav= :housing_nav,housing_icon= :housing_icon,prayer_nav= :prayer_nav,prayer_icon= :prayer_icon,notif_nav= :notif_nav,notif_icon= :notif_icon WHERE id = :id");
 		$name = $_POST['name'];
 		$timeZone = $_POST['time_zone'];
 		$welcomeMessage = $_POST['welcome'];
 		$visible = isset($_POST['visible'])?1:0;
 		$custom = isset($_POST['custom'])?1:0;
 		$remote = isset($_POST['remote'])?1:0;
+		$allow_qr_share = isset($_POST['allow_qr_share'])?1:0;
 		$id = $_POST["id"];
 
 		$logo=null;
@@ -141,6 +142,7 @@
 		$stmt->bindValue(':visible', $visible);
 		$stmt->bindValue(':custom', $custom);
 		$stmt->bindValue(':remote', $remote);
+		$stmt->bindValue(':allow_qr_share', $allow_qr_share);
 		if ($_POST["saveLogo"] == "delete"){
 			$stmt->bindValue(':logo',  base64_encode(""));
 		}
@@ -301,6 +303,8 @@
                                                 <div class="input" title="This option allows a user to enter what timezone they are in on the app so the schedule is displayed with those times.">Allow a User to Enter a Custom Timezone:<input autocomplete="off" type="checkbox" name="custom" value="true" <?php echo ($get_event_res["custom_tz"]) ? "checked" : ""; ?>></div>
 
                                                 <div class="input" title="This option allows the app to display the schedule in the same timezone that the users divice reports.">Allow a User to Attend Remotely:<input autocomplete="off" type="checkbox" name="remote" value="true" <?php echo ($get_event_res["view_remote"]) ? "checked" : ""; ?>></div>
+
+                                                <div class="input" title="This option allows the app to share the QR code without coming back to this web site">Allow a User to share a QR code:<input autocomplete="off" type="checkbox" name="allow_qr_share" value="true" <?php echo ($get_event_res["allow_qr_share"]) ? "checked" : ""; ?>></div>
 
 						<div class="input" title="When this option is checked the app can scan the qr code to get the event data.">Event is Live:<input autocomplete="off" type="checkbox" name="visible" value="true" <?php echo ($get_event_res["visible"]) ? "checked" : ""; ?>></div>
 

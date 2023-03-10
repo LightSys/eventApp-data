@@ -48,6 +48,7 @@ create table event (
     config_version      int,
     notif_version       int,
     refresh_rate        varchar(10),
+    allow_qr_share	boolean,
 
     primary key (internal_ID)
 ) ENGINE = INNODB;
