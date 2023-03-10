@@ -36,6 +36,7 @@ function add_data() {
 			"logo" => $get_event_res["logo"],
 			"custom_time_zone"=> $get_event_res["custom_tz"],
 			"remote_viewing"=>$get_event_res["view_remote"],
+			"allow_qr_share"=>$get_event_res["allow_qr_share"],
 			"event_name"=>$get_event_res["name"]
 	);
 
